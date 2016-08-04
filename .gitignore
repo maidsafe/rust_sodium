@@ -1,0 +1,10 @@
+*~
+*.sw*
+*.o
+*.so
+/doc
+.rust
+Cargo.lock
+/target
+rust_sodium-sys/target
+systest/target

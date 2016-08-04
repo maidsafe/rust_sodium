@@ -1,0 +1,28 @@
+[package]
+authors = ["MaidSafe Developers <dev@maidsafe.net>", "dnaq"]
+build = "build.rs"
+description = "Raw bindings to libsodium"
+documentation = "http://docs.maidsafe.net/rust_sodium/latest"
+homepage = "http://maidsafe.net"
+license = "MIT OR Apache-2.0"
+links = "sodium"
+name = "rust_sodium-sys"
+repository = "https://github.com/maidsafe/rust_sodium"
+version = "0.1.0"
+
+[dependencies]
+libc = "~0.2.14"
+
+[build-dependencies]
+pkg-config = { version = "~0.3.8", optional = true }
+gcc = { version = "~0.3.32", optional = true }
+flate2 = { version = "~0.2.14", optional = true }
+tar = { version = "~0.4.7", optional = true }
+unwrap = "~1.1.0"
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["pkg-config"]
+get-libsodium = ["gcc", "flate2", "tar"]

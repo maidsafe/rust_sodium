@@ -1,0 +1,19 @@
+[package]
+authors = ["MaidSafe Developers <dev@maidsafe.net>"]
+build = "build.rs"
+description = "Test that bindings match native library's interface"
+homepage = "http://maidsafe.net"
+license = "MIT OR Apache-2.0"
+name = "systest"
+version = "0.1.0"
+
+[dependencies]
+rust_sodium-sys = { path = "../rust_sodium-sys" }
+libc = "~0.2.14"
+
+[build-dependencies]
+ctest = { git = "https://github.com/alexcrichton/ctest" }
+unwrap = "~1.1.0"
+
+[features]
+default = ["rust_sodium-sys/get-libsodium"]
