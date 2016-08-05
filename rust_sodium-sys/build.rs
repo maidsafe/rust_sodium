@@ -151,7 +151,8 @@ fn main() {
     // Download gz tarball
     let basename = "libsodium-".to_string() + VERSION;
     let gz_filename = basename.clone() + ".tar.gz";
-    let url = "https://download.libsodium.org/libsodium/releases/".to_string() + &gz_filename;
+    let url = "https://github.com/jedisct1/libsodium/releases/download/".to_string() + VERSION +
+              "/" + &gz_filename;
     let mut install_dir = get_install_dir();
     let mut source_dir = unwrap!(env::var("OUT_DIR")) + "/source";
     // Avoid issues with paths containing spaces by falling back to using /tmp
