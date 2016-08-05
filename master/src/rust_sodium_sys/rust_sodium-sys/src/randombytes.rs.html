@@ -47,11 +47,15 @@
 <span id="3">3</span>
 <span id="4">4</span>
 <span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
 </pre><pre class='rust '>
 <span class='comment'>// randombytes.h</span>
 
 <span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>randombytes_buf</span>(<span class='ident'>buf</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>size</span>: <span class='ident'>size_t</span>);
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>randombytes_set_implementation</span>(<span class='ident'>function_pointers</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>randombytes_implementation</span>)
+                                          <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 }
 </pre>
 </section>
