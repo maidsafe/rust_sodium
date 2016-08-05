@@ -7,9 +7,7 @@
 //! SHA-3 competition will improve the situation.
 use ffi::{crypto_hash_sha256, crypto_hash_sha256_BYTES};
 
-hash_module!(crypto_hash_sha256,
-             crypto_hash_sha256_BYTES,
-             64);
+hash_module!(crypto_hash_sha256, crypto_hash_sha256_BYTES, 64);
 
 #[cfg(test)]
 mod test {

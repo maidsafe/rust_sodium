@@ -1,6 +1,6 @@
 // utils.h
 
-extern {
+extern "C" {
     pub fn sodium_memzero(pnt: *mut c_void, len: size_t);
     pub fn sodium_memcmp(b1_: *const c_void, b2_: *const c_void, len: size_t) -> c_int;
     pub fn sodium_increment(n: *mut u8, len: size_t);

@@ -65,9 +65,7 @@ extern crate serde;
 ///
 /// `init()` returns `false` if initialization failed.
 pub fn init() -> bool {
-    unsafe {
-        ffi::sodium_init() != -1
-    }
+    unsafe { ffi::sodium_init() != -1 }
 }
 
 mod marshal;

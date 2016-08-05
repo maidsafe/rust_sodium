@@ -6,31 +6,31 @@ pub const crypto_aead_chacha20poly1305_NPUBBYTES: usize = 8;
 pub const crypto_aead_chacha20poly1305_ABYTES: usize = 16;
 
 
-extern {
+extern "C" {
     pub fn crypto_aead_chacha20poly1305_keybytes() -> size_t;
     pub fn crypto_aead_chacha20poly1305_nsecbytes() -> size_t;
     pub fn crypto_aead_chacha20poly1305_npubbytes() -> size_t;
     pub fn crypto_aead_chacha20poly1305_abytes() -> size_t;
-    pub fn crypto_aead_chacha20poly1305_encrypt(
-        c: *mut u8,
-        clen: *mut c_ulonglong,
-        m: *const u8,
-        mlen: c_ulonglong,
-        ad: *const u8,
-        adlen: c_ulonglong,
-        nsec: *const u8,
-        npub: *const u8,
-        k: *const u8) -> c_int;
-    pub fn crypto_aead_chacha20poly1305_decrypt(
-        m: *mut u8,
-        mlen: *mut c_ulonglong,
-        nsec: *mut u8,
-        c: *const u8,
-        clen: c_ulonglong,
-        ad: *const u8,
-        adlen: c_ulonglong,
-        npub: *const u8,
-        k: *const u8) -> c_int;
+    pub fn crypto_aead_chacha20poly1305_encrypt(c: *mut u8,
+                                                clen: *mut c_ulonglong,
+                                                m: *const u8,
+                                                mlen: c_ulonglong,
+                                                ad: *const u8,
+                                                adlen: c_ulonglong,
+                                                nsec: *const u8,
+                                                npub: *const u8,
+                                                k: *const u8)
+                                                -> c_int;
+    pub fn crypto_aead_chacha20poly1305_decrypt(m: *mut u8,
+                                                mlen: *mut c_ulonglong,
+                                                nsec: *mut u8,
+                                                c: *const u8,
+                                                clen: c_ulonglong,
+                                                ad: *const u8,
+                                                adlen: c_ulonglong,
+                                                npub: *const u8,
+                                                k: *const u8)
+                                                -> c_int;
 }
 
 

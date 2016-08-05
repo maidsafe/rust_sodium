@@ -2,8 +2,8 @@
 //! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html), Section 7.
 //! This cipher is conjectured to meet the standard notion of
 //! unpredictability.
-use ffi::{crypto_stream_xsalsa20, crypto_stream_xsalsa20_xor, crypto_stream_xsalsa20_KEYBYTES,
-          crypto_stream_xsalsa20_NONCEBYTES};
+use ffi::{crypto_stream_xsalsa20, crypto_stream_xsalsa20_KEYBYTES,
+          crypto_stream_xsalsa20_NONCEBYTES, crypto_stream_xsalsa20_xor};
 
 stream_module!(crypto_stream_xsalsa20,
                crypto_stream_xsalsa20_xor,
@@ -17,7 +17,7 @@ mod test {
     #[test]
     fn test_vector_1() {
         // corresponding to tests/stream.c and tests/stream5.cpp from NaCl
-        use crypto::hash::sha256::{hash, Digest};
+        use crypto::hash::sha256::{Digest, hash};
         let firstkey = Key([0x1b, 0x27, 0x55, 0x64, 0x73, 0xe9, 0x85, 0xd4, 0x62, 0xcd, 0x51,
                             0x19, 0x7a, 0x9a, 0x46, 0xc7, 0x60, 0x09, 0x54, 0x9e, 0xac, 0x64,
                             0x74, 0xf2, 0x06, 0xc4, 0xee, 0x08, 0x44, 0xf6, 0x83, 0x89]);

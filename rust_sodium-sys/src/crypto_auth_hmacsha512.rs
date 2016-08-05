@@ -11,37 +11,36 @@ pub const crypto_auth_hmacsha512_BYTES: usize = 64;
 pub const crypto_auth_hmacsha512_KEYBYTES: usize = 32;
 
 
-extern {
+extern "C" {
     pub fn crypto_auth_hmacsha512_bytes() -> size_t;
     pub fn crypto_auth_hmacsha512_keybytes() -> size_t;
-    pub fn crypto_auth_hmacsha512(
-        a: *mut u8,
-        m: *const u8,
-        mlen: c_ulonglong,
-        k: *const u8) -> c_int;
-    pub fn crypto_auth_hmacsha512_verify(
-        a: *const u8,
-        m: *const u8,
-        mlen: c_ulonglong,
-        k: *const u8) -> c_int;
-    pub fn crypto_auth_hmacsha512_init(
-        state: *mut crypto_auth_hmacsha512_state,
-        key: *const u8,
-        keylen: size_t) -> c_int;
-    pub fn crypto_auth_hmacsha512_update(
-        state: *mut crypto_auth_hmacsha512_state,
-        m: *const u8,
-        mlen: c_ulonglong) -> c_int;
-    pub fn crypto_auth_hmacsha512_final(
-        state: *mut crypto_auth_hmacsha512_state,
-        a: *mut u8) -> c_int;
+    pub fn crypto_auth_hmacsha512(a: *mut u8,
+                                  m: *const u8,
+                                  mlen: c_ulonglong,
+                                  k: *const u8)
+                                  -> c_int;
+    pub fn crypto_auth_hmacsha512_verify(a: *const u8,
+                                         m: *const u8,
+                                         mlen: c_ulonglong,
+                                         k: *const u8)
+                                         -> c_int;
+    pub fn crypto_auth_hmacsha512_init(state: *mut crypto_auth_hmacsha512_state,
+                                       key: *const u8,
+                                       keylen: size_t)
+                                       -> c_int;
+    pub fn crypto_auth_hmacsha512_update(state: *mut crypto_auth_hmacsha512_state,
+                                         m: *const u8,
+                                         mlen: c_ulonglong)
+                                         -> c_int;
+    pub fn crypto_auth_hmacsha512_final(state: *mut crypto_auth_hmacsha512_state,
+                                        a: *mut u8)
+                                        -> c_int;
 }
 
 
 #[test]
 fn test_crypto_auth_hmacsha512_bytes() {
-    assert!(unsafe { crypto_auth_hmacsha512_bytes() as usize } ==
-            crypto_auth_hmacsha512_BYTES)
+    assert!(unsafe { crypto_auth_hmacsha512_bytes() as usize } == crypto_auth_hmacsha512_BYTES)
 }
 #[test]
 fn test_crypto_auth_hmacsha512_keybytes() {
