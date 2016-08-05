@@ -4,18 +4,18 @@ pub const crypto_stream_chacha20_KEYBYTES: usize = 32;
 pub const crypto_stream_chacha20_NONCEBYTES: usize = 8;
 
 
-extern {
-    pub fn crypto_stream_chacha20(
-        c: *mut u8,
-        clen: c_ulonglong,
-        n: *const u8,
-        k: *const u8) -> c_int;
-    pub fn crypto_stream_chacha20_xor(
-        c: *mut u8,
-        m: *const u8,
-        mlen: c_ulonglong,
-        n: *const u8,
-        k: *const u8) -> c_int;
+extern "C" {
+    pub fn crypto_stream_chacha20(c: *mut u8,
+                                  clen: c_ulonglong,
+                                  n: *const u8,
+                                  k: *const u8)
+                                  -> c_int;
+    pub fn crypto_stream_chacha20_xor(c: *mut u8,
+                                      m: *const u8,
+                                      mlen: c_ulonglong,
+                                      n: *const u8,
+                                      k: *const u8)
+                                      -> c_int;
     pub fn crypto_stream_chacha20_keybytes() -> size_t;
     pub fn crypto_stream_chacha20_noncebytes() -> size_t;
 }

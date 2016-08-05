@@ -169,7 +169,8 @@ mod bench_m {
 ///              a state with a key.
 /// $update_name - A function `f(s: *mut $state_name, m: *u8, mlen: size_t)` that updates
 ///                a state with a message chunk.
-/// $final_name - A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator                    tag of length $tagbytes from a $state_name.
+/// $final_name - A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator
+///               tag of length $tagbytes from a $state_name.
 /// $tagbytes   - The number of bytes in an authenticator tag.
 macro_rules! auth_state (($state_name:ident,
                           $init_name:ident,

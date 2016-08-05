@@ -1,10 +1,10 @@
 //! `HMAC-SHA-512-256`, i.e., the first 256 bits of
 //! `HMAC-SHA-512`.  `HMAC-SHA-512-256` is conjectured to meet the standard notion
 //! of unforgeability.
-use ffi::{crypto_auth_hmacsha512256, crypto_auth_hmacsha512256_verify,
-          crypto_auth_hmacsha512256_state, crypto_auth_hmacsha512256_init,
-          crypto_auth_hmacsha512256_update, crypto_auth_hmacsha512256_final,
-          crypto_auth_hmacsha512256_KEYBYTES, crypto_auth_hmacsha512256_BYTES};
+use ffi::{crypto_auth_hmacsha512256, crypto_auth_hmacsha512256_BYTES,
+          crypto_auth_hmacsha512256_KEYBYTES, crypto_auth_hmacsha512256_final,
+          crypto_auth_hmacsha512256_init, crypto_auth_hmacsha512256_state,
+          crypto_auth_hmacsha512256_update, crypto_auth_hmacsha512256_verify};
 
 auth_module!(crypto_auth_hmacsha512256,
              crypto_auth_hmacsha512256_verify,

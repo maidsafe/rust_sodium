@@ -5,43 +5,32 @@ pub const crypto_core_salsa20_INPUTBYTES: usize = 16;
 pub const crypto_core_salsa20_KEYBYTES: usize = 32;
 pub const crypto_core_salsa20_CONSTBYTES: usize = 16;
 
-extern {
+extern "C" {
     pub fn crypto_core_salsa20_outputbytes() -> size_t;
     pub fn crypto_core_salsa20_inputbytes() -> size_t;
     pub fn crypto_core_salsa20_keybytes() -> size_t;
     pub fn crypto_core_salsa20_constbytes() -> size_t;
 
-    pub fn crypto_core_salsa20(
-        out: *mut u8,
-        in_: *const u8,
-        k: *const u8,
-        c: *const u8) -> c_int;
+    pub fn crypto_core_salsa20(out: *mut u8, in_: *const u8, k: *const u8, c: *const u8) -> c_int;
 }
 
 #[test]
 fn test_crypto_core_salsa20_outputbytes() {
-    assert!(unsafe {
-        crypto_core_salsa20_outputbytes() as usize
-    } == crypto_core_salsa20_OUTPUTBYTES)
+    assert!(unsafe { crypto_core_salsa20_outputbytes() as usize } ==
+            crypto_core_salsa20_OUTPUTBYTES)
 }
 
 #[test]
 fn test_crypto_core_salsa20_inputbytes() {
-    assert!(unsafe {
-        crypto_core_salsa20_inputbytes() as usize
-    } == crypto_core_salsa20_INPUTBYTES)
+    assert!(unsafe { crypto_core_salsa20_inputbytes() as usize } == crypto_core_salsa20_INPUTBYTES)
 }
 
 #[test]
 fn test_crypto_core_salsa20_keybytes() {
-    assert!(unsafe {
-        crypto_core_salsa20_keybytes() as usize
-    } == crypto_core_salsa20_KEYBYTES)
+    assert!(unsafe { crypto_core_salsa20_keybytes() as usize } == crypto_core_salsa20_KEYBYTES)
 }
 
 #[test]
 fn test_crypto_core_salsa20_constbytes() {
-    assert!(unsafe {
-        crypto_core_salsa20_constbytes() as usize
-    } == crypto_core_salsa20_CONSTBYTES)
+    assert!(unsafe { crypto_core_salsa20_constbytes() as usize } == crypto_core_salsa20_CONSTBYTES)
 }

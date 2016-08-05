@@ -4,17 +4,17 @@ pub const crypto_onetimeauth_poly1305_BYTES: usize = 16;
 pub const crypto_onetimeauth_poly1305_KEYBYTES: usize = 32;
 
 
-extern {
-    pub fn crypto_onetimeauth_poly1305(
-        a: *mut u8,
-        m: *const u8,
-        mlen: c_ulonglong,
-        k: *const u8) -> c_int;
-    pub fn crypto_onetimeauth_poly1305_verify(
-        a: *const u8,
-        m: *const u8,
-        mlen: c_ulonglong,
-        k: *const u8) -> c_int;
+extern "C" {
+    pub fn crypto_onetimeauth_poly1305(a: *mut u8,
+                                       m: *const u8,
+                                       mlen: c_ulonglong,
+                                       k: *const u8)
+                                       -> c_int;
+    pub fn crypto_onetimeauth_poly1305_verify(a: *const u8,
+                                              m: *const u8,
+                                              mlen: c_ulonglong,
+                                              k: *const u8)
+                                              -> c_int;
     pub fn crypto_onetimeauth_poly1305_bytes() -> size_t;
     pub fn crypto_onetimeauth_poly1305_keybytes() -> size_t;
 }

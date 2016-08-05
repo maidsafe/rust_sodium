@@ -1,5 +1,5 @@
 // core.h
 
-extern {
+extern "C" {
     pub fn sodium_init() -> c_int;
 }

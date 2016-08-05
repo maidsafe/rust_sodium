@@ -3,7 +3,7 @@ extern crate serde_json;
 #[cfg(all(test, feature = "serde"))]
 extern crate core;
 #[cfg(all(test, feature = "serde"))]
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 // Encodes then decodes `value` using JSON
 #[cfg(all(test, feature = "serde"))]

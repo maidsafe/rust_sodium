@@ -1,7 +1,7 @@
 #![allow(non_upper_case_globals)]
 
 extern crate libc;
-use libc::{c_void, c_int, c_ulonglong, c_char, size_t};
+use libc::{c_char, c_int, c_ulonglong, c_void, size_t};
 
 include!("src/core.rs");
 
