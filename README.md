@@ -12,7 +12,7 @@ differences are:
 * offers the ability to initialise libsodium with a psuedorandom number generator, allowing for
   reproducible data to be generated, which can be useful in the context of tests
 * implements a test to ensure the FFI bindings match the native library's interface
-* includes AppVeyor CI tests
+* runs CI tests on Windows (AppVeyor), OS X and Linux (Travis)
 
 |Crate|Linux/OS X|Windows|Coverage|Issues|
 |:---:|:--------:|:-----:|:------:|:----:|
