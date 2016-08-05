@@ -121,8 +121,6 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
-<span id="80">80</span>
-<span id="81">81</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! `SHA-256`.</span>
 <span class='doccomment'>//!</span>
@@ -133,9 +131,7 @@
 <span class='doccomment'>//! SHA-3 competition will improve the situation.</span>
 <span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_hash_sha256</span>, <span class='ident'>crypto_hash_sha256_BYTES</span>};
 
-<span class='macro'>hash_module</span><span class='macro'>!</span>(<span class='ident'>crypto_hash_sha256</span>,
-             <span class='ident'>crypto_hash_sha256_BYTES</span>,
-             <span class='number'>64</span>);
+<span class='macro'>hash_module</span><span class='macro'>!</span>(<span class='ident'>crypto_hash_sha256</span>, <span class='ident'>crypto_hash_sha256_BYTES</span>, <span class='number'>64</span>);
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {

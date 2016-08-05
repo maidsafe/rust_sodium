@@ -74,7 +74,6 @@
 <span id="30">30</span>
 <span id="31">31</span>
 <span id="32">32</span>
-<span id="33">33</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_stream_salsa20.h</span>
 
@@ -82,18 +81,18 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_stream_salsa20_NONCEBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>8</span>;
 
 
-<span class='kw'>extern</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_salsa20</span>(
-        <span class='ident'>c</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>clen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>n</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_salsa20_xor</span>(
-        <span class='ident'>c</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>n</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_salsa20</span>(<span class='ident'>c</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                 <span class='ident'>clen</span>: <span class='ident'>c_ulonglong</span>,
+                                 <span class='ident'>n</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                 <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                 <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_salsa20_xor</span>(<span class='ident'>c</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                     <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                     <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
+                                     <span class='ident'>n</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                     <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                     <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_salsa20_keybytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_salsa20_noncebytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
 }
@@ -101,8 +100,7 @@
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_stream_salsa20_keybytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_stream_salsa20_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
-            <span class='ident'>crypto_stream_salsa20_KEYBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_stream_salsa20_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span> <span class='ident'>crypto_stream_salsa20_KEYBYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_stream_salsa20_noncebytes</span>() {

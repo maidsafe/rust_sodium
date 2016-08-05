@@ -84,11 +84,6 @@
 <span id="40">40</span>
 <span id="41">41</span>
 <span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
-<span id="46">46</span>
-<span id="47">47</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_core_salsa2012.h</span>
 
@@ -97,45 +92,40 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_core_salsa2012_KEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>32</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_core_salsa2012_CONSTBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>16</span>;
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_core_salsa2012_outputbytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_core_salsa2012_inputbytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_core_salsa2012_keybytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_core_salsa2012_constbytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_core_salsa2012</span>(
-        <span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>in_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>c</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_core_salsa2012</span>(<span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                 <span class='ident'>in_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                 <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                 <span class='ident'>c</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                 <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_core_salsa2012_outputbytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_core_salsa2012_outputbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_core_salsa2012_OUTPUTBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_core_salsa2012_outputbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_core_salsa2012_OUTPUTBYTES</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_core_salsa2012_inputbytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_core_salsa2012_inputbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_core_salsa2012_INPUTBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_core_salsa2012_inputbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_core_salsa2012_INPUTBYTES</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_core_salsa2012_keybytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_core_salsa2012_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_core_salsa2012_KEYBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_core_salsa2012_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span> <span class='ident'>crypto_core_salsa2012_KEYBYTES</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_core_salsa2012_constbytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_core_salsa2012_constbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_core_salsa2012_CONSTBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_core_salsa2012_constbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_core_salsa2012_CONSTBYTES</span>)
 }
 </pre>
 </section>

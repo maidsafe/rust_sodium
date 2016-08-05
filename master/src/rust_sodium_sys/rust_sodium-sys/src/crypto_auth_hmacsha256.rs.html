@@ -91,7 +91,6 @@
 <span id="47">47</span>
 <span id="48">48</span>
 <span id="49">49</span>
-<span id="50">50</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_auth_hmacsha256.h</span>
 
@@ -106,37 +105,36 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_auth_hmacsha256_KEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>32</span>;
 
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_bytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_keybytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256</span>(
-        <span class='ident'>a</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_verify</span>(
-        <span class='ident'>a</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_init</span>(
-        <span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_auth_hmacsha256_state</span>,
-        <span class='ident'>key</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>keylen</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_update</span>(
-        <span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_auth_hmacsha256_state</span>,
-        <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_final</span>(
-        <span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_auth_hmacsha256_state</span>,
-        <span class='ident'>a</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256</span>(<span class='ident'>a</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                  <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                  <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
+                                  <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                  <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_verify</span>(<span class='ident'>a</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                         <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                         <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
+                                         <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                         <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_init</span>(<span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_auth_hmacsha256_state</span>,
+                                       <span class='ident'>key</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                       <span class='ident'>keylen</span>: <span class='ident'>size_t</span>)
+                                       <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_update</span>(<span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_auth_hmacsha256_state</span>,
+                                         <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                         <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>)
+                                         <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_auth_hmacsha256_final</span>(<span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_auth_hmacsha256_state</span>,
+                                        <span class='ident'>a</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>)
+                                        <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 }
 
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_auth_hmacsha256_bytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_auth_hmacsha256_bytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
-            <span class='ident'>crypto_auth_hmacsha256_BYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_auth_hmacsha256_bytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span> <span class='ident'>crypto_auth_hmacsha256_BYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_auth_hmacsha256_keybytes</span>() {

@@ -56,8 +56,8 @@
 <span class='doccomment'>//! `AES 128` in `CTR`-mode</span>
 <span class='doccomment'>//! This cipher is conjectured to meet the standard notion of</span>
 <span class='doccomment'>//! unpredictability.</span>
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_stream_aes128ctr</span>, <span class='ident'>crypto_stream_aes128ctr_xor</span>, <span class='ident'>crypto_stream_aes128ctr_KEYBYTES</span>,
-          <span class='ident'>crypto_stream_aes128ctr_NONCEBYTES</span>};
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_stream_aes128ctr</span>, <span class='ident'>crypto_stream_aes128ctr_KEYBYTES</span>,
+          <span class='ident'>crypto_stream_aes128ctr_NONCEBYTES</span>, <span class='ident'>crypto_stream_aes128ctr_xor</span>};
 
 <span class='macro'>stream_module</span><span class='macro'>!</span>(<span class='ident'>crypto_stream_aes128ctr</span>,
                <span class='ident'>crypto_stream_aes128ctr_xor</span>,

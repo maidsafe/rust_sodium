@@ -69,8 +69,6 @@
 <span id="25">25</span>
 <span id="26">26</span>
 <span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_shorthash_siphash24.h</span>
 
@@ -78,12 +76,12 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_shorthash_siphash24_KEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>16</span>;
 
 
-<span class='kw'>extern</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_shorthash_siphash24</span>(
-        <span class='ident'>h</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_shorthash_siphash24</span>(<span class='ident'>h</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                      <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                      <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
+                                      <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                      <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_shorthash_siphash24_bytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_shorthash_siphash24_keybytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
 }
@@ -91,15 +89,13 @@
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_shorthash_siphash24_bytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_shorthash_siphash24_bytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_shorthash_siphash24_BYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_shorthash_siphash24_bytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_shorthash_siphash24_BYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_shorthash_siphash24_keybytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_shorthash_siphash24_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_shorthash_siphash24_KEYBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_shorthash_siphash24_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_shorthash_siphash24_KEYBYTES</span>)
 }
 </pre>
 </section>

@@ -107,31 +107,31 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_aead_chacha20poly1305_ABYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>16</span>;
 
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_keybytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_nsecbytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_npubbytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_abytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_encrypt</span>(
-        <span class='ident'>c</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>clen</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>ad</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>adlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>nsec</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>npub</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_decrypt</span>(
-        <span class='ident'>m</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>mlen</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>nsec</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>c</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>clen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>ad</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>adlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>npub</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_encrypt</span>(<span class='ident'>c</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>clen</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_ulonglong</span>,
+                                                <span class='ident'>m</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>mlen</span>: <span class='ident'>c_ulonglong</span>,
+                                                <span class='ident'>ad</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>adlen</span>: <span class='ident'>c_ulonglong</span>,
+                                                <span class='ident'>nsec</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>npub</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                                <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_aead_chacha20poly1305_decrypt</span>(<span class='ident'>m</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>mlen</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_ulonglong</span>,
+                                                <span class='ident'>nsec</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>c</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>clen</span>: <span class='ident'>c_ulonglong</span>,
+                                                <span class='ident'>ad</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>adlen</span>: <span class='ident'>c_ulonglong</span>,
+                                                <span class='ident'>npub</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                <span class='ident'>k</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>)
+                                                <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 }
 
 

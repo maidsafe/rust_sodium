@@ -72,19 +72,15 @@
 <span id="28">28</span>
 <span id="29">29</span>
 <span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_stream.h</span>
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_stream_KEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>crypto_stream_xsalsa20_KEYBYTES</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_stream_NONCEBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span>
-    <span class='ident'>crypto_stream_xsalsa20_NONCEBYTES</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_stream_NONCEBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>crypto_stream_xsalsa20_NONCEBYTES</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_stream_PRIMITIVE</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> <span class='op'>=</span> (<span class='string'>b&quot;xsalsa20\0&quot;</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
 
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_keybytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_noncebytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_stream_primitive</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
@@ -93,13 +89,11 @@
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_stream_keybytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_stream_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
-            <span class='ident'>crypto_stream_KEYBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_stream_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span> <span class='ident'>crypto_stream_KEYBYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_stream_noncebytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_stream_noncebytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
-            <span class='ident'>crypto_stream_NONCEBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_stream_noncebytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span> <span class='ident'>crypto_stream_NONCEBYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_stream_primitive</span>() {

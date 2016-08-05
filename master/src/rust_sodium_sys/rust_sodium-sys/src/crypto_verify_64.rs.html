@@ -57,25 +57,21 @@
 <span id="13">13</span>
 <span id="14">14</span>
 <span id="15">15</span>
-<span id="16">16</span>
-<span id="17">17</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_verify_64.h</span>
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_verify_64_BYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>64</span>;
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_verify_64_bytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_verify_64</span>(
-        <span class='ident'>x</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>y</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_verify_64</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>y</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 }
 
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_verify_64_bytes</span>() {
-   <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_verify_64_bytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
-                       <span class='ident'>crypto_verify_64_BYTES</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_verify_64_bytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
+               <span class='ident'>crypto_verify_64_BYTES</span>);
 }
 </pre>
 </section>

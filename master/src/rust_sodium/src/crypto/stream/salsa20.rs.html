@@ -77,8 +77,8 @@
 <span class='doccomment'>//! `crypto_stream_salsa20` (Salsa20/20), a particular cipher specified in</span>
 <span class='doccomment'>//! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html), Section 7.  This</span>
 <span class='doccomment'>//! cipher is conjectured to meet the standard notion of unpredictability.</span>
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_stream_salsa20</span>, <span class='ident'>crypto_stream_salsa20_xor</span>, <span class='ident'>crypto_stream_salsa20_KEYBYTES</span>,
-          <span class='ident'>crypto_stream_salsa20_NONCEBYTES</span>};
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_stream_salsa20</span>, <span class='ident'>crypto_stream_salsa20_KEYBYTES</span>, <span class='ident'>crypto_stream_salsa20_NONCEBYTES</span>,
+          <span class='ident'>crypto_stream_salsa20_xor</span>};
 
 <span class='macro'>stream_module</span><span class='macro'>!</span>(<span class='ident'>crypto_stream_salsa20</span>,
                <span class='ident'>crypto_stream_salsa20_xor</span>,
@@ -92,7 +92,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_vector_1</span>() {
         <span class='comment'>// corresponding to tests/stream2.c and tests/stream6.cpp from NaCl</span>
-        <span class='kw'>use</span> <span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>::{<span class='ident'>hash</span>, <span class='ident'>Digest</span>};
+        <span class='kw'>use</span> <span class='ident'>crypto</span>::<span class='ident'>hash</span>::<span class='ident'>sha256</span>::{<span class='ident'>Digest</span>, <span class='ident'>hash</span>};
         <span class='kw'>let</span> <span class='ident'>secondkey</span> <span class='op'>=</span> <span class='ident'>Key</span>([<span class='number'>0xdc</span>, <span class='number'>0x90</span>, <span class='number'>0x8d</span>, <span class='number'>0xda</span>, <span class='number'>0x0b</span>, <span class='number'>0x93</span>, <span class='number'>0x44</span>, <span class='number'>0xa9</span>, <span class='number'>0x53</span>, <span class='number'>0x62</span>, <span class='number'>0x9b</span>,
                              <span class='number'>0x73</span>, <span class='number'>0x38</span>, <span class='number'>0x20</span>, <span class='number'>0x77</span>, <span class='number'>0x88</span>, <span class='number'>0x80</span>, <span class='number'>0xf3</span>, <span class='number'>0xce</span>, <span class='number'>0xb4</span>, <span class='number'>0x21</span>, <span class='number'>0xbb</span>,
                              <span class='number'>0x61</span>, <span class='number'>0xb9</span>, <span class='number'>0x1c</span>, <span class='number'>0xbd</span>, <span class='number'>0x4c</span>, <span class='number'>0x3e</span>, <span class='number'>0x66</span>, <span class='number'>0x25</span>, <span class='number'>0x6c</span>, <span class='number'>0xe4</span>]);

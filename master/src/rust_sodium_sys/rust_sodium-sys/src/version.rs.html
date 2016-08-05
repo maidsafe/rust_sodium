@@ -62,7 +62,7 @@
 </pre><pre class='rust '>
 <span class='comment'>// version.h</span>
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sodium_version_string</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sodium_library_version_major</span>() <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sodium_library_version_minor</span>() <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;

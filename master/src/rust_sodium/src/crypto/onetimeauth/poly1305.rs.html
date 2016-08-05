@@ -90,8 +90,8 @@
 <span class='doccomment'>//! in [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html), Section 9. This</span>
 <span class='doccomment'>//! authenticator is proven to meet the standard notion of unforgeability after a</span>
 <span class='doccomment'>//! single message.</span>
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_onetimeauth_poly1305</span>, <span class='ident'>crypto_onetimeauth_poly1305_verify</span>,
-          <span class='ident'>crypto_onetimeauth_poly1305_KEYBYTES</span>, <span class='ident'>crypto_onetimeauth_poly1305_BYTES</span>};
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_onetimeauth_poly1305</span>, <span class='ident'>crypto_onetimeauth_poly1305_BYTES</span>,
+          <span class='ident'>crypto_onetimeauth_poly1305_KEYBYTES</span>, <span class='ident'>crypto_onetimeauth_poly1305_verify</span>};
 
 <span class='macro'>auth_module</span><span class='macro'>!</span>(<span class='ident'>crypto_onetimeauth_poly1305</span>,
              <span class='ident'>crypto_onetimeauth_poly1305_verify</span>,

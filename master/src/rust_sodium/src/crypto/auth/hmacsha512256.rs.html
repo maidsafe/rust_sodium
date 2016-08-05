@@ -107,10 +107,10 @@
 <span class='doccomment'>//! `HMAC-SHA-512-256`, i.e., the first 256 bits of</span>
 <span class='doccomment'>//! `HMAC-SHA-512`.  `HMAC-SHA-512-256` is conjectured to meet the standard notion</span>
 <span class='doccomment'>//! of unforgeability.</span>
-<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_auth_hmacsha512256</span>, <span class='ident'>crypto_auth_hmacsha512256_verify</span>,
-          <span class='ident'>crypto_auth_hmacsha512256_state</span>, <span class='ident'>crypto_auth_hmacsha512256_init</span>,
-          <span class='ident'>crypto_auth_hmacsha512256_update</span>, <span class='ident'>crypto_auth_hmacsha512256_final</span>,
-          <span class='ident'>crypto_auth_hmacsha512256_KEYBYTES</span>, <span class='ident'>crypto_auth_hmacsha512256_BYTES</span>};
+<span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>crypto_auth_hmacsha512256</span>, <span class='ident'>crypto_auth_hmacsha512256_BYTES</span>,
+          <span class='ident'>crypto_auth_hmacsha512256_KEYBYTES</span>, <span class='ident'>crypto_auth_hmacsha512256_final</span>,
+          <span class='ident'>crypto_auth_hmacsha512256_init</span>, <span class='ident'>crypto_auth_hmacsha512256_state</span>,
+          <span class='ident'>crypto_auth_hmacsha512256_update</span>, <span class='ident'>crypto_auth_hmacsha512256_verify</span>};
 
 <span class='macro'>auth_module</span><span class='macro'>!</span>(<span class='ident'>crypto_auth_hmacsha512256</span>,
              <span class='ident'>crypto_auth_hmacsha512256_verify</span>,

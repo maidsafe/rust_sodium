@@ -317,6 +317,7 @@
 <span id="273">273</span>
 <span id="274">274</span>
 <span id="275">275</span>
+<span id="276">276</span>
 </pre><pre class='rust '>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>auth_module</span> ((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>auth_name</span>:<span class='ident'>ident</span>,
                            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>verify_name</span>:<span class='ident'>ident</span>,
@@ -489,7 +490,8 @@
 <span class='doccomment'>///              a state with a key.</span>
 <span class='doccomment'>/// $update_name - A function `f(s: *mut $state_name, m: *u8, mlen: size_t)` that updates</span>
 <span class='doccomment'>///                a state with a message chunk.</span>
-<span class='doccomment'>/// $final_name - A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator                    tag of length $tagbytes from a $state_name.</span>
+<span class='doccomment'>/// $final_name - A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator</span>
+<span class='doccomment'>///               tag of length $tagbytes from a $state_name.</span>
 <span class='doccomment'>/// $tagbytes   - The number of bytes in an authenticator tag.</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>auth_state</span> ((<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>state_name</span>:<span class='ident'>ident</span>,
                           <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>init_name</span>:<span class='ident'>ident</span>,

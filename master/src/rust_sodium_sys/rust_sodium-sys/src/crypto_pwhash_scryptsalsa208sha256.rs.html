@@ -265,123 +265,87 @@
 <span id="221">221</span>
 <span id="222">222</span>
 <span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_pwhash_scryptsalsa208sha256.h</span>
 
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_SALTBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>32</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_STRBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>102</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_STRPREFIX</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> <span class='op'>=</span> (<span class='string'>b&quot;$7$\0&quot;</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span>
-    <span class='number'>524288</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span>
-    <span class='number'>16777216</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span>
-    <span class='number'>33554432</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span>
-    <span class='number'>1073741824</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_STRPREFIX</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> <span class='op'>=</span>
+    (<span class='string'>b&quot;$7$\0&quot;</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>524288</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>16777216</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>33554432</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>1073741824</span>;
 
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_saltbytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_strbytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_strprefix</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_opslimit_interactive</span>() <span class='op'>-&gt;</span>
-        <span class='ident'>size_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_memlimit_interactive</span>() <span class='op'>-&gt;</span>
-        <span class='ident'>size_t</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_opslimit_interactive</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_memlimit_interactive</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256</span>(
-        <span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>outlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
-        <span class='ident'>passwdlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>salt</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>opslimit</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>memlimit</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str</span>(
-        <span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
-        <span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
-        <span class='ident'>passwdlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>opslimit</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>memlimit</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str_verify</span>(
-        <span class='ident'>str_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
-        <span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
-        <span class='ident'>passwdlen</span>: <span class='ident'>c_ulonglong</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_ll</span>(
-        <span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>passwdlen</span>: <span class='ident'>size_t</span>,
-        <span class='ident'>salt</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>saltlen</span>: <span class='ident'>size_t</span>,
-        <span class='ident'>N</span>: <span class='ident'>u64</span>,
-        <span class='ident'>r</span>: <span class='ident'>u32</span>,
-        <span class='ident'>p</span>: <span class='ident'>u32</span>,
-        <span class='ident'>buf</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>buflen</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256</span>(<span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                              <span class='ident'>outlen</span>: <span class='ident'>c_ulonglong</span>,
+                                              <span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                                              <span class='ident'>passwdlen</span>: <span class='ident'>c_ulonglong</span>,
+                                              <span class='ident'>salt</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                              <span class='ident'>opslimit</span>: <span class='ident'>c_ulonglong</span>,
+                                              <span class='ident'>memlimit</span>: <span class='ident'>size_t</span>)
+                                              <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str</span>(<span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
+                                                  <span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                                                  <span class='ident'>passwdlen</span>: <span class='ident'>c_ulonglong</span>,
+                                                  <span class='ident'>opslimit</span>: <span class='ident'>c_ulonglong</span>,
+                                                  <span class='ident'>memlimit</span>: <span class='ident'>size_t</span>)
+                                                  <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str_verify</span>(<span class='ident'>str_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                                                         <span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                                                         <span class='ident'>passwdlen</span>: <span class='ident'>c_ulonglong</span>)
+                                                         <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_ll</span>(<span class='ident'>passwd</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                 <span class='ident'>passwdlen</span>: <span class='ident'>size_t</span>,
+                                                 <span class='ident'>salt</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                                 <span class='ident'>saltlen</span>: <span class='ident'>size_t</span>,
+                                                 <span class='ident'>N</span>: <span class='ident'>u64</span>,
+                                                 <span class='ident'>r</span>: <span class='ident'>u32</span>,
+                                                 <span class='ident'>p</span>: <span class='ident'>u32</span>,
+                                                 <span class='ident'>buf</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                                 <span class='ident'>buflen</span>: <span class='ident'>size_t</span>)
+                                                 <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 }
 
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_saltbytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_saltbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_SALTBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_pwhash_scryptsalsa208sha256_saltbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_pwhash_scryptsalsa208sha256_SALTBYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_strbytes</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_strbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_STRBYTES</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_pwhash_scryptsalsa208sha256_strbytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_pwhash_scryptsalsa208sha256_STRBYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_opslimit_interactive</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_opslimit_interactive</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_pwhash_scryptsalsa208sha256_opslimit_interactive</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_memlimit_interactive</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_memlimit_interactive</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_pwhash_scryptsalsa208sha256_memlimit_interactive</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_pwhash_scryptsalsa208sha256_opslimit_sensitive</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive</span>() {
-    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive</span>() <span class='kw'>as</span> <span class='ident'>usize</span>
-    } <span class='op'>==</span> <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE</span>)
+    <span class='macro'>assert</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_pwhash_scryptsalsa208sha256_memlimit_sensitive</span>() <span class='kw'>as</span> <span class='ident'>usize</span> } <span class='op'>==</span>
+            <span class='ident'>crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_strprefix</span>() {
@@ -394,8 +358,7 @@
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_pwhash_scryptsalsa208sha256_str</span>() {
     <span class='kw'>let</span> <span class='ident'>password</span> <span class='op'>=</span> <span class='string'>&quot;Correct Horse Battery Staple&quot;</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hashed_password</span> <span class='op'>=</span>
-        [<span class='number'>0</span>; <span class='ident'>crypto_pwhash_scryptsalsa208sha256_STRBYTES</span>];
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hashed_password</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='ident'>crypto_pwhash_scryptsalsa208sha256_STRBYTES</span>];
     <span class='kw'>let</span> <span class='ident'>ret_hash</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
         <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str</span>(
             <span class='ident'>hashed_password</span>.<span class='ident'>as_mut_ptr</span>(),
@@ -408,10 +371,9 @@
     };
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ret_hash</span> <span class='op'>==</span> <span class='number'>0</span>);
     <span class='kw'>let</span> <span class='ident'>ret_verify</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str_verify</span>(
-            <span class='ident'>hashed_password</span>.<span class='ident'>as_ptr</span>(),
-            <span class='ident'>password</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
-            <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_ulonglong</span>)
+        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str_verify</span>(<span class='ident'>hashed_password</span>.<span class='ident'>as_ptr</span>(),
+                                                      <span class='ident'>password</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                                                      <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_ulonglong</span>)
     };
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ret_verify</span> <span class='op'>==</span> <span class='number'>0</span>);
 }
@@ -424,14 +386,11 @@
     <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='number'>1</span>;
     <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='number'>1</span>;
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0u8</span>; <span class='number'>64</span>];
-    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0x77</span>, <span class='number'>0xd6</span>, <span class='number'>0x57</span>, <span class='number'>0x62</span>, <span class='number'>0x38</span>, <span class='number'>0x65</span>, <span class='number'>0x7b</span>, <span class='number'>0x20</span>,
-                    <span class='number'>0x3b</span>, <span class='number'>0x19</span>, <span class='number'>0xca</span>, <span class='number'>0x42</span>, <span class='number'>0xc1</span>, <span class='number'>0x8a</span>, <span class='number'>0x04</span>, <span class='number'>0x97</span>,
-                    <span class='number'>0xf1</span>, <span class='number'>0x6b</span>, <span class='number'>0x48</span>, <span class='number'>0x44</span>, <span class='number'>0xe3</span>, <span class='number'>0x07</span>, <span class='number'>0x4a</span>, <span class='number'>0xe8</span>,
-                    <span class='number'>0xdf</span>, <span class='number'>0xdf</span>, <span class='number'>0xfa</span>, <span class='number'>0x3f</span>, <span class='number'>0xed</span>, <span class='number'>0xe2</span>, <span class='number'>0x14</span>, <span class='number'>0x42</span>,
-                    <span class='number'>0xfc</span>, <span class='number'>0xd0</span>, <span class='number'>0x06</span>, <span class='number'>0x9d</span>, <span class='number'>0xed</span>, <span class='number'>0x09</span>, <span class='number'>0x48</span>, <span class='number'>0xf8</span>,
-                    <span class='number'>0x32</span>, <span class='number'>0x6a</span>, <span class='number'>0x75</span>, <span class='number'>0x3a</span>, <span class='number'>0x0f</span>, <span class='number'>0xc8</span>, <span class='number'>0x1f</span>, <span class='number'>0x17</span>,
-                    <span class='number'>0xe8</span>, <span class='number'>0xd3</span>, <span class='number'>0xe0</span>, <span class='number'>0xfb</span>, <span class='number'>0x2e</span>, <span class='number'>0x0d</span>, <span class='number'>0x36</span>, <span class='number'>0x28</span>,
-                    <span class='number'>0xcf</span>, <span class='number'>0x35</span>, <span class='number'>0xe2</span>, <span class='number'>0x0c</span>, <span class='number'>0x38</span>, <span class='number'>0xd1</span>, <span class='number'>0x89</span>, <span class='number'>0x06</span>];
+    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0x77</span>, <span class='number'>0xd6</span>, <span class='number'>0x57</span>, <span class='number'>0x62</span>, <span class='number'>0x38</span>, <span class='number'>0x65</span>, <span class='number'>0x7b</span>, <span class='number'>0x20</span>, <span class='number'>0x3b</span>, <span class='number'>0x19</span>, <span class='number'>0xca</span>, <span class='number'>0x42</span>, <span class='number'>0xc1</span>,
+                    <span class='number'>0x8a</span>, <span class='number'>0x04</span>, <span class='number'>0x97</span>, <span class='number'>0xf1</span>, <span class='number'>0x6b</span>, <span class='number'>0x48</span>, <span class='number'>0x44</span>, <span class='number'>0xe3</span>, <span class='number'>0x07</span>, <span class='number'>0x4a</span>, <span class='number'>0xe8</span>, <span class='number'>0xdf</span>, <span class='number'>0xdf</span>,
+                    <span class='number'>0xfa</span>, <span class='number'>0x3f</span>, <span class='number'>0xed</span>, <span class='number'>0xe2</span>, <span class='number'>0x14</span>, <span class='number'>0x42</span>, <span class='number'>0xfc</span>, <span class='number'>0xd0</span>, <span class='number'>0x06</span>, <span class='number'>0x9d</span>, <span class='number'>0xed</span>, <span class='number'>0x09</span>, <span class='number'>0x48</span>,
+                    <span class='number'>0xf8</span>, <span class='number'>0x32</span>, <span class='number'>0x6a</span>, <span class='number'>0x75</span>, <span class='number'>0x3a</span>, <span class='number'>0x0f</span>, <span class='number'>0xc8</span>, <span class='number'>0x1f</span>, <span class='number'>0x17</span>, <span class='number'>0xe8</span>, <span class='number'>0xd3</span>, <span class='number'>0xe0</span>, <span class='number'>0xfb</span>,
+                    <span class='number'>0x2e</span>, <span class='number'>0x0d</span>, <span class='number'>0x36</span>, <span class='number'>0x28</span>, <span class='number'>0xcf</span>, <span class='number'>0x35</span>, <span class='number'>0xe2</span>, <span class='number'>0x0c</span>, <span class='number'>0x38</span>, <span class='number'>0xd1</span>, <span class='number'>0x89</span>, <span class='number'>0x06</span>];
     <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
         <span class='ident'>crypto_pwhash_scryptsalsa208sha256_ll</span>(<span class='ident'>password</span>.<span class='ident'>as_ptr</span>(),
                                               <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>,
@@ -455,14 +414,11 @@
     <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='number'>8</span>;
     <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='number'>16</span>;
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0u8</span>; <span class='number'>64</span>];
-    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0xfd</span>, <span class='number'>0xba</span>, <span class='number'>0xbe</span>, <span class='number'>0x1c</span>, <span class='number'>0x9d</span>, <span class='number'>0x34</span>, <span class='number'>0x72</span>, <span class='number'>0x00</span>,
-                    <span class='number'>0x78</span>, <span class='number'>0x56</span>, <span class='number'>0xe7</span>, <span class='number'>0x19</span>, <span class='number'>0x0d</span>, <span class='number'>0x01</span>, <span class='number'>0xe9</span>, <span class='number'>0xfe</span>,
-                    <span class='number'>0x7c</span>, <span class='number'>0x6a</span>, <span class='number'>0xd7</span>, <span class='number'>0xcb</span>, <span class='number'>0xc8</span>, <span class='number'>0x23</span>, <span class='number'>0x78</span>, <span class='number'>0x30</span>,
-                    <span class='number'>0xe7</span>, <span class='number'>0x73</span>, <span class='number'>0x76</span>, <span class='number'>0x63</span>, <span class='number'>0x4b</span>, <span class='number'>0x37</span>, <span class='number'>0x31</span>, <span class='number'>0x62</span>,
-                    <span class='number'>0x2e</span>, <span class='number'>0xaf</span>, <span class='number'>0x30</span>, <span class='number'>0xd9</span>, <span class='number'>0x2e</span>, <span class='number'>0x22</span>, <span class='number'>0xa3</span>, <span class='number'>0x88</span>,
-                    <span class='number'>0x6f</span>, <span class='number'>0xf1</span>, <span class='number'>0x09</span>, <span class='number'>0x27</span>, <span class='number'>0x9d</span>, <span class='number'>0x98</span>, <span class='number'>0x30</span>, <span class='number'>0xda</span>,
-                    <span class='number'>0xc7</span>, <span class='number'>0x27</span>, <span class='number'>0xaf</span>, <span class='number'>0xb9</span>, <span class='number'>0x4a</span>, <span class='number'>0x83</span>, <span class='number'>0xee</span>, <span class='number'>0x6d</span>,
-                    <span class='number'>0x83</span>, <span class='number'>0x60</span>, <span class='number'>0xcb</span>, <span class='number'>0xdf</span>, <span class='number'>0xa2</span>, <span class='number'>0xcc</span>, <span class='number'>0x06</span>, <span class='number'>0x40</span>];
+    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0xfd</span>, <span class='number'>0xba</span>, <span class='number'>0xbe</span>, <span class='number'>0x1c</span>, <span class='number'>0x9d</span>, <span class='number'>0x34</span>, <span class='number'>0x72</span>, <span class='number'>0x00</span>, <span class='number'>0x78</span>, <span class='number'>0x56</span>, <span class='number'>0xe7</span>, <span class='number'>0x19</span>, <span class='number'>0x0d</span>,
+                    <span class='number'>0x01</span>, <span class='number'>0xe9</span>, <span class='number'>0xfe</span>, <span class='number'>0x7c</span>, <span class='number'>0x6a</span>, <span class='number'>0xd7</span>, <span class='number'>0xcb</span>, <span class='number'>0xc8</span>, <span class='number'>0x23</span>, <span class='number'>0x78</span>, <span class='number'>0x30</span>, <span class='number'>0xe7</span>, <span class='number'>0x73</span>,
+                    <span class='number'>0x76</span>, <span class='number'>0x63</span>, <span class='number'>0x4b</span>, <span class='number'>0x37</span>, <span class='number'>0x31</span>, <span class='number'>0x62</span>, <span class='number'>0x2e</span>, <span class='number'>0xaf</span>, <span class='number'>0x30</span>, <span class='number'>0xd9</span>, <span class='number'>0x2e</span>, <span class='number'>0x22</span>, <span class='number'>0xa3</span>,
+                    <span class='number'>0x88</span>, <span class='number'>0x6f</span>, <span class='number'>0xf1</span>, <span class='number'>0x09</span>, <span class='number'>0x27</span>, <span class='number'>0x9d</span>, <span class='number'>0x98</span>, <span class='number'>0x30</span>, <span class='number'>0xda</span>, <span class='number'>0xc7</span>, <span class='number'>0x27</span>, <span class='number'>0xaf</span>, <span class='number'>0xb9</span>,
+                    <span class='number'>0x4a</span>, <span class='number'>0x83</span>, <span class='number'>0xee</span>, <span class='number'>0x6d</span>, <span class='number'>0x83</span>, <span class='number'>0x60</span>, <span class='number'>0xcb</span>, <span class='number'>0xdf</span>, <span class='number'>0xa2</span>, <span class='number'>0xcc</span>, <span class='number'>0x06</span>, <span class='number'>0x40</span>];
     <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
         <span class='ident'>crypto_pwhash_scryptsalsa208sha256_ll</span>(<span class='ident'>password</span>.<span class='ident'>as_ptr</span>(),
                                               <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>,
@@ -486,14 +442,11 @@
     <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='number'>8</span>;
     <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='number'>1</span>;
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0u8</span>; <span class='number'>64</span>];
-    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0x70</span>, <span class='number'>0x23</span>, <span class='number'>0xbd</span>, <span class='number'>0xcb</span>, <span class='number'>0x3a</span>, <span class='number'>0xfd</span>, <span class='number'>0x73</span>, <span class='number'>0x48</span>,
-                    <span class='number'>0x46</span>, <span class='number'>0x1c</span>, <span class='number'>0x06</span>, <span class='number'>0xcd</span>, <span class='number'>0x81</span>, <span class='number'>0xfd</span>, <span class='number'>0x38</span>, <span class='number'>0xeb</span>,
-                    <span class='number'>0xfd</span>, <span class='number'>0xa8</span>, <span class='number'>0xfb</span>, <span class='number'>0xba</span>, <span class='number'>0x90</span>, <span class='number'>0x4f</span>, <span class='number'>0x8e</span>, <span class='number'>0x3e</span>,
-                    <span class='number'>0xa9</span>, <span class='number'>0xb5</span>, <span class='number'>0x43</span>, <span class='number'>0xf6</span>, <span class='number'>0x54</span>, <span class='number'>0x5d</span>, <span class='number'>0xa1</span>, <span class='number'>0xf2</span>,
-                    <span class='number'>0xd5</span>, <span class='number'>0x43</span>, <span class='number'>0x29</span>, <span class='number'>0x55</span>, <span class='number'>0x61</span>, <span class='number'>0x3f</span>, <span class='number'>0x0f</span>, <span class='number'>0xcf</span>,
-                    <span class='number'>0x62</span>, <span class='number'>0xd4</span>, <span class='number'>0x97</span>, <span class='number'>0x05</span>, <span class='number'>0x24</span>, <span class='number'>0x2a</span>, <span class='number'>0x9a</span>, <span class='number'>0xf9</span>,
-                    <span class='number'>0xe6</span>, <span class='number'>0x1e</span>, <span class='number'>0x85</span>, <span class='number'>0xdc</span>, <span class='number'>0x0d</span>, <span class='number'>0x65</span>, <span class='number'>0x1e</span>, <span class='number'>0x40</span>,
-                    <span class='number'>0xdf</span>, <span class='number'>0xcf</span>, <span class='number'>0x01</span>, <span class='number'>0x7b</span>, <span class='number'>0x45</span>, <span class='number'>0x57</span>, <span class='number'>0x58</span>, <span class='number'>0x87</span>];
+    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0x70</span>, <span class='number'>0x23</span>, <span class='number'>0xbd</span>, <span class='number'>0xcb</span>, <span class='number'>0x3a</span>, <span class='number'>0xfd</span>, <span class='number'>0x73</span>, <span class='number'>0x48</span>, <span class='number'>0x46</span>, <span class='number'>0x1c</span>, <span class='number'>0x06</span>, <span class='number'>0xcd</span>, <span class='number'>0x81</span>,
+                    <span class='number'>0xfd</span>, <span class='number'>0x38</span>, <span class='number'>0xeb</span>, <span class='number'>0xfd</span>, <span class='number'>0xa8</span>, <span class='number'>0xfb</span>, <span class='number'>0xba</span>, <span class='number'>0x90</span>, <span class='number'>0x4f</span>, <span class='number'>0x8e</span>, <span class='number'>0x3e</span>, <span class='number'>0xa9</span>, <span class='number'>0xb5</span>,
+                    <span class='number'>0x43</span>, <span class='number'>0xf6</span>, <span class='number'>0x54</span>, <span class='number'>0x5d</span>, <span class='number'>0xa1</span>, <span class='number'>0xf2</span>, <span class='number'>0xd5</span>, <span class='number'>0x43</span>, <span class='number'>0x29</span>, <span class='number'>0x55</span>, <span class='number'>0x61</span>, <span class='number'>0x3f</span>, <span class='number'>0x0f</span>,
+                    <span class='number'>0xcf</span>, <span class='number'>0x62</span>, <span class='number'>0xd4</span>, <span class='number'>0x97</span>, <span class='number'>0x05</span>, <span class='number'>0x24</span>, <span class='number'>0x2a</span>, <span class='number'>0x9a</span>, <span class='number'>0xf9</span>, <span class='number'>0xe6</span>, <span class='number'>0x1e</span>, <span class='number'>0x85</span>, <span class='number'>0xdc</span>,
+                    <span class='number'>0x0d</span>, <span class='number'>0x65</span>, <span class='number'>0x1e</span>, <span class='number'>0x40</span>, <span class='number'>0xdf</span>, <span class='number'>0xcf</span>, <span class='number'>0x01</span>, <span class='number'>0x7b</span>, <span class='number'>0x45</span>, <span class='number'>0x57</span>, <span class='number'>0x58</span>, <span class='number'>0x87</span>];
     <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
         <span class='ident'>crypto_pwhash_scryptsalsa208sha256_ll</span>(<span class='ident'>password</span>.<span class='ident'>as_ptr</span>(),
                                               <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>,
@@ -517,14 +470,11 @@
     <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='number'>8</span>;
     <span class='kw'>let</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='number'>1</span>;
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> [<span class='number'>0u8</span>; <span class='number'>64</span>];
-    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0x21</span>, <span class='number'>0x01</span>, <span class='number'>0xcb</span>, <span class='number'>0x9b</span>, <span class='number'>0x6a</span>, <span class='number'>0x51</span>, <span class='number'>0x1a</span>, <span class='number'>0xae</span>,
-                    <span class='number'>0xad</span>, <span class='number'>0xdb</span>, <span class='number'>0xbe</span>, <span class='number'>0x09</span>, <span class='number'>0xcf</span>, <span class='number'>0x70</span>, <span class='number'>0xf8</span>, <span class='number'>0x81</span>,
-                    <span class='number'>0xec</span>, <span class='number'>0x56</span>, <span class='number'>0x8d</span>, <span class='number'>0x57</span>, <span class='number'>0x4a</span>, <span class='number'>0x2f</span>, <span class='number'>0xfd</span>, <span class='number'>0x4d</span>,
-                    <span class='number'>0xab</span>, <span class='number'>0xe5</span>, <span class='number'>0xee</span>, <span class='number'>0x98</span>, <span class='number'>0x20</span>, <span class='number'>0xad</span>, <span class='number'>0xaa</span>, <span class='number'>0x47</span>,
-                    <span class='number'>0x8e</span>, <span class='number'>0x56</span>, <span class='number'>0xfd</span>, <span class='number'>0x8f</span>, <span class='number'>0x4b</span>, <span class='number'>0xa5</span>, <span class='number'>0xd0</span>, <span class='number'>0x9f</span>,
-                    <span class='number'>0xfa</span>, <span class='number'>0x1c</span>, <span class='number'>0x6d</span>, <span class='number'>0x92</span>, <span class='number'>0x7c</span>, <span class='number'>0x40</span>, <span class='number'>0xf4</span>, <span class='number'>0xc3</span>,
-                    <span class='number'>0x37</span>, <span class='number'>0x30</span>, <span class='number'>0x40</span>, <span class='number'>0x49</span>, <span class='number'>0xe8</span>, <span class='number'>0xa9</span>, <span class='number'>0x52</span>, <span class='number'>0xfb</span>,
-                    <span class='number'>0xcb</span>, <span class='number'>0xf4</span>, <span class='number'>0x5c</span>, <span class='number'>0x6f</span>, <span class='number'>0xa7</span>, <span class='number'>0x7a</span>, <span class='number'>0x41</span>, <span class='number'>0xa4</span>];
+    <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> [<span class='number'>0x21</span>, <span class='number'>0x01</span>, <span class='number'>0xcb</span>, <span class='number'>0x9b</span>, <span class='number'>0x6a</span>, <span class='number'>0x51</span>, <span class='number'>0x1a</span>, <span class='number'>0xae</span>, <span class='number'>0xad</span>, <span class='number'>0xdb</span>, <span class='number'>0xbe</span>, <span class='number'>0x09</span>, <span class='number'>0xcf</span>,
+                    <span class='number'>0x70</span>, <span class='number'>0xf8</span>, <span class='number'>0x81</span>, <span class='number'>0xec</span>, <span class='number'>0x56</span>, <span class='number'>0x8d</span>, <span class='number'>0x57</span>, <span class='number'>0x4a</span>, <span class='number'>0x2f</span>, <span class='number'>0xfd</span>, <span class='number'>0x4d</span>, <span class='number'>0xab</span>, <span class='number'>0xe5</span>,
+                    <span class='number'>0xee</span>, <span class='number'>0x98</span>, <span class='number'>0x20</span>, <span class='number'>0xad</span>, <span class='number'>0xaa</span>, <span class='number'>0x47</span>, <span class='number'>0x8e</span>, <span class='number'>0x56</span>, <span class='number'>0xfd</span>, <span class='number'>0x8f</span>, <span class='number'>0x4b</span>, <span class='number'>0xa5</span>, <span class='number'>0xd0</span>,
+                    <span class='number'>0x9f</span>, <span class='number'>0xfa</span>, <span class='number'>0x1c</span>, <span class='number'>0x6d</span>, <span class='number'>0x92</span>, <span class='number'>0x7c</span>, <span class='number'>0x40</span>, <span class='number'>0xf4</span>, <span class='number'>0xc3</span>, <span class='number'>0x37</span>, <span class='number'>0x30</span>, <span class='number'>0x40</span>, <span class='number'>0x49</span>,
+                    <span class='number'>0xe8</span>, <span class='number'>0xa9</span>, <span class='number'>0x52</span>, <span class='number'>0xfb</span>, <span class='number'>0xcb</span>, <span class='number'>0xf4</span>, <span class='number'>0x5c</span>, <span class='number'>0x6f</span>, <span class='number'>0xa7</span>, <span class='number'>0x7a</span>, <span class='number'>0x41</span>, <span class='number'>0xa4</span>];
     <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
         <span class='ident'>crypto_pwhash_scryptsalsa208sha256_ll</span>(<span class='ident'>password</span>.<span class='ident'>as_ptr</span>(),
                                               <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>size_t</span>,

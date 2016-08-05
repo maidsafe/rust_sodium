@@ -182,14 +182,6 @@
 <span id="138">138</span>
 <span id="139">139</span>
 <span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
-<span id="147">147</span>
-<span id="148">148</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_generichash.h</span>
 
@@ -199,12 +191,13 @@
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_generichash_KEYBYTES_MIN</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>crypto_generichash_blake2b_KEYBYTES_MIN</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_generichash_KEYBYTES_MAX</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>crypto_generichash_blake2b_KEYBYTES_MAX</span>;
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_generichash_KEYBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>crypto_generichash_blake2b_KEYBYTES</span>;
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_generichash_PRIMITIVE</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> <span class='op'>=</span> (<span class='string'>b&quot;blake2b\0&quot;</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
+<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>crypto_generichash_PRIMITIVE</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span> <span class='op'>=</span>
+    (<span class='string'>b&quot;blake2b\0&quot;</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
 
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>non_camel_case_types</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>crypto_generichash_state</span> { }
 
-<span class='kw'>extern</span> {
+<span class='kw'>extern</span> <span class='string'>&quot;C&quot;</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_bytes_min</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_bytes_max</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_bytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
@@ -213,33 +206,29 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_keybytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_primitive</span>() <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash</span>(
-        <span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>outlen</span>: <span class='ident'>size_t</span>,
-        <span class='ident'>in_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>inlen</span>: <span class='ident'>c_ulonglong</span>,
-        <span class='ident'>key</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>keylen</span>: <span class='ident'>size_t</span>)
-        <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash</span>(<span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                              <span class='ident'>outlen</span>: <span class='ident'>size_t</span>,
+                              <span class='ident'>in_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                              <span class='ident'>inlen</span>: <span class='ident'>c_ulonglong</span>,
+                              <span class='ident'>key</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                              <span class='ident'>keylen</span>: <span class='ident'>size_t</span>)
+                              <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_init</span>(
-        <span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_generichash_state</span>,
-        <span class='ident'>key</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>keylen</span>: <span class='ident'>size_t</span>,
-        <span class='ident'>outlen</span>: <span class='ident'>size_t</span>)
-        <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_init</span>(<span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_generichash_state</span>,
+                                   <span class='ident'>key</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                   <span class='ident'>keylen</span>: <span class='ident'>size_t</span>,
+                                   <span class='ident'>outlen</span>: <span class='ident'>size_t</span>)
+                                   <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_update</span>(
-        <span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_generichash_state</span>,
-        <span class='ident'>in_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
-        <span class='ident'>inlen</span>: <span class='ident'>c_ulonglong</span>)
-        <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_update</span>(<span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_generichash_state</span>,
+                                     <span class='ident'>in_</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                     <span class='ident'>inlen</span>: <span class='ident'>c_ulonglong</span>)
+                                     <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_final</span>(
-        <span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_generichash_state</span>,
-        <span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
-        <span class='ident'>outlen</span>: <span class='ident'>size_t</span>)
-        <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_final</span>(<span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_generichash_state</span>,
+                                    <span class='ident'>out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                    <span class='ident'>outlen</span>: <span class='ident'>size_t</span>)
+                                    <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>crypto_generichash_statebytes</span>() <span class='op'>-&gt;</span> <span class='ident'>size_t</span>;
 }
@@ -247,37 +236,37 @@
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_generichash_bytes_min</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_bytes_min</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
-                        <span class='ident'>crypto_generichash_BYTES_MIN</span>)
+               <span class='ident'>crypto_generichash_BYTES_MIN</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_generichash_bytes_max</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_bytes_max</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
-                        <span class='ident'>crypto_generichash_BYTES_MAX</span>)
+               <span class='ident'>crypto_generichash_BYTES_MAX</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_generichash_bytes</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_bytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
-                        <span class='ident'>crypto_generichash_BYTES</span>)
+               <span class='ident'>crypto_generichash_BYTES</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_generichash_keybytes_min</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_keybytes_min</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
-                        <span class='ident'>crypto_generichash_KEYBYTES_MIN</span>)
+               <span class='ident'>crypto_generichash_KEYBYTES_MIN</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_generichash_keybytes_max</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_keybytes_max</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
-                        <span class='ident'>crypto_generichash_KEYBYTES_MAX</span>)
+               <span class='ident'>crypto_generichash_KEYBYTES_MAX</span>)
 }
 
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_generichash_keybytes</span>() {
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_keybytes</span>() <span class='kw'>as</span> <span class='ident'>usize</span> },
-                        <span class='ident'>crypto_generichash_KEYBYTES</span>)
+               <span class='ident'>crypto_generichash_KEYBYTES</span>)
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_crypto_generichash_primitive</span>() {
@@ -300,10 +289,14 @@
     <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> [<span class='number'>0u8</span>; <span class='ident'>crypto_generichash_KEYBYTES</span>];
 
     <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_generichash</span>(<span class='ident'>out</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>out</span>.<span class='ident'>len</span>(),
-                           <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>m</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>,
-                           <span class='ident'>key</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>key</span>.<span class='ident'>len</span>())
-    }, <span class='number'>0</span>);
+                   <span class='ident'>crypto_generichash</span>(<span class='ident'>out</span>.<span class='ident'>as_mut_ptr</span>(),
+                                      <span class='ident'>out</span>.<span class='ident'>len</span>(),
+                                      <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(),
+                                      <span class='ident'>m</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>,
+                                      <span class='ident'>key</span>.<span class='ident'>as_ptr</span>(),
+                                      <span class='ident'>key</span>.<span class='ident'>len</span>())
+               },
+               <span class='number'>0</span>);
 }
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
@@ -318,26 +311,17 @@
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>st</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0u8</span>; (<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_statebytes</span>() })];
     <span class='kw'>let</span> <span class='ident'>pst</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>mem</span>::<span class='ident'>transmute</span>::<span class='op'>&lt;</span><span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>crypto_generichash_state</span><span class='op'>&gt;</span>(<span class='ident'>st</span>.<span class='ident'>as_mut_ptr</span>()) };
 
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_generichash_init</span>(<span class='ident'>pst</span>,
-                                <span class='ident'>key</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>key</span>.<span class='ident'>len</span>(),
-                                <span class='ident'>out</span>.<span class='ident'>len</span>())
-    }, <span class='number'>0</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_init</span>(<span class='ident'>pst</span>, <span class='ident'>key</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>key</span>.<span class='ident'>len</span>(), <span class='ident'>out</span>.<span class='ident'>len</span>()) },
+               <span class='number'>0</span>);
 
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_generichash_update</span>(<span class='ident'>pst</span>,
-                                <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>m</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>)
-    }, <span class='number'>0</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_update</span>(<span class='ident'>pst</span>, <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>m</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>) },
+               <span class='number'>0</span>);
 
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_generichash_update</span>(<span class='ident'>pst</span>,
-                                <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>m</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>)
-    }, <span class='number'>0</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_update</span>(<span class='ident'>pst</span>, <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>m</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u64</span>) },
+               <span class='number'>0</span>);
 
-    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_generichash_final</span>(<span class='ident'>pst</span>,
-                                <span class='ident'>out</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>out</span>.<span class='ident'>len</span>())
-    }, <span class='number'>0</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw'>unsafe</span> { <span class='ident'>crypto_generichash_final</span>(<span class='ident'>pst</span>, <span class='ident'>out</span>.<span class='ident'>as_mut_ptr</span>(), <span class='ident'>out</span>.<span class='ident'>len</span>()) },
+               <span class='number'>0</span>);
 }
 </pre>
 </section>
