@@ -199,7 +199,7 @@
 <span class='doccomment'>/// Number of bytes in a `Scalar`.</span>
 <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>SCALARBYTES</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>crypto_scalarmult_curve25519_SCALARBYTES</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-rustc-serialize&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>;
 
 <span class='macro'>new_type</span><span class='macro'>!</span> {

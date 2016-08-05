@@ -454,7 +454,7 @@
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
 <span class='kw'>use</span> <span class='ident'>marshal</span>::<span class='ident'>marshal</span>;
 <span class='kw'>use</span> <span class='ident'>randombytes</span>::<span class='ident'>randombytes_into</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-rustc-serialize&quot;</span>)]</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>;
 
 <span class='doccomment'>/// Number of bytes in a `PublicKey`.</span>
@@ -797,7 +797,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>m_pre</span> <span class='op'>==</span> <span class='ident'>mexp</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;use-rustc-serialize&quot;</span>))]</span>
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;serde&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;rustc-serialize&quot;</span>))]</span>
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_serialisation</span>() {
         <span class='kw'>use</span> <span class='ident'>test_utils</span>::<span class='ident'>round_trip</span>;
