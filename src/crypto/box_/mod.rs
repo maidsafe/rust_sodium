@@ -46,7 +46,7 @@
 //!
 //! # Example (simple interface)
 //! ```
-//! use sodiumoxide::crypto::box_;
+//! use rust_sodium::crypto::box_;
 //!
 //! let (ourpk, oursk) = box_::gen_keypair();
 //! // normally theirpk is sent by the other party
@@ -59,7 +59,7 @@
 //! ```
 //! # Example (precomputation interface)
 //! ```
-//! use sodiumoxide::crypto::box_;
+//! use rust_sodium::crypto::box_;
 //!
 //! let (ourpk, oursk) = box_::gen_keypair();
 //! let (theirpk, theirsk) = box_::gen_keypair();

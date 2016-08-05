@@ -20,7 +20,7 @@
 //!
 //! # Example
 //! ```
-//! use sodiumoxide::crypto::onetimeauth;
+//! use rust_sodium::crypto::onetimeauth;
 //!
 //! let key = onetimeauth::gen_key();
 //! let data_to_authenticate = b"some data";

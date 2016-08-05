@@ -35,7 +35,7 @@ pub fn memcmp(x: &[u8], y: &[u8]) -> bool {
 /// WARNING: this method does not check for arithmetic overflow. When used for incrementing
 /// nonces it is the callers responsibility to ensure that any given nonce value
 /// is only used once.
-/// If the caller does not do that the cryptographic primitives in sodiumoxide
+/// If the caller does not do that the cryptographic primitives in rust_sodium
 /// will not uphold any security guarantees (i.e. they will break)
 pub fn increment_le(x: &mut [u8]) {
     unsafe {

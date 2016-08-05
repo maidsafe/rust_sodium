@@ -22,8 +22,9 @@ cache:
     - $HOME/elfutils
 script:
   - curl -sSL https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/build_and_run_tests.sh | bash
-  - cd $TRAVIS_BUILD_DIR && cargo run --manifest_path systest/Cargo.toml
-  - cd $TRAVIS_BUILD_DIR && cargo test --release --verbose --manifest_path rust_sodium-sys/Cargo.toml
+  - cd $TRAVIS_BUILD_DIR
+  - cargo run --manifest-path systest/Cargo.toml
+  - cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium
 before_cache:
   - curl -sSLO https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/install_elfutils.sh
   - . install_elfutils.sh
