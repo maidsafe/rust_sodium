@@ -1,5 +1,5 @@
 [package]
-authors = ["MaidSafe Developers <dev@maidsafe.net>", "dnaq"]
+authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 build = "build.rs"
 description = "Raw bindings to libsodium"
 documentation = "http://docs.maidsafe.net/rust_sodium/latest"

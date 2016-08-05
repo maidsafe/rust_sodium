@@ -1,5 +1,5 @@
 [package]
-authors = ["MaidSafe Developers <dev@maidsafe.net>", "dnaq"]
+authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 description = "Fast cryptographic library for Rust (bindings to libsodium)"
 documentation = "http://docs.maidsafe.net/rust_sodium/latest"
 homepage = "http://maidsafe.net"
@@ -12,7 +12,7 @@ version = "0.1.0"
 [dependencies]
 libc = "~0.2.14"
 rand = "~0.3.14"
-rust_sodium-sys = { path = "rust_sodium-sys", version = "=0.1.0" }
+rust_sodium-sys = { path = "rust_sodium-sys", version = "~0.1.0" }
 rustc-serialize = { version = "~0.3.19", optional = true }
 serde = { version = "~0.8.0", optional = true }
 
