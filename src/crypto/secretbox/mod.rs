@@ -24,7 +24,7 @@
 //!
 //! # Example
 //! ```
-//! use sodiumoxide::crypto::secretbox;
+//! use rust_sodium::crypto::secretbox;
 //! let key = secretbox::gen_key();
 //! let nonce = secretbox::gen_nonce();
 //! let plaintext = b"some data";

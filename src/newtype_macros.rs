@@ -117,7 +117,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
 /// WARNING: it might be tempting to do comparisons on objects
 /// by using `x[a..b] == y[a..b]`. This will open up for timing attacks
 /// when comparing for example authenticator tags. Because of this only
-/// use the comparison functions exposed by the sodiumoxide API.
+/// use the comparison functions exposed by the rust_sodium API.
     impl ::std::ops::Index<::std::ops::Range<usize>> for $newtype {
         type Output = [u8];
         fn index(&self, _index: ::std::ops::Range<usize>) -> &[u8] {
@@ -130,7 +130,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
 /// WARNING: it might be tempting to do comparisons on objects
 /// by using `x[..b] == y[..b]`. This will open up for timing attacks
 /// when comparing for example authenticator tags. Because of this only
-/// use the comparison functions exposed by the sodiumoxide API.
+/// use the comparison functions exposed by the rust_sodium API.
     impl ::std::ops::Index<::std::ops::RangeTo<usize>> for $newtype {
         type Output = [u8];
         fn index(&self, _index: ::std::ops::RangeTo<usize>) -> &[u8] {
@@ -143,7 +143,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
 /// WARNING: it might be tempting to do comparisons on objects
 /// by using `x[a..] == y[a..]`. This will open up for timing attacks
 /// when comparing for example authenticator tags. Because of this only
-/// use the comparison functions exposed by the sodiumoxide API.
+/// use the comparison functions exposed by the rust_sodium API.
     impl ::std::ops::Index<::std::ops::RangeFrom<usize>> for $newtype {
         type Output = [u8];
         fn index(&self, _index: ::std::ops::RangeFrom<usize>) -> &[u8] {
@@ -156,7 +156,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
 /// WARNING: it might be tempting to do comparisons on objects
 /// by using `x[] == y[]`. This will open up for timing attacks
 /// when comparing for example authenticator tags. Because of this only
-/// use the comparison functions exposed by the sodiumoxide API.
+/// use the comparison functions exposed by the rust_sodium API.
     impl ::std::ops::Index<::std::ops::RangeFull> for $newtype {
         type Output = [u8];
         fn index(&self, _index: ::std::ops::RangeFull) -> &[u8] {
@@ -289,7 +289,7 @@ macro_rules! new_type {
             ///
             /// WARNING: this method does not check for arithmetic overflow. It is the callers
             /// responsibility to ensure that any given nonce value is only used once.
-            /// If the caller does not do that the cryptographic primitives in sodiumoxide
+            /// If the caller does not do that the cryptographic primitives in rust_sodium
             /// will not uphold any security guarantees (i.e. they will break)
             pub fn increment_le(&self) -> $name {
                 let mut res = *self;
@@ -302,7 +302,7 @@ macro_rules! new_type {
             ///
             /// WARNING: this method does not check for arithmetic overflow. It is the callers
             /// responsibility to ensure that any given nonce value is only used once.
-            /// If the caller does not do that the cryptographic primitives in sodiumoxide
+            /// If the caller does not do that the cryptographic primitives in rust_sodium
             /// will not uphold any security guarantees.
             pub fn increment_le_inplace(&mut self) {
                 use utils::increment_le;

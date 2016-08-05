@@ -25,7 +25,7 @@
 //!
 //! # Example
 //! ```
-//! use sodiumoxide::crypto::sign;
+//! use rust_sodium::crypto::sign;
 //! let (pk, sk) = sign::gen_keypair();
 //! let data_to_sign = b"some data";
 //! let signed_data = sign::sign(data_to_sign, &sk);
@@ -35,7 +35,7 @@
 //!
 //! # Example (detached signatures)
 //! ```
-//! use sodiumoxide::crypto::sign;
+//! use rust_sodium::crypto::sign;
 //! let (pk, sk) = sign::gen_keypair();
 //! let data_to_sign = b"some data";
 //! let signature = sign::sign_detached(data_to_sign, &sk);

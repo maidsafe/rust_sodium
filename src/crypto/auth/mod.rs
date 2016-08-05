@@ -35,7 +35,7 @@
 //!
 //! # Example (simple interface)
 //! ```
-//! use sodiumoxide::crypto::auth;
+//! use rust_sodium::crypto::auth;
 //!
 //! let key = auth::gen_key();
 //! let data_to_authenticate = b"some data";
@@ -45,8 +45,8 @@
 //!
 //! # Example (streaming interface)
 //! ```
-//! use sodiumoxide::crypto::auth;
-//! use sodiumoxide::randombytes;
+//! use rust_sodium::crypto::auth;
+//! use rust_sodium::randombytes;
 //!
 //! let key = randombytes::randombytes(123);
 //!

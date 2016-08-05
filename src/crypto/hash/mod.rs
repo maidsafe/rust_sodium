@@ -31,7 +31,7 @@
 //!
 //! # Example
 //! ```
-//! use sodiumoxide::crypto::hash;
+//! use rust_sodium::crypto::hash;
 //!
 //! let data_to_hash = b"some data";
 //! let digest = hash::hash(data_to_hash);

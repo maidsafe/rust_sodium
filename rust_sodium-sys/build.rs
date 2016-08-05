@@ -114,6 +114,7 @@ fn main() {
     let _ = fs::remove_file(gz_path);
 
     // Get path to gcc in order to guess location of libpthread.a
+    let mut lib_search_dirs = vec![Path::new(&install_dir).join("lib")];
     let where_output = Command::new("where")
         .arg(gcc::Config::new().get_compiler().path())
         .output()
@@ -126,18 +127,21 @@ fn main() {
                String::from_utf8_lossy(&where_output.stderr));
     }
     let compiler_path_as_string = String::from_utf8_lossy(&where_output.stdout);
-    let compiler_path = PathBuf::from(compiler_path_as_string.trim());
+    let compiler_path = PathBuf::from(unwrap!(compiler_path_as_string.lines().next()).trim());
     let mingw_path = unwrap!(unwrap!(compiler_path.parent()).parent());
-    let lib_path = if cfg!(target_pointer_width = "32") {
-        mingw_path.join("lib")
+    if cfg!(target_pointer_width = "32") {
+        lib_search_dirs.push(mingw_path.join("lib"));
+        lib_search_dirs.push(mingw_path.join("i686-w64-mingw32").join("lib"));
     } else {
-        mingw_path.join("x86_64-w64-mingw32").join("lib")
-    };
+        lib_search_dirs.push(mingw_path.join("x86_64-w64-mingw32").join("lib"));
+    }
 
     println!("cargo:rustc-link-lib=static=sodium");
     println!("cargo:rustc-link-lib=pthread");
-    println!("cargo:rustc-link-search=native={}/lib", install_dir);
-    println!("cargo:rustc-link-search=native={}", lib_path.display());
+    for lib_search_dir in &lib_search_dirs {
+        println!("cargo:rustc-link-search=native={}",
+                 lib_search_dir.display());
+    }
     println!("cargo:include={}/include", install_dir);
 }
 
@@ -175,11 +179,12 @@ fn main() {
         .unwrap_or_else(|error| {
             panic!("Failed to run curl command: {}", error);
         });
-    if !curl_output.status.success() {
-        panic!("\n{}\n{}\n",
-               String::from_utf8_lossy(&curl_output.stdout),
-               String::from_utf8_lossy(&curl_output.stderr));
-    }
+    // TODO - re-enable
+    // if !curl_output.status.success() {
+    //     panic!("\n{}\n{}\n",
+    //            String::from_utf8_lossy(&curl_output.stdout),
+    //            String::from_utf8_lossy(&curl_output.stderr));
+    // }
 
     // Unpack the tarball
     let gz_archive = unwrap!(File::open(&gz_path));
