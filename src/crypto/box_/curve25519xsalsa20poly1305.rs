@@ -7,7 +7,7 @@
 use ffi;
 use marshal::marshal;
 use randombytes::randombytes_into;
-#[cfg(feature = "use-rustc-serialize")]
+#[cfg(feature = "rustc-serialize")]
 use rustc_serialize;
 
 /// Number of bytes in a `PublicKey`.
@@ -350,7 +350,7 @@ mod test {
         assert!(m_pre == mexp);
     }
 
-    #[cfg(any(feature = "serde", feature = "use-rustc-serialize"))]
+    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;

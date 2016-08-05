@@ -47,7 +47,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
         }
     }
 
-    #[cfg(feature = "use-rustc-serialize")]
+    #[cfg(feature = "rustc-serialize")]
     impl rustc_serialize::Encodable for $newtype {
         fn encode<E: rustc_serialize::Encoder>(&self, encoder: &mut E)
                 -> Result<(), E::Error> {
@@ -89,7 +89,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
         }
     }
 
-    #[cfg(feature = "use-rustc-serialize")]
+    #[cfg(feature = "rustc-serialize")]
     impl rustc_serialize::Decodable for $newtype {
         fn decode<D: rustc_serialize::Decoder>(decoder: &mut D)
                 -> Result<$newtype, D::Error> {

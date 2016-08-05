@@ -16,11 +16,11 @@ pub fn round_trip<T>(value: T)
 }
 
 
-#[cfg(all(test, feature = "use-rustc-serialize", not(feature = "serde")))]
+#[cfg(all(test, feature = "rustc-serialize", not(feature = "serde")))]
 use rustc_serialize::{Decodable, Encodable, json};
 
 // Encodes then decodes `value` using JSON
-#[cfg(all(test, feature = "use-rustc-serialize", not(feature = "serde")))]
+#[cfg(all(test, feature = "rustc-serialize", not(feature = "serde")))]
 pub fn round_trip<T>(value: T)
     where T: Decodable + Encodable + Eq
 {
