@@ -11,6 +11,7 @@ version = "0.1.0"
 
 [dependencies]
 libc = "~0.2.14"
+rand = "~0.3.14"
 rust_sodium-sys = { path = "rust_sodium-sys", version = "=0.1.0" }
 rustc-serialize = { version = "~0.3.19", optional = true }
 serde = { version = "~0.8.0", optional = true }
@@ -22,4 +23,5 @@ serde_json = "~0.8.0"
 
 [features]
 benchmarks = []
-default = ["rustc-serialize", "rust_sodium-sys/get-libsodium"]
+default = ["rustc-serialize", "get-libsodium"]
+get-libsodium = ["rust_sodium-sys/get-libsodium"]

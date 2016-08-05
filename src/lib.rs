@@ -53,20 +53,11 @@
 
 extern crate rust_sodium_sys as ffi;
 extern crate libc;
+extern crate rand;
 #[cfg(any(test, feature = "use-rustc-serialize"))]
 extern crate rustc_serialize;
 #[cfg(any(test, feature = "serde"))]
 extern crate serde;
-
-/// `init()` initializes the sodium library and chooses faster versions of
-/// the primitives if possible. `init()` also makes the random number generation
-/// functions (`gen_key`, `gen_keypair`, `gen_nonce`, `randombytes`, `randombytes_into`)
-/// thread-safe
-///
-/// `init()` returns `false` if initialization failed.
-pub fn init() -> bool {
-    unsafe { ffi::sodium_init() != -1 }
-}
 
 mod marshal;
 #[macro_use]
@@ -92,4 +83,21 @@ pub mod crypto {
     pub mod stream;
     pub mod shorthash;
     pub mod verify;
+}
+
+/// Initialises libsodium and chooses faster versions of the primitives if possible.  Also makes the
+/// random number generation functions (`gen_key`, `gen_keypair`, `gen_nonce`, `randombytes`,
+/// `randombytes_into`) thread-safe.
+///
+/// Returns `false` if initialisation failed.
+pub fn init() -> bool {
+    unsafe { ffi::sodium_init() != -1 }
+}
+
+/// Sets [libsodium's `randombytes_implementation`]
+/// (https://download.libsodium.org/doc/advanced/custom_rng.html) to use a
+/// [Rust `Rng` implementation](../rand/trait.Rng.html) and initialises libsodium.
+/// See [the rust_sodium-sys' docs](../rust_sodium_sys/fn.init_with_rng.html) for further details.
+pub fn init_with_rng<T: rand::Rng>(rng: &mut T) -> Result<(), i32> {
+    ffi::init_with_rng(rng)
 }

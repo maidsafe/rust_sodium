@@ -1,7 +1,19 @@
 #![allow(non_upper_case_globals)]
 
+#[macro_use]
+extern crate lazy_static;
 extern crate libc;
-use libc::{c_char, c_int, c_ulonglong, c_void, size_t};
+extern crate rand;
+#[macro_use]
+extern crate unwrap;
+
+use std::cell::RefCell;
+use std::ffi::CString;
+use std::rc::Rc;
+use std::sync::Mutex;
+
+use libc::{c_char, c_int, c_ulonglong, c_void, size_t, uint32_t};
+use rand::{Rng, SeedableRng, XorShiftRng};
 
 include!("src/core.rs");
 
@@ -52,5 +64,6 @@ include!("src/crypto_verify_32.rs");
 include!("src/crypto_verify_64.rs");
 
 include!("src/randombytes.rs");
+include!("src/init_with_rng.rs");
 include!("src/utils.rs");
 include!("src/version.rs");
