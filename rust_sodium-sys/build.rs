@@ -168,16 +168,16 @@ fn main() {
         .arg(&url)
         .arg("-o")
         .arg(&gz_path)
+        .arg("--verbose")
         .output()
         .unwrap_or_else(|error| {
             panic!("Failed to run curl command: {}", error);
         });
-    // TODO - re-enable
-    // if !curl_output.status.success() {
-    //     panic!("\n{}\n{}\n",
-    //            String::from_utf8_lossy(&curl_output.stdout),
-    //            String::from_utf8_lossy(&curl_output.stderr));
-    // }
+    if !curl_output.status.success() {
+        panic!("\n{}\n{}\n",
+               String::from_utf8_lossy(&curl_output.stdout),
+               String::from_utf8_lossy(&curl_output.stderr));
+    }
 
     // Unpack the tarball
     let gz_archive = unwrap!(File::open(&gz_path));
