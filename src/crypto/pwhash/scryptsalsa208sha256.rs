@@ -3,7 +3,7 @@
 use ffi;
 use randombytes::randombytes_into;
 use libc::{c_char, c_ulonglong};
-#[cfg(feature = "use-rustc-serialize")]
+#[cfg(feature = "rustc-serialize")]
 use rustc_serialize;
 
 /// Number of bytes in a `Salt`.
@@ -226,7 +226,7 @@ mod test {
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "use-rustc-serialize"))]
+    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use randombytes::randombytes;

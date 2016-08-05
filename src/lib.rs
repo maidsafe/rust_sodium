@@ -54,7 +54,7 @@
 extern crate rust_sodium_sys as ffi;
 extern crate libc;
 extern crate rand;
-#[cfg(any(test, feature = "use-rustc-serialize"))]
+#[cfg(any(test, feature = "rustc-serialize"))]
 extern crate rustc_serialize;
 #[cfg(any(test, feature = "serde"))]
 extern crate serde;
