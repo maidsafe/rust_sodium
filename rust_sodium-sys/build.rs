@@ -166,9 +166,8 @@ fn main() {
 
     let curl_output = Command::new("curl")
         .arg(&url)
-        .arg("-o")
+        .arg("-sSLvo")
         .arg(&gz_path)
-        .arg("--verbose")
         .output()
         .unwrap_or_else(|error| {
             panic!("Failed to run curl command: {}", error);

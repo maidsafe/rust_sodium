@@ -11,12 +11,15 @@ repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.1.0"
 
 [dependencies]
+lazy_static = "~0.2.1"
 libc = "~0.2.14"
+rand = "~0.3.14"
+unwrap = "~1.1.0"
 
 [build-dependencies]
-pkg-config = { version = "~0.3.8", optional = true }
-gcc = { version = "~0.3.32", optional = true }
 flate2 = { version = "~0.2.14", optional = true }
+gcc = { version = "~0.3.32", optional = true }
+pkg-config = { version = "~0.3.8", optional = true }
 tar = { version = "~0.4.7", optional = true }
 unwrap = "~1.1.0"
 
@@ -25,4 +28,4 @@ path = "lib.rs"
 
 [features]
 default = ["pkg-config"]
-get-libsodium = ["gcc", "flate2", "tar"]
+get-libsodium = ["flate2", "gcc", "tar"]
