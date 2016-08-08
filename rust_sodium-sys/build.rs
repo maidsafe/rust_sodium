@@ -202,6 +202,7 @@ fn main() {
         .arg(&prefix_arg)
         .arg(&host_arg)
         .arg("--enable-shared=no")
+        .arg("--disable-pie")
         .output()
         .unwrap_or_else(|error| {
             panic!("Failed to run './configure': {}", error);
