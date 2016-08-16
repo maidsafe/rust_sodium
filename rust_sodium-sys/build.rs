@@ -191,7 +191,13 @@ fn main() {
 
     // Run `./configure`
     let gcc = gcc::Config::new();
-    let cc = format!("{}", gcc.get_compiler().path().display());
+    let (cc, cflags) = if target.contains("i686") {
+        (format!("{} -m32", gcc.get_compiler().path().display()),
+         env::var("CFLAGS").unwrap_or(String::default()) + " -march=i686")
+    } else {
+        (format!("{}", gcc.get_compiler().path().display()),
+         env::var("CFLAGS").unwrap_or(String::default()))
+    };
     let prefix_arg = format!("--prefix={}", install_dir);
     let host = unwrap!(env::var("HOST"));
     let host_arg = format!("--host={}", target);
@@ -199,6 +205,7 @@ fn main() {
     let configure_output = Command::new("./configure")
         .current_dir(&source_dir)
         .env("CC", &cc)
+        .env("CFLAGS", &cflags)
         .arg(&prefix_arg)
         .arg(&host_arg)
         .arg("--enable-shared=no")
@@ -215,13 +222,12 @@ fn main() {
 
     // Run `make check`, or `make all` if we're cross-compiling
     let j_arg = format!("-j{}", unwrap!(env::var("NUM_JOBS")));
-    let make_arg = if target == host {
-        "check"
-    } else {
-        "all"
-    };
+    let cross_compiling = target != host;
+    let make_arg = if cross_compiling { "all" } else { "check" };
     let make_output = Command::new("make")
         .current_dir(&source_dir)
+        .env("CC", &cc)
+        .env("CFLAGS", &cflags)
         .env("V", "1")
         .arg(make_arg)
         .arg(&j_arg)
@@ -230,15 +236,27 @@ fn main() {
             panic!("Failed to run 'make check': {}", error);
         });
     if !make_output.status.success() {
-        panic!("\n{}\n{}\n{}\n",
+        let need_i386 = if cross_compiling &&
+                           String::from_utf8_lossy(&make_output.stderr)
+            .contains("fatal error: asm/errno.h: No such file or directory") {
+            "********************************************\nPossible missing dependencies.  Try \
+             running:\n  sudo apt-get install \
+             linux-libc-dev:i386\n********************************************\n\n"
+        } else {
+            ""
+        };
+        panic!("\n{}\n{}\n{}\n{}",
                String::from_utf8_lossy(&configure_output.stdout),
                String::from_utf8_lossy(&make_output.stdout),
-               String::from_utf8_lossy(&make_output.stderr));
+               String::from_utf8_lossy(&make_output.stderr),
+               need_i386);
     }
 
     // Run `make install`
     let install_output = Command::new("make")
         .current_dir(&source_dir)
+        .env("CC", &cc)
+        .env("CFLAGS", &cflags)
         .arg("install")
         .output()
         .unwrap_or_else(|error| {
