@@ -32,7 +32,7 @@ new_type! {
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_key() -> Key {
     let mut key = [0; KEYBYTES];
     randombytes_into(&mut key);
@@ -43,7 +43,7 @@ pub fn gen_key() -> Key {
 ///
 /// THREAD SAFETY: `gen_nonce()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 ///
 /// NOTE: When using primitives with short nonces (e.g. salsa20, salsa208, salsa2012)
 /// do not use random nonces since the probability of nonce-collision is not negligible
@@ -60,10 +60,10 @@ pub fn stream(len: usize,
               &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
         let mut c: Vec<u8> = repeat(0u8).take(len).collect();
-        $stream_name(c.as_mut_ptr(),
-                     c.len() as c_ulonglong,
-                     n.as_ptr(),
-                     k.as_ptr());
+        assert_eq!(0, $stream_name(c.as_mut_ptr(),
+                                   c.len() as c_ulonglong,
+                                   n.as_ptr(),
+                                   k.as_ptr()));
         c
     }
 }
@@ -79,11 +79,11 @@ pub fn stream_xor(m: &[u8],
                   &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
         let mut c: Vec<u8> = repeat(0u8).take(m.len()).collect();
-        $xor_name(c.as_mut_ptr(),
-                  m.as_ptr(),
-                  m.len() as c_ulonglong,
-                  n.as_ptr(),
-                  k.as_ptr());
+        assert_eq!(0, $xor_name(c.as_mut_ptr(),
+                                m.as_ptr(),
+                                m.len() as c_ulonglong,
+                                n.as_ptr(),
+                                k.as_ptr()));
         c
     }
 }
@@ -98,11 +98,11 @@ pub fn stream_xor_inplace(m: &mut [u8],
                           &Nonce(ref n): &Nonce,
                           &Key(ref k): &Key) {
     unsafe {
-        $xor_name(m.as_mut_ptr(),
-                  m.as_ptr(),
-                  m.len() as c_ulonglong,
-                  n.as_ptr(),
-                  k.as_ptr());
+        assert_eq!(0, $xor_name(m.as_mut_ptr(),
+                                m.as_ptr(),
+                                m.len() as c_ulonglong,
+                                n.as_ptr(),
+                                k.as_ptr()));
     }
 }
 

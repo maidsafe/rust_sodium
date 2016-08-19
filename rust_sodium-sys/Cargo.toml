@@ -3,7 +3,7 @@ authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 build = "build.rs"
 description = "Raw bindings to libsodium"
 documentation = "http://docs.maidsafe.net/rust_sodium/latest"
-homepage = "http://maidsafe.net"
+homepage = "https://maidsafe.net"
 license = "MIT OR Apache-2.0"
 links = "sodium"
 name = "rust_sodium-sys"
@@ -11,16 +11,17 @@ repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.1.1"
 
 [dependencies]
+clippy = {version = "~0.0.85", optional = true}
 lazy_static = "~0.2.1"
-libc = "~0.2.14"
+libc = "~0.2.15"
 rand = "~0.3.14"
 unwrap = "~1.1.0"
 
 [build-dependencies]
 flate2 = { version = "~0.2.14", optional = true }
-gcc = { version = "~0.3.32", optional = true }
+gcc = { version = "~0.3.34", optional = true }
 pkg-config = { version = "~0.3.8", optional = true }
-tar = { version = "~0.4.7", optional = true }
+tar = { version = "~0.4.8", optional = true }
 unwrap = "~1.1.0"
 
 [lib]

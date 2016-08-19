@@ -1,5 +1,6 @@
 //! `HMAC-SHA-512` `HMAC-SHA-512` is conjectured to meet the standard notion of
 //! unforgeability.
+
 use ffi::{crypto_auth_hmacsha512, crypto_auth_hmacsha512_BYTES, crypto_auth_hmacsha512_KEYBYTES,
           crypto_auth_hmacsha512_final, crypto_auth_hmacsha512_init, crypto_auth_hmacsha512_state,
           crypto_auth_hmacsha512_update, crypto_auth_hmacsha512_verify};

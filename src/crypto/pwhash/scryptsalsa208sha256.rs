@@ -1,8 +1,9 @@
 //! `crypto_pwhash_scryptsalsa208sha256`, a particular combination of Scrypt, Salsa20/8
 //! and SHA-256
+
 use ffi;
-use randombytes::randombytes_into;
 use libc::{c_char, c_ulonglong};
+use randombytes::randombytes_into;
 #[cfg(feature = "rustc-serialize")]
 use rustc_serialize;
 
@@ -64,7 +65,7 @@ new_type! {
 /// `gen_salt()` randombly generates a new `Salt` for key derivation
 ///
 /// THREAD SAFETY: `gen_salt()` is thread-safe provided that you have called
-/// `rust_sodium::init()` once before using any other function from rust_sodium.
+/// `rust_sodium::init()` once before using any other function from `rust_sodium`.
 pub fn gen_salt() -> Salt {
     let mut salt = Salt([0; SALTBYTES]);
     {
@@ -171,14 +172,14 @@ pub fn pwhash_verify(&HashedPassword(ref str_): &HashedPassword, passwd: &[u8]) 
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use ffi;
     use std::ffi::CStr;
+    use super::*;
 
     #[test]
     fn test_str_prefix() {
         let str_prefix = unsafe {
-            CStr::from_ptr(ffi::crypto_pwhash_scryptsalsa208sha256_STRPREFIX).to_str().unwrap()
+            unwrap!(CStr::from_ptr(ffi::crypto_pwhash_scryptsalsa208sha256_STRPREFIX).to_str())
         };
         assert_eq!(STRPREFIX, str_prefix);
     }
@@ -193,12 +194,11 @@ mod test {
         let key_expected = [0xf1, 0xbb, 0xb8, 0x7c, 0x43, 0x36, 0x5b, 0x03, 0x3b, 0x9a, 0xe8,
                             0x3e, 0x05, 0xef, 0xad, 0x25, 0xdb, 0x8d, 0x83, 0xb8, 0x3d, 0xb1,
                             0xde, 0xe3, 0x6b, 0xdb, 0xf5, 0x4d, 0xcd, 0x3a, 0x1a, 0x11];
-        let key = derive_key(&mut kb,
-                             pw,
-                             &salt,
-                             OPSLIMIT_INTERACTIVE,
-                             MEMLIMIT_INTERACTIVE)
-            .unwrap();
+        let key = unwrap!(derive_key(&mut kb,
+                                     pw,
+                                     &salt,
+                                     OPSLIMIT_INTERACTIVE,
+                                     MEMLIMIT_INTERACTIVE));
         assert_eq!(key, key_expected);
     }
 
@@ -207,17 +207,18 @@ mod test {
         use randombytes::randombytes;
         for i in 0..32usize {
             let pw = randombytes(i);
-            let pwh = pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE).unwrap();
+            let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
             assert!(pwhash_verify(&pwh, &pw));
         }
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_pwhash_verify_tamper() {
         use randombytes::randombytes;
         for i in 0..16usize {
             let mut pw = randombytes(i);
-            let pwh = pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE).unwrap();
+            let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
             for j in 0..pw.len() {
                 pw[j] ^= 0x20;
                 assert!(!pwhash_verify(&pwh, &pw));
@@ -233,7 +234,7 @@ mod test {
         use test_utils::round_trip;
         for i in 0..32usize {
             let pw = randombytes(i);
-            let pwh = pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE).unwrap();
+            let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
             let salt = gen_salt();
             round_trip(pwh);
             round_trip(salt);

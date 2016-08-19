@@ -1,5 +1,5 @@
 //! `crypto_scalarmult_curve25519` specified in
-//! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html), Sections 2, 3, and 4.
+//! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html), Sections 2, 3, and 4.
 //! This function is conjectured to be strong. For background see Bernstein,
 //! "Curve25519: new Diffie-Hellman speed records," Lecture Notes in Computer
 //! Science 3958 (2006), 207–228, http://cr.yp.to/papers.html#curve25519.
@@ -30,7 +30,7 @@ new_type! {
 pub fn scalarmult(&Scalar(ref n): &Scalar, &GroupElement(ref p): &GroupElement) -> GroupElement {
     let mut q = [0; GROUPELEMENTBYTES];
     unsafe {
-        ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(), n.as_ptr(), p.as_ptr());
+        assert_eq!(0, ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(), n.as_ptr(), p.as_ptr()));
     }
     GroupElement(q)
 }
@@ -41,7 +41,7 @@ pub fn scalarmult(&Scalar(ref n): &Scalar, &GroupElement(ref p): &GroupElement) 
 pub fn scalarmult_base(&Scalar(ref n): &Scalar) -> GroupElement {
     let mut q = [0; GROUPELEMENTBYTES];
     unsafe {
-        ffi::crypto_scalarmult_curve25519_base(q.as_mut_ptr(), n.as_ptr());
+        assert_eq!(0, ffi::crypto_scalarmult_curve25519_base(q.as_mut_ptr(), n.as_ptr()));
     }
     GroupElement(q)
 }

@@ -64,5 +64,6 @@
 //!                          pwhash::MEMLIMIT_INTERACTIVE).unwrap();
 //! assert!(pwhash::pwhash_verify(&pwh, passwd));
 //! ```
+
 pub use self::scryptsalsa208sha256::*;
 pub mod scryptsalsa208sha256;

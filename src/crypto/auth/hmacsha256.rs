@@ -1,5 +1,6 @@
 //! `HMAC-SHA-256` `HMAC-SHA-256` is conjectured to meet the standard notion of
 //! unforgeability.
+
 use ffi::{crypto_auth_hmacsha256, crypto_auth_hmacsha256_BYTES, crypto_auth_hmacsha256_KEYBYTES,
           crypto_auth_hmacsha256_final, crypto_auth_hmacsha256_init, crypto_auth_hmacsha256_state,
           crypto_auth_hmacsha256_update, crypto_auth_hmacsha256_verify};

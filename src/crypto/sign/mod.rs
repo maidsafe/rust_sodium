@@ -13,14 +13,14 @@
 //!
 //! # Alternate primitives
 //!
-//! --------------------------------------------------------------------------------
-//! |crypto_sign                         | PUBLICKEYBYTES | SECRETKEYBYTES | BYTES |
-//! |------------------------------------|----------------|----------------|-------|
-//! |crypto_sign_ed25519                 | 32             | 64             | 64    |
-//! |crypto_sign_edwards25519sha512batch | 32             | 64             | 64    |
-//! --------------------------------------------------------------------------------
+//! ----------------------------------------------------------------------------------
+//! |`crypto_sign`                         | PUBLICKEYBYTES | SECRETKEYBYTES | BYTES |
+//! |--------------------------------------|----------------|----------------|-------|
+//! |`crypto_sign_ed25519`                 | 32             | 64             | 64    |
+//! |`crypto_sign_edwards25519sha512batch` | 32             | 64             | 64    |
+//! ----------------------------------------------------------------------------------
 //!
-//! crypto_sign_edwards25519sha512batch is a prototype. It has been replaced with
+//! `crypto_sign_edwards25519sha512batch` is a prototype. It has been replaced with
 //! Ed25519 and is only kept here for compatibility reasons.
 //!
 //! # Example
@@ -41,5 +41,6 @@
 //! let signature = sign::sign_detached(data_to_sign, &sk);
 //! assert!(sign::verify_detached(&signature, data_to_sign, &pk));
 //! ```
+
 pub use self::ed25519::*;
 pub mod ed25519;

@@ -5,6 +5,7 @@
 //! However, for the moment, there do not appear to be alternatives that
 //! inspire satisfactory levels of confidence. One can hope that NIST's
 //! SHA-3 competition will improve the situation.
+
 use ffi::{crypto_hash_sha512, crypto_hash_sha512_BYTES};
 
 hash_module!(crypto_hash_sha512, crypto_hash_sha512_BYTES, 128);
@@ -33,24 +34,24 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        let mut r = BufReader::new(File::open(filename).unwrap());
+        let mut r = BufReader::new(unwrap!(File::open(filename)));
         let mut line = String::new();
         loop {
             line.clear();
-            r.read_line(&mut line).unwrap();
-            if line.len() == 0 {
+            let _ = unwrap!(r.read_line(&mut line));
+            if line.is_empty() {
                 break;
             }
             let starts_with_len = line.starts_with("Len = ");
             if starts_with_len {
-                let len: usize = line[6..].trim().parse().unwrap();
+                let len: usize = unwrap!(line[6..].trim().parse());
                 line.clear();
-                r.read_line(&mut line).unwrap();
-                let rawmsg = line[6..].from_hex().unwrap();
+                let _ = unwrap!(r.read_line(&mut line));
+                let rawmsg = unwrap!(line[6..].from_hex());
                 let msg = &rawmsg[..len / 8];
                 line.clear();
-                r.read_line(&mut line).unwrap();
-                let md = line[5..].from_hex().unwrap();
+                let _ = unwrap!(r.read_line(&mut line));
+                let md = unwrap!(line[5..].from_hex());
                 let Digest(digest) = hash(msg);
                 assert!(&digest[..] == &md[..]);
             }

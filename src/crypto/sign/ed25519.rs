@@ -2,11 +2,12 @@
 //! [Ed25519](http://ed25519.cr.yp.to/). This function is conjectured to meet the
 //! standard notion of unforgeability for a public-key signature scheme under
 //! chosen-message attacks.
+
 use ffi;
 use libc::c_ulonglong;
-use std::iter::repeat;
 #[cfg(feature = "rustc-serialize")]
 use rustc_serialize;
+use std::iter::repeat;
 
 /// Number of bytes in a `Seed`.
 pub const SEEDBYTES: usize = ffi::crypto_sign_ed25519_SEEDBYTES;
@@ -54,12 +55,13 @@ new_type! {
 ///
 /// THREAD SAFETY: `gen_keypair()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_keypair() -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        ffi::crypto_sign_ed25519_keypair(pk.as_mut_ptr(), sk.as_mut_ptr());
+        assert_eq!(0,
+                   ffi::crypto_sign_ed25519_keypair(pk.as_mut_ptr(), sk.as_mut_ptr()));
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -70,7 +72,10 @@ pub fn keypair_from_seed(&Seed(ref seed): &Seed) -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        ffi::crypto_sign_ed25519_seed_keypair(pk.as_mut_ptr(), sk.as_mut_ptr(), seed.as_ptr());
+        assert_eq!(0,
+                   ffi::crypto_sign_ed25519_seed_keypair(pk.as_mut_ptr(),
+                                                         sk.as_mut_ptr(),
+                                                         seed.as_ptr()));
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -81,11 +86,12 @@ pub fn sign(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Vec<u8> {
     unsafe {
         let mut sm: Vec<u8> = repeat(0u8).take(m.len() + SIGNATUREBYTES).collect();
         let mut smlen = 0;
-        ffi::crypto_sign_ed25519(sm.as_mut_ptr(),
-                                 &mut smlen,
-                                 m.as_ptr(),
-                                 m.len() as c_ulonglong,
-                                 sk.as_ptr());
+        assert_eq!(0,
+                   ffi::crypto_sign_ed25519(sm.as_mut_ptr(),
+                                            &mut smlen,
+                                            m.as_ptr(),
+                                            m.len() as c_ulonglong,
+                                            sk.as_ptr()));
         sm.truncate(smlen as usize);
         sm
     }
@@ -117,11 +123,12 @@ pub fn sign_detached(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Signature {
     unsafe {
         let mut sig = [0u8; SIGNATUREBYTES];
         let mut siglen: c_ulonglong = 0;
-        ffi::crypto_sign_ed25519_detached(sig.as_mut_ptr(),
-                                          &mut siglen,
-                                          m.as_ptr(),
-                                          m.len() as c_ulonglong,
-                                          sk.as_ptr());
+        assert_eq!(0,
+                   ffi::crypto_sign_ed25519_detached(sig.as_mut_ptr(),
+                                                     &mut siglen,
+                                                     m.as_ptr(),
+                                                     m.len() as c_ulonglong,
+                                                     sk.as_ptr()));
         assert_eq!(siglen, SIGNATUREBYTES as c_ulonglong);
         Signature(sig)
     }
@@ -160,6 +167,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -168,7 +176,7 @@ mod test {
             let mut sm = sign(&m, &sk);
             for j in 0..sm.len() {
                 sm[j] ^= 0x20;
-                assert!(Err(()) == verify(&mut sm, &pk));
+                assert!(Err(()) == verify(&sm, &pk));
                 sm[j] ^= 0x20;
             }
         }
@@ -186,6 +194,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_sign_verify_detached_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -216,6 +225,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper_seed() {
         use randombytes::{randombytes, randombytes_into};
         for i in 0..32usize {
@@ -227,7 +237,7 @@ mod test {
             let mut sm = sign(&m, &sk);
             for j in 0..sm.len() {
                 sm[j] ^= 0x20;
-                assert!(Err(()) == verify(&mut sm, &pk));
+                assert!(Err(()) == verify(&sm, &pk));
                 sm[j] ^= 0x20;
             }
         }
@@ -241,15 +251,15 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        let r = BufReader::new(File::open("testvectors/ed25519.input").unwrap());
+        let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
-            let line = mline.unwrap();
+            let line = unwrap!(mline);
             let mut x = line.split(':');
-            let x0 = x.next().unwrap();
-            let x1 = x.next().unwrap();
-            let x2 = x.next().unwrap();
-            let x3 = x.next().unwrap();
-            let seed_bytes = x0[..64].from_hex().unwrap();
+            let x0 = unwrap!(x.next());
+            let x1 = unwrap!(x.next());
+            let x2 = unwrap!(x.next());
+            let x3 = unwrap!(x.next());
+            let seed_bytes = unwrap!(x0[..64].from_hex());
             assert!(seed_bytes.len() == SEEDBYTES);
             let mut seedbuf = [0u8; SEEDBYTES];
             for (s, b) in seedbuf.iter_mut().zip(seed_bytes.iter()) {
@@ -257,9 +267,9 @@ mod test {
             }
             let seed = Seed(seedbuf);
             let (pk, sk) = keypair_from_seed(&seed);
-            let m = x2.from_hex().unwrap();
+            let m = unwrap!(x2.from_hex());
             let sm = sign(&m, &sk);
-            verify(&sm, &pk).unwrap();
+            assert!(unwrap!(verify(&sm, &pk)) == m);
             assert!(x1 == pk[..].to_hex());
             assert!(x3 == sm.to_hex());
         }
@@ -273,15 +283,15 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        let r = BufReader::new(File::open("testvectors/ed25519.input").unwrap());
+        let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
-            let line = mline.unwrap();
+            let line = unwrap!(mline);
             let mut x = line.split(':');
-            let x0 = x.next().unwrap();
-            let x1 = x.next().unwrap();
-            let x2 = x.next().unwrap();
-            let x3 = x.next().unwrap();
-            let seed_bytes = x0[..64].from_hex().unwrap();
+            let x0 = unwrap!(x.next());
+            let x1 = unwrap!(x.next());
+            let x2 = unwrap!(x.next());
+            let x3 = unwrap!(x.next());
+            let seed_bytes = unwrap!(x0[..64].from_hex());
             assert!(seed_bytes.len() == SEEDBYTES);
             let mut seedbuf = [0u8; SEEDBYTES];
             for (s, b) in seedbuf.iter_mut().zip(seed_bytes.iter()) {
@@ -289,7 +299,7 @@ mod test {
             }
             let seed = Seed(seedbuf);
             let (pk, sk) = keypair_from_seed(&seed);
-            let m = x2.from_hex().unwrap();
+            let m = unwrap!(x2.from_hex());
             let sig = sign_detached(&m, &sk);
             assert!(verify_detached(&sig, &m, &pk));
             assert!(x1 == pk[..].to_hex());

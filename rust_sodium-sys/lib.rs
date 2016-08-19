@@ -1,4 +1,26 @@
-#![allow(non_upper_case_globals)]
+#![doc(html_logo_url =
+           "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
+       html_favicon_url = "https://maidsafe.net/img/favicon.ico",
+       html_root_url = "https://maidsafe.github.io/rust_sodium/master/rust_sodium_sys")]
+
+// For explanation of lint checks, run `rustc -W help` or see
+// https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
+#![forbid(exceeding_bitshifts, mutable_transmutes, no_mangle_const_items,
+          unknown_crate_types, warnings)]
+#![deny(bad_style, deprecated, drop_with_repr_extern, improper_ctypes, non_shorthand_field_patterns,
+        overflowing_literals, plugin_as_library, private_no_mangle_fns, private_no_mangle_statics,
+        stable_features, unconditional_recursion, unknown_lints, unused, unused_allocation,
+        unused_attributes, unused_comparisons, unused_features, unused_parens, while_true)]
+#![warn(trivial_casts, unused_extern_crates, unused_import_braces, unused_qualifications,
+        unused_results)]
+#![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
+         missing_debug_implementations, missing_docs, non_upper_case_globals, trivial_numeric_casts,
+         unsafe_code, variant_size_differences)]
+
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+#![cfg_attr(feature="clippy", deny(clippy, unicode_not_nfc, wrong_pub_self_convention,
+                                   option_unwrap_used))]
 
 #[macro_use]
 extern crate lazy_static;
@@ -7,13 +29,13 @@ extern crate rand;
 #[macro_use]
 extern crate unwrap;
 
+
+use libc::{c_char, c_int, c_ulonglong, c_void, size_t, uint32_t};
+use rand::{Rng, SeedableRng, XorShiftRng};
 use std::cell::RefCell;
 use std::ffi::CString;
 use std::rc::Rc;
 use std::sync::Mutex;
-
-use libc::{c_char, c_int, c_ulonglong, c_void, size_t, uint32_t};
-use rand::{Rng, SeedableRng, XorShiftRng};
 
 include!("src/core.rs");
 

@@ -114,11 +114,10 @@ fn test_crypto_generichash() {
                0);
 }
 
-#[cfg(test)]
-use std::mem;
-
 #[test]
 fn test_crypto_generichash_multipart() {
+    use std::mem;
+
     let mut out = [0u8; crypto_generichash_BYTES];
     let m = [0u8; 64];
     let key = [0u8; crypto_generichash_KEYBYTES];

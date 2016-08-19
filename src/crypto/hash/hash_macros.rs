@@ -19,7 +19,7 @@ new_type! {
 pub fn hash(m: &[u8]) -> Digest {
     unsafe {
         let mut h = [0; DIGESTBYTES];
-        $hash_name(h.as_mut_ptr(), m.as_ptr(), m.len() as c_ulonglong);
+        assert_eq!(0, $hash_name(h.as_mut_ptr(), m.as_ptr(), m.len() as c_ulonglong));
         Digest(h)
     }
 }

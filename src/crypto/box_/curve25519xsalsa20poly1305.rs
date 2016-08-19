@@ -1,9 +1,10 @@
 //! `crypto_box_curve25519xsalsa20poly1305` , a particular
 //! combination of Curve25519, Salsa20, and Poly1305 specified in
-//! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html).
+//! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html).
 //!
 //! This function is conjectured to meet the standard notions of privacy and
 //! third-party unforgeability.
+
 use ffi;
 use marshal::marshal;
 use randombytes::randombytes_into;
@@ -52,12 +53,14 @@ new_type! {
 ///
 /// THREAD SAFETY: `gen_keypair()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_keypair() -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        ffi::crypto_box_curve25519xsalsa20poly1305_keypair(pk.as_mut_ptr(), sk.as_mut_ptr());
+        assert_eq!(0,
+                   ffi::crypto_box_curve25519xsalsa20poly1305_keypair(pk.as_mut_ptr(),
+                                                                      sk.as_mut_ptr()));
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -66,7 +69,7 @@ pub fn gen_keypair() -> (PublicKey, SecretKey) {
 ///
 /// THREAD SAFETY: `gen_nonce()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_nonce() -> Nonce {
     let mut n = [0; NONCEBYTES];
     randombytes_into(&mut n);
@@ -82,12 +85,13 @@ pub fn seal(m: &[u8],
             -> Vec<u8> {
     let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| {
         unsafe {
-            ffi::crypto_box_curve25519xsalsa20poly1305(dst,
-                                                       src,
-                                                       len,
-                                                       n.as_ptr(),
-                                                       pk.as_ptr(),
-                                                       sk.as_ptr());
+            assert_eq!(0,
+                       ffi::crypto_box_curve25519xsalsa20poly1305(dst,
+                                                                  src,
+                                                                  len,
+                                                                  n.as_ptr(),
+                                                                  pk.as_ptr(),
+                                                                  sk.as_ptr()));
         }
     });
     c
@@ -114,11 +118,7 @@ pub fn open(c: &[u8],
                                                             sk.as_ptr())
         }
     });
-    if ret == 0 {
-        Ok(m)
-    } else {
-        Err(())
-    }
+    if ret == 0 { Ok(m) } else { Err(()) }
 }
 
 new_type! {
@@ -138,9 +138,10 @@ pub fn precompute(&PublicKey(ref pk): &PublicKey,
                   -> PrecomputedKey {
     let mut k = [0u8; PRECOMPUTEDKEYBYTES];
     unsafe {
-        ffi::crypto_box_curve25519xsalsa20poly1305_beforenm(k.as_mut_ptr(),
-                                                            pk.as_ptr(),
-                                                            sk.as_ptr());
+        assert_eq!(0,
+                   ffi::crypto_box_curve25519xsalsa20poly1305_beforenm(k.as_mut_ptr(),
+                                                                       pk.as_ptr(),
+                                                                       sk.as_ptr()));
     }
     PrecomputedKey(k)
 }
@@ -153,11 +154,12 @@ pub fn seal_precomputed(m: &[u8],
                         -> Vec<u8> {
     let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| {
         unsafe {
-            ffi::crypto_box_curve25519xsalsa20poly1305_afternm(dst,
-                                                               src,
-                                                               len,
-                                                               n.as_ptr(),
-                                                               k.as_ptr());
+            assert_eq!(0,
+                       ffi::crypto_box_curve25519xsalsa20poly1305_afternm(dst,
+                                                                          src,
+                                                                          len,
+                                                                          n.as_ptr(),
+                                                                          k.as_ptr()));
         }
     });
     c
@@ -182,11 +184,7 @@ pub fn open_precomputed(c: &[u8],
                                                                     k.as_ptr())
         }
     });
-    if ret == 0 {
-        Ok(m)
-    } else {
-        Err(())
-    }
+    if ret == 0 { Ok(m) } else { Err(()) }
 }
 
 #[cfg(test)]
@@ -227,6 +225,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -237,13 +236,14 @@ mod test {
             let mut c = seal(&m, &n, &pk1, &sk2);
             for j in 0..c.len() {
                 c[j] ^= 0x20;
-                assert!(Err(()) == open(&mut c, &n, &pk2, &sk1));
+                assert!(Err(()) == open(&c, &n, &pk2, &sk1));
                 c[j] ^= 0x20;
             }
         }
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_seal_open_precomputed_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -256,7 +256,7 @@ mod test {
             let mut c = seal_precomputed(&m, &n, &k1);
             for j in 0..c.len() {
                 c[j] ^= 0x20;
-                assert!(Err(()) == open_precomputed(&mut c, &n, &k2));
+                assert!(Err(()) == open_precomputed(&c, &n, &k2));
                 c[j] ^= 0x20;
             }
         }
@@ -382,7 +382,7 @@ mod bench {
             .collect();
         b.iter(|| {
             for m in ms.iter() {
-                open(&seal(m, &n, &pk, &sk), &n, &pk, &sk).unwrap();
+                unwrap!(open(&seal(m, &n, &pk, &sk), &n, &pk, &sk));
             }
         });
     }

@@ -1,13 +1,14 @@
 //! Cryptographic random number generation.
+
 use ffi;
-use std::iter::repeat;
 use libc::c_void;
+use std::iter::repeat;
 
 /// `randombytes()` randomly generates size bytes of data.
 ///
 /// THREAD SAFETY: `randombytes()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn randombytes(size: usize) -> Vec<u8> {
     unsafe {
         let mut buf: Vec<u8> = repeat(0u8).take(size).collect();
@@ -21,7 +22,7 @@ pub fn randombytes(size: usize) -> Vec<u8> {
 ///
 /// THREAD SAFETY: `randombytes_into()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn randombytes_into(buf: &mut [u8]) {
     unsafe {
         ffi::randombytes_buf(buf.as_mut_ptr() as *mut c_void, buf.len());

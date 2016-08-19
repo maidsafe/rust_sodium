@@ -11,9 +11,9 @@
 //! authentication code," Journal of Computer and System Sciences 61 (2000),
 //! 362–399; http://www-cse.ucsd.edu/~mihir/papers/cbc.html.
 //!
-//! NaCl does not make any promises regarding "strong" unforgeability;
+//! `NaCl` does not make any promises regarding "strong" unforgeability;
 //! perhaps one valid authenticator can be converted into another valid
-//! authenticator for the same message. NaCl also does not make any promises
+//! authenticator for the same message. `NaCl` also does not make any promises
 //! regarding "truncated unforgeability."
 //!
 //! # Selected primitive
@@ -23,15 +23,15 @@
 //! unforgeability.
 //!
 //! # Alternate primitives
-//! NaCl supports the following secret-key authentication functions:
+//! `NaCl` supports the following secret-key authentication functions:
 //!
-//! ------------------------------------------------------------
-//! |crypto_auth              |primitive        |BYTES|KEYBYTES|
-//! |-------------------------|-----------------|-----|--------|
-//! |crypto_auth_hmacsha256   |HMAC_SHA-256     |32   |32      |
-//! |crypto_auth_hmacsha512256|HMAC_SHA-512-256 |32   |32      |
-//! |crypto_auth_hmacsha512   |HMAC_SHA-512     |64   |32      |
-//! ------------------------------------------------------------
+//! -----------------------------------------------------------------
+//! |`crypto_auth`               |primitive          |BYTES|KEYBYTES|
+//! |----------------------------|-------------------|-----|--------|
+//! |`crypto_auth_hmacsha256`    |`HMAC_SHA-256`     |32   |32      |
+//! |`crypto_auth_hmacsha512256` |`HMAC_SHA-512-256` |32   |32      |
+//! |`crypto_auth_hmacsha512`    |`HMAC_SHA-512`     |64   |32      |
+//! -----------------------------------------------------------------
 //!
 //! # Example (simple interface)
 //! ```
@@ -65,6 +65,7 @@
 //! let tag2 = state.finalize();
 //! assert_eq!(tag1, tag2);
 //! ```
+
 pub use self::hmacsha512256::*;
 #[macro_use]
 mod auth_macros;

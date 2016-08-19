@@ -1,9 +1,10 @@
 //! `crypto_secretbox_xsalsa20poly1305`, a particular
 //! combination of Salsa20 and Poly1305 specified in
-//! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html).
+//! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html).
 //!
 //! This function is conjectured to meet the standard notions of privacy and
 //! authenticity.
+
 use ffi;
 use marshal::marshal;
 use randombytes::randombytes_into;
@@ -41,7 +42,7 @@ pub const MACBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_MACBYTES;
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_key() -> Key {
     let mut key = [0; KEYBYTES];
     randombytes_into(&mut key);
@@ -52,7 +53,7 @@ pub fn gen_key() -> Key {
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_nonce() -> Nonce {
     let mut nonce = [0; NONCEBYTES];
     randombytes_into(&mut nonce);
@@ -80,11 +81,7 @@ pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8
             ffi::crypto_secretbox_xsalsa20poly1305_open(dst, src, len, n.as_ptr(), k.as_ptr())
         }
     });
-    if ret == 0 {
-        Ok(m)
-    } else {
-        Err(())
-    }
+    if ret == 0 { Ok(m) } else { Err(()) }
 }
 
 #[cfg(test)]
@@ -105,6 +102,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -114,7 +112,7 @@ mod test {
             let mut c = seal(&m, &n, &k);
             for i in 0..c.len() {
                 c[i] ^= 0x20;
-                assert!(Err(()) == open(&mut c, &n, &k));
+                assert!(Err(()) == open(&c, &n, &k));
                 c[i] ^= 0x20;
             }
         }
@@ -190,7 +188,7 @@ mod bench {
             .collect();
         b.iter(|| {
             for m in ms.iter() {
-                open(&seal(&m, &n, &k), &n, &k).unwrap();
+                unwrap!(open(&seal(&m, &n, &k), &n, &k));
             }
         });
     }

@@ -1,11 +1,12 @@
 //! Libsodium version functions
+
 use ffi;
 use std::ffi::CStr;
 
 /// `version_string()` returns the version string from libsodium.
 pub fn version_string() -> &'static str {
     let version = unsafe { CStr::from_ptr(ffi::sodium_version_string()) };
-    version.to_str().unwrap()
+    unwrap!(version.to_str())
 }
 
 /// `version_major()` returns the major version from libsodium.
