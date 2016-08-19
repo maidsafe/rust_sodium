@@ -26,6 +26,7 @@ mod test {
     fn test_vector_1() {
         // corresponding to tests/auth.c from NaCl
         // "Test Case 2" from RFC 4231
+        assert!(::init());
         let key = Key([74, 101, 102, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
         let c = [0x77, 0x68, 0x61, 0x74, 0x20, 0x64, 0x6f, 0x20, 0x79, 0x61, 0x20, 0x77, 0x61,
@@ -44,6 +45,7 @@ mod test {
     fn test_vector_state_1() {
         // corresponding to tests/auth.c from NaCl
         // "Test Case 2" from RFC 4231
+        assert!(::init());
         let key = [74, 101, 102, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                    0, 0, 0, 0, 0, 0, 0, 0];
         let c = [0x77, 0x68, 0x61, 0x74, 0x20, 0x64, 0x6f, 0x20, 0x79, 0x61, 0x20, 0x77, 0x61,

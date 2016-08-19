@@ -74,6 +74,7 @@ mod test_m {
     #[test]
     fn test_auth_verify() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -86,6 +87,7 @@ mod test_m {
     #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_auth_verify_tamper() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let mut m = randombytes(i);
@@ -108,6 +110,7 @@ mod test_m {
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -130,6 +133,7 @@ mod bench_m {
 
     #[bench]
     fn bench_auth(b: &mut test::Bencher) {
+        assert!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
@@ -143,6 +147,7 @@ mod bench_m {
 
     #[bench]
     fn bench_verify(b: &mut test::Bencher) {
+        assert!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
@@ -248,6 +253,7 @@ mod test_s {
     #[test]
     fn test_auth_eq_auth_state() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -262,6 +268,7 @@ mod test_s {
     #[test]
     fn test_auth_eq_auth_state_chunked() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);

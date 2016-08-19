@@ -65,6 +65,7 @@ mod test {
     #[test]
     fn test_seal_open() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let (pk, sk) = box_::gen_keypair();
             let m = randombytes(i);
@@ -78,6 +79,7 @@ mod test {
     #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let (pk, sk) = box_::gen_keypair();
             let m = randombytes(i);

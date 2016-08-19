@@ -56,6 +56,7 @@ mod test {
     #[test]
     #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_vectors() {
+        assert!(::init());
         let maxlen = 64;
         let mut m = Vec::with_capacity(64);
         for i in 0usize..64 {
@@ -137,6 +138,7 @@ mod test {
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
+        assert!(::init());
         for i in 0..64usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -158,6 +160,7 @@ mod bench {
 
     #[bench]
     fn bench_shorthash(b: &mut test::Bencher) {
+        assert!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter()
             .map(|s| randombytes(*s))

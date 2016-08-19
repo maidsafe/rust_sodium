@@ -157,6 +157,7 @@ mod test {
     #[test]
     fn test_sign_verify() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -170,6 +171,7 @@ mod test {
     #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -185,6 +187,7 @@ mod test {
     #[test]
     fn test_sign_verify_detached() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -197,6 +200,7 @@ mod test {
     #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_sign_verify_detached_tamper() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -212,6 +216,7 @@ mod test {
     #[test]
     fn test_sign_verify_seed() {
         use randombytes::{randombytes, randombytes_into};
+        assert!(::init());
         for i in 0..256usize {
             let mut seedbuf = [0; 32];
             randombytes_into(&mut seedbuf);
@@ -228,6 +233,7 @@ mod test {
     #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper_seed() {
         use randombytes::{randombytes, randombytes_into};
+        assert!(::init());
         for i in 0..32usize {
             let mut seedbuf = [0; 32];
             randombytes_into(&mut seedbuf);
@@ -251,6 +257,7 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
+        assert!(::init());
         let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
             let line = unwrap!(mline);
@@ -283,6 +290,7 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
+        assert!(::init());
         let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
             let line = unwrap!(mline);
@@ -313,6 +321,7 @@ mod test {
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
+        assert!(::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -335,6 +344,7 @@ mod bench {
 
     #[bench]
     fn bench_sign(b: &mut test::Bencher) {
+        assert!(::init());
         let (_, sk) = gen_keypair();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter()
             .map(|s| randombytes(*s))
@@ -348,6 +358,7 @@ mod bench {
 
     #[bench]
     fn bench_verify(b: &mut test::Bencher) {
+        assert!(::init());
         let (pk, sk) = gen_keypair();
         let sms: Vec<Vec<u8>> = BENCH_SIZES.iter()
             .map(|s| {
