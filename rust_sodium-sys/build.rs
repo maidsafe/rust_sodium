@@ -4,6 +4,8 @@ extern crate unwrap;
 #[cfg(not(feature = "get-libsodium"))]
 extern crate pkg_config;
 
+const VERSION: &'static str = "1.0.11";
+
 #[cfg(not(feature = "get-libsodium"))]
 fn main() {
     use std::env;
@@ -14,8 +16,18 @@ fn main() {
             None => "dylib",
         };
         println!("cargo:rustc-flags=-l {0}=sodium", mode);
+        println!("cargo:warning=Using unknown libsodium version.  This crate is tested against \
+                  {} and may not be fully compatible with other versions.",
+                 VERSION);
     } else {
-        unwrap!(pkg_config::find_library("libsodium"));
+        let lib_details = unwrap!(pkg_config::probe_library("libsodium"));
+        if lib_details.version != VERSION {
+            println!("cargo:warning=Using libsodium version {}.  This crate is tested against {} \
+                      and may not be fully compatible with {}.",
+                     lib_details.version,
+                     VERSION,
+                     lib_details.version);
+        }
     }
 }
 
@@ -27,9 +39,6 @@ extern crate gcc;
 extern crate flate2;
 #[cfg(feature = "get-libsodium")]
 extern crate tar;
-
-#[cfg(feature = "get-libsodium")]
-const VERSION: &'static str = "1.0.11";
 
 #[cfg(feature = "get-libsodium")]
 fn get_install_dir() -> String {
@@ -158,8 +167,13 @@ fn main() {
     // Avoid issues with paths containing spaces by falling back to using /tmp
     let target = unwrap!(env::var("TARGET"));
     if install_dir.contains(" ") {
-        install_dir = "/tmp/".to_string() + &basename + "/" + &target + "/installed";
-        source_dir = "/tmp/".to_string() + &basename + "/" + &target + "/source";
+        let fallback_path = "/tmp/".to_string() + &basename + "/" + &target;
+        install_dir = fallback_path.clone() + "/installed";
+        source_dir = fallback_path.clone() + "/source";
+        println!("cargo:warning=The path to the usual build directory contains spaces and hence \
+                  can't be used to build libsodium.  Falling back to use {}.  If running `cargo \
+                  clean`, ensure you also delete this fallback directory",
+                 fallback_path);
     }
     let gz_path = source_dir.clone() + "/" + &gz_filename;
     unwrap!(fs::create_dir_all(&install_dir));

@@ -1,4 +1,5 @@
 //! Libsodium utility functions
+
 use ffi;
 use libc::c_void;
 
@@ -35,7 +36,7 @@ pub fn memcmp(x: &[u8], y: &[u8]) -> bool {
 /// WARNING: this method does not check for arithmetic overflow. When used for incrementing
 /// nonces it is the callers responsibility to ensure that any given nonce value
 /// is only used once.
-/// If the caller does not do that the cryptographic primitives in rust_sodium
+/// If the caller does not do that the cryptographic primitives in `rust_sodium`
 /// will not uphold any security guarantees (i.e. they will break)
 pub fn increment_le(x: &mut [u8]) {
     unsafe {
@@ -51,6 +52,7 @@ mod test {
     fn test_memcmp() {
         use randombytes::randombytes;
 
+        assert!(::init());
         for i in 0usize..256 {
             let x = randombytes(i);
             assert!(memcmp(&x, &x));
@@ -71,6 +73,7 @@ mod test {
 
     #[test]
     fn test_increment_le_zero() {
+        assert!(::init());
         for i in 1usize..256 {
             let mut x = vec!(0u8; i);
             increment_le(&mut x);
@@ -83,6 +86,7 @@ mod test {
 
     #[test]
     fn test_increment_le_vectors() {
+        assert!(::init());
         let mut x = [255, 2, 3, 4, 5];
         let y = [0, 3, 3, 4, 5];
         increment_le(&mut x);
@@ -112,6 +116,7 @@ mod test {
 
     #[test]
     fn test_increment_le_overflow() {
+        assert!(::init());
         for i in 1usize..256 {
             let mut x = vec!(255u8; i);
             increment_le(&mut x);

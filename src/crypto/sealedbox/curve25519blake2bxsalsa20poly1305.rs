@@ -1,4 +1,5 @@
 //! A particular combination of Curve25519, Blake2B, Salsa20 and Poly1305.
+
 use ffi;
 
 use libc::c_ulonglong;
@@ -18,10 +19,10 @@ const SEALBYTES: usize = ffi::crypto_box_SEALBYTES;
 pub fn seal(m: &[u8], &box_::PublicKey(ref pk): &box_::PublicKey) -> Vec<u8> {
     let mut c = vec![0u8; m.len() + SEALBYTES];
     unsafe {
-        ffi::crypto_box_seal(c.as_mut_ptr(),
-                             m.as_ptr(),
-                             m.len() as c_ulonglong,
-                             pk.as_ptr());
+        let _todo_use_result = ffi::crypto_box_seal(c.as_mut_ptr(),
+                                                    m.as_ptr(),
+                                                    m.len() as c_ulonglong,
+                                                    pk.as_ptr());
     }
     c
 }
@@ -52,11 +53,7 @@ pub fn open(c: &[u8],
                                   pk.as_ptr(),
                                   sk.as_ptr())
     };
-    if ret == 0 {
-        Ok(m)
-    } else {
-        Err(())
-    }
+    if ret == 0 { Ok(m) } else { Err(()) }
 }
 
 #[cfg(test)]
@@ -67,6 +64,7 @@ mod test {
     #[test]
     fn test_seal_open() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let (pk, sk) = box_::gen_keypair();
             let m = randombytes(i);
@@ -77,15 +75,17 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let (pk, sk) = box_::gen_keypair();
             let m = randombytes(i);
             let mut c = seal(&m, &pk);
             for j in 0..c.len() {
                 c[j] ^= 0x20;
-                assert!(Err(()) == open(&mut c, &pk, &sk));
+                assert!(Err(()) == open(&c, &pk, &sk));
                 c[j] ^= 0x20;
             }
         }

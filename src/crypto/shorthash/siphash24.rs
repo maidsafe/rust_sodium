@@ -1,4 +1,5 @@
 //! `SipHash-2-4`
+
 use ffi;
 use libc::c_ulonglong;
 use randombytes::randombytes_into;
@@ -27,7 +28,7 @@ new_type! {
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_key() -> Key {
     let mut k = [0; KEYBYTES];
     randombytes_into(&mut k);
@@ -39,10 +40,10 @@ pub fn gen_key() -> Key {
 pub fn shorthash(m: &[u8], &Key(ref k): &Key) -> Digest {
     unsafe {
         let mut h = [0; DIGESTBYTES];
-        ffi::crypto_shorthash_siphash24(h.as_mut_ptr(),
-                                        m.as_ptr(),
-                                        m.len() as c_ulonglong,
-                                        k.as_ptr());
+        let _todo_use_result = ffi::crypto_shorthash_siphash24(h.as_mut_ptr(),
+                                                               m.as_ptr(),
+                                                               m.len() as c_ulonglong,
+                                                               k.as_ptr());
         Digest(h)
     }
 }
@@ -52,7 +53,9 @@ mod test {
     use super::*;
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_vectors() {
+        assert!(::init());
         let maxlen = 64;
         let mut m = Vec::with_capacity(64);
         for i in 0usize..64 {
@@ -134,6 +137,7 @@ mod test {
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
+        assert!(::init());
         for i in 0..64usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -155,6 +159,7 @@ mod bench {
 
     #[bench]
     fn bench_shorthash(b: &mut test::Bencher) {
+        assert!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter()
             .map(|s| randombytes(*s))

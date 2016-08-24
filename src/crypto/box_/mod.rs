@@ -28,18 +28,18 @@
 //! and receiver are nevertheless protected against forgeries by other
 //! parties. In the terminology of
 //! http://groups.google.com/group/sci.crypt/msg/ec5c18b23b11d82c,
-//! crypto_box uses "public-key authenticators" rather than "public-key
+//! `crypto_box` uses "public-key authenticators" rather than "public-key
 //! signatures."
 //!
 //! Users who want public verifiability (or receiver-assisted public
 //! verifiability) should instead use signatures (or signcryption).
-//! Signature support is a high priority for NaCl; a signature API will be
-//! described in subsequent NaCl documentation.
+//! Signature support is a high priority for `NaCl`; a signature API will be
+//! described in subsequent `NaCl` documentation.
 //!
 //! # Selected primitive
 //! `seal()` is `crypto_box_curve25519xsalsa20poly1305` , a particular
 //! combination of Curve25519, Salsa20, and Poly1305 specified in
-//! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html).
+//! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html).
 //!
 //! This function is conjectured to meet the standard notions of privacy and
 //! third-party unforgeability.
@@ -73,5 +73,6 @@
 //!                                              &their_precomputed_key).unwrap();
 //! assert!(plaintext == &their_plaintext[..]);
 //! ```
+
 pub use self::curve25519xsalsa20poly1305::*;
 pub mod curve25519xsalsa20poly1305;

@@ -34,7 +34,7 @@ new_type! {
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_key() -> Key {
     let mut k = [0; KEYBYTES];
     randombytes_into(&mut k);
@@ -47,10 +47,10 @@ pub fn authenticate(m: &[u8],
                     &Key(ref k): &Key) -> Tag {
     unsafe {
         let mut tag = [0; TAGBYTES];
-        $auth_name(tag.as_mut_ptr(),
-                   m.as_ptr(),
-                   m.len() as c_ulonglong,
-                   k.as_ptr());
+        let _todo_use_result = $auth_name(tag.as_mut_ptr(),
+                                          m.as_ptr(),
+                                          m.len() as c_ulonglong,
+                                          k.as_ptr());
         Tag(tag)
     }
 }
@@ -74,6 +74,7 @@ mod test_m {
     #[test]
     fn test_auth_verify() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -83,20 +84,22 @@ mod test_m {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_auth_verify_tamper() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let mut m = randombytes(i);
-            let Tag(mut tagbuf) = authenticate(&mut m, &k);
+            let Tag(mut tagbuf) = authenticate(&m, &k);
             for j in 0..m.len() {
                 m[j] ^= 0x20;
-                assert!(!verify(&Tag(tagbuf), &mut m, &k));
+                assert!(!verify(&Tag(tagbuf), &m, &k));
                 m[j] ^= 0x20;
             }
             for j in 0..tagbuf.len() {
                 tagbuf[j] ^= 0x20;
-                assert!(!verify(&Tag(tagbuf), &mut m, &k));
+                assert!(!verify(&Tag(tagbuf), &m, &k));
                 tagbuf[j] ^= 0x20;
             }
         }
@@ -107,6 +110,7 @@ mod test_m {
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -129,6 +133,7 @@ mod bench_m {
 
     #[bench]
     fn bench_auth(b: &mut test::Bencher) {
+        assert!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
@@ -142,6 +147,7 @@ mod bench_m {
 
     #[bench]
     fn bench_verify(b: &mut test::Bencher) {
+        assert!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
@@ -214,7 +220,7 @@ impl State {
     pub fn init(k: &[u8]) -> State {
         unsafe {
             let mut s = mem::uninitialized();
-            $init_name(&mut s, k.as_ptr(), k.len());
+            let _todo_use_result = $init_name(&mut s, k.as_ptr(), k.len());
             State(s)
         }
     }
@@ -224,16 +230,17 @@ impl State {
     pub fn update(&mut self, in_: &[u8]) {
         let &mut State(ref mut state) = self;
         unsafe {
-            $update_name(state, in_.as_ptr(), in_.len() as c_ulonglong);
+            let _todo_use_result = $update_name(state, in_.as_ptr(), in_.len() as c_ulonglong);
         }
     }
 
 /// `finalize()` finalizes the authenticator computation and returns a `Tag`.
+    #[allow(trivial_numeric_casts)]
     pub fn finalize(&mut self) -> Tag {
         unsafe {
             let &mut State(ref mut state) = self;
             let mut tag = [0; $tagbytes as usize];
-            $final_name(state, tag.as_mut_ptr());
+            let _todo_use_result = $final_name(state, tag.as_mut_ptr());
             Tag(tag)
         }
     }
@@ -246,6 +253,7 @@ mod test_s {
     #[test]
     fn test_auth_eq_auth_state() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -260,6 +268,7 @@ mod test_s {
     #[test]
     fn test_auth_eq_auth_state_chunked() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);

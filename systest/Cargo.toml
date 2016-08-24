@@ -2,14 +2,14 @@
 authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 build = "build.rs"
 description = "Test that bindings match native library's interface"
-homepage = "http://maidsafe.net"
+homepage = "https://maidsafe.net"
 license = "MIT OR Apache-2.0"
 name = "systest"
 version = "0.1.0"
 
 [dependencies]
-rust_sodium-sys = { path = "../rust_sodium-sys" }
-libc = "~0.2.14"
+rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.1.1" }
+libc = "~0.2.15"
 
 [build-dependencies]
 ctest = { git = "https://github.com/alexcrichton/ctest" }

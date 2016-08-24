@@ -1,9 +1,10 @@
 //! `crypto_secretbox_xsalsa20poly1305`, a particular
 //! combination of Salsa20 and Poly1305 specified in
-//! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html).
+//! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html).
 //!
 //! This function is conjectured to meet the standard notions of privacy and
 //! authenticity.
+
 use ffi;
 use marshal::marshal;
 use randombytes::randombytes_into;
@@ -41,7 +42,7 @@ pub const MACBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_MACBYTES;
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_key() -> Key {
     let mut key = [0; KEYBYTES];
     randombytes_into(&mut key);
@@ -52,7 +53,7 @@ pub fn gen_key() -> Key {
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_nonce() -> Nonce {
     let mut nonce = [0; NONCEBYTES];
     randombytes_into(&mut nonce);
@@ -80,11 +81,7 @@ pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8
             ffi::crypto_secretbox_xsalsa20poly1305_open(dst, src, len, n.as_ptr(), k.as_ptr())
         }
     });
-    if ret == 0 {
-        Ok(m)
-    } else {
-        Err(())
-    }
+    if ret == 0 { Ok(m) } else { Err(()) }
 }
 
 #[cfg(test)]
@@ -94,6 +91,7 @@ mod test {
     #[test]
     fn test_seal_open() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -105,8 +103,10 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -114,7 +114,7 @@ mod test {
             let mut c = seal(&m, &n, &k);
             for i in 0..c.len() {
                 c[i] ^= 0x20;
-                assert!(Err(()) == open(&mut c, &n, &k));
+                assert!(Err(()) == open(&c, &n, &k));
                 c[i] ^= 0x20;
             }
         }
@@ -122,6 +122,7 @@ mod test {
 
     #[test]
     fn test_vector_1() {
+        assert!(::init());
         let firstkey = Key([0x1b, 0x27, 0x55, 0x64, 0x73, 0xe9, 0x85, 0xd4, 0x62, 0xcd, 0x51,
                             0x19, 0x7a, 0x9a, 0x46, 0xc7, 0x60, 0x09, 0x54, 0x9e, 0xac, 0x64,
                             0x74, 0xf2, 0x06, 0xc4, 0xee, 0x08, 0x44, 0xf6, 0x83, 0x89]);
@@ -163,6 +164,7 @@ mod test {
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;
+        assert!(::init());
         for _ in 0..256usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -183,6 +185,7 @@ mod bench {
 
     #[bench]
     fn bench_seal_open(b: &mut test::Bencher) {
+        assert!(::init());
         let k = gen_key();
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter()
@@ -190,7 +193,7 @@ mod bench {
             .collect();
         b.iter(|| {
             for m in ms.iter() {
-                open(&seal(&m, &n, &k), &n, &k).unwrap();
+                unwrap!(open(&seal(&m, &n, &k), &n, &k));
             }
         });
     }

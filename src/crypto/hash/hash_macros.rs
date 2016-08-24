@@ -19,7 +19,7 @@ new_type! {
 pub fn hash(m: &[u8]) -> Digest {
     unsafe {
         let mut h = [0; DIGESTBYTES];
-        $hash_name(h.as_mut_ptr(), m.as_ptr(), m.len() as c_ulonglong);
+        let _todo_use_result = $hash_name(h.as_mut_ptr(), m.as_ptr(), m.len() as c_ulonglong);
         Digest(h)
     }
 }
@@ -33,6 +33,7 @@ mod test_encode {
     #[test]
     fn test_serialisation() {
         use randombytes::randombytes;
+        assert!(::init());
         for i in 0..32usize {
             let m = randombytes(i);
             let d = hash(&m[..]);
@@ -53,6 +54,7 @@ mod bench_m {
 
     #[bench]
     fn bench_hash(b: &mut test::Bencher) {
+        assert!(::init());
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
         }).collect();

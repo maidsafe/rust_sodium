@@ -17,7 +17,7 @@
 //! # Selected primitive
 //! `seal()` is `crypto_secretbox_xsalsa20poly1305`, a particular
 //! combination of Salsa20 and Poly1305 specified in
-//! [Cryptography in NaCl](http://nacl.cr.yp.to/valid.html).
+//! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html).
 //!
 //! This function is conjectured to meet the standard notions of privacy and
 //! authenticity.
@@ -32,5 +32,6 @@
 //! let their_plaintext = secretbox::open(&ciphertext, &nonce, &key).unwrap();
 //! assert!(plaintext == &their_plaintext[..]);
 //! ```
+
 pub use self::xsalsa20poly1305::*;
 pub mod xsalsa20poly1305;

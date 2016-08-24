@@ -5,6 +5,7 @@
 //! However, for the moment, there do not appear to be alternatives that
 //! inspire satisfactory levels of confidence. One can hope that NIST's
 //! SHA-3 competition will improve the situation.
+
 use ffi::{crypto_hash_sha512, crypto_hash_sha512_BYTES};
 
 hash_module!(crypto_hash_sha512, crypto_hash_sha512_BYTES, 128);
@@ -17,6 +18,7 @@ mod test {
     fn test_vector_1() {
         // corresponding to tests/hash.c, tests/hash2.cpp,
         // tests/hash3.c and tests/hash4.cpp from NaCl
+        assert!(::init());
         let x = [0x74, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x67, 0xa];
         let h_expected = [0x24, 0xf9, 0x50, 0xaa, 0xc7, 0xb9, 0xea, 0x9b, 0x3c, 0xb7, 0x28, 0x22,
                           0x8a, 0x0c, 0x82, 0xb6, 0x7c, 0x39, 0xe9, 0x6b, 0x4b, 0x34, 0x47, 0x98,
@@ -33,24 +35,25 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        let mut r = BufReader::new(File::open(filename).unwrap());
+        assert!(::init());
+        let mut r = BufReader::new(unwrap!(File::open(filename)));
         let mut line = String::new();
         loop {
             line.clear();
-            r.read_line(&mut line).unwrap();
-            if line.len() == 0 {
+            let _ = unwrap!(r.read_line(&mut line));
+            if line.is_empty() {
                 break;
             }
             let starts_with_len = line.starts_with("Len = ");
             if starts_with_len {
-                let len: usize = line[6..].trim().parse().unwrap();
+                let len: usize = unwrap!(line[6..].trim().parse());
                 line.clear();
-                r.read_line(&mut line).unwrap();
-                let rawmsg = line[6..].from_hex().unwrap();
+                let _ = unwrap!(r.read_line(&mut line));
+                let rawmsg = unwrap!(line[6..].from_hex());
                 let msg = &rawmsg[..len / 8];
                 line.clear();
-                r.read_line(&mut line).unwrap();
-                let md = line[5..].from_hex().unwrap();
+                let _ = unwrap!(r.read_line(&mut line));
+                let md = unwrap!(line[5..].from_hex());
                 let Digest(digest) = hash(msg);
                 assert!(&digest[..] == &md[..]);
             }

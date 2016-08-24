@@ -1,6 +1,6 @@
 //! Rust bindings to the [sodium library](https://github.com/jedisct1/libsodium).
 //!
-//! Sodium is a portable implementation of Dan Bernsteins [NaCl: Networking and
+//! Sodium is a portable implementation of Dan Bernsteins [`NaCl`: Networking and
 //! Cryptography library](http://nacl.cr.yp.to)
 //!
 //! For most users, if you want public-key (asymmetric) cryptography you should use
@@ -46,18 +46,40 @@
 //!  `crypto::verify`
 //!
 //!  `crypto::shorthash`
-#![warn(missing_docs)]
-#![warn(non_upper_case_globals)]
-#![warn(non_camel_case_types)]
-#![warn(unused_qualifications)]
+
+#![doc(html_logo_url =
+           "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
+       html_favicon_url = "https://maidsafe.net/img/favicon.ico",
+       html_root_url = "https://maidsafe.github.io/rust_sodium")]
+
+// For explanation of lint checks, run `rustc -W help` or see
+// https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
+#![forbid(bad_style, exceeding_bitshifts, mutable_transmutes, no_mangle_const_items,
+          unknown_crate_types, warnings)]
+#![deny(deprecated, drop_with_repr_extern, improper_ctypes, missing_docs,
+        non_shorthand_field_patterns, overflowing_literals, plugin_as_library,
+        private_no_mangle_fns, private_no_mangle_statics, stable_features, unconditional_recursion,
+        unknown_lints, unused, unused_allocation, unused_attributes, unused_comparisons,
+        unused_features, unused_parens, while_true)]
+#![warn(trivial_casts, trivial_numeric_casts, unused_extern_crates, unused_import_braces,
+        unused_qualifications, unused_results)]
+#![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
+         missing_debug_implementations, unsafe_code, variant_size_differences)]
+
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+#![cfg_attr(feature="clippy", deny(clippy, unicode_not_nfc, wrong_pub_self_convention,
+                                   option_unwrap_used))]
 
 extern crate rust_sodium_sys as ffi;
 extern crate libc;
 extern crate rand;
 #[cfg(any(test, feature = "rustc-serialize"))]
 extern crate rustc_serialize;
-#[cfg(any(test, feature = "serde"))]
+#[cfg(feature = "serde")]
 extern crate serde;
+#[macro_use]
+extern crate unwrap;
 
 mod marshal;
 #[macro_use]

@@ -5,6 +5,7 @@
 //! However, for the moment, there do not appear to be alternatives that
 //! inspire satisfactory levels of confidence. One can hope that NIST's
 //! SHA-3 competition will improve the situation.
+
 use ffi::{crypto_hash_sha256, crypto_hash_sha256_BYTES};
 
 hash_module!(crypto_hash_sha256, crypto_hash_sha256_BYTES, 64);
@@ -16,6 +17,7 @@ mod test {
     #[test]
     fn test_vector_1() {
         // hash of empty string
+        assert!(::init());
         let x = [];
         let h_expected = [0xe3, 0xb0, 0xc4, 0x42, 0x98, 0xfc, 0x1c, 0x14, 0x9a, 0xfb, 0xf4, 0xc8,
                           0x99, 0x6f, 0xb9, 0x24, 0x27, 0xae, 0x41, 0xe4, 0x64, 0x9b, 0x93, 0x4c,
@@ -27,6 +29,7 @@ mod test {
     #[test]
     fn test_vector_2() {
         // The quick brown fox jumps over the lazy dog
+        assert!(::init());
         let x = [0x54, 0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63, 0x6b, 0x20, 0x62, 0x72, 0x6f,
                  0x77, 0x6e, 0x20, 0x66, 0x6f, 0x78, 0x20, 0x6a, 0x75, 0x6d, 0x70, 0x73, 0x20,
                  0x6f, 0x76, 0x65, 0x72, 0x20, 0x74, 0x68, 0x65, 0x20, 0x6c, 0x61, 0x7a, 0x79,
@@ -43,24 +46,25 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        let mut r = BufReader::new(File::open(filename).unwrap());
+        assert!(::init());
+        let mut r = BufReader::new(unwrap!(File::open(filename)));
         let mut line = String::new();
         loop {
             line.clear();
-            r.read_line(&mut line).unwrap();
-            if line.len() == 0 {
+            let _ = unwrap!(r.read_line(&mut line));
+            if line.is_empty() {
                 break;
             }
             let starts_with_len = line.starts_with("Len = ");
             if starts_with_len {
-                let len: usize = line[6..].trim().parse().unwrap();
+                let len: usize = unwrap!(line[6..].trim().parse());
                 line.clear();
-                r.read_line(&mut line).unwrap();
-                let rawmsg = line[6..].from_hex().unwrap();
+                let _ = unwrap!(r.read_line(&mut line));
+                let rawmsg = unwrap!(line[6..].from_hex());
                 let msg = &rawmsg[..len / 8];
                 line.clear();
-                r.read_line(&mut line).unwrap();
-                let md = line[5..].from_hex().unwrap();
+                let _ = unwrap!(r.read_line(&mut line));
+                let md = unwrap!(line[5..].from_hex());
                 let Digest(digest) = hash(msg);
                 assert!(&digest[..] == &md[..]);
             }
