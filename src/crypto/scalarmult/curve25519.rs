@@ -30,7 +30,9 @@ new_type! {
 pub fn scalarmult(&Scalar(ref n): &Scalar, &GroupElement(ref p): &GroupElement) -> GroupElement {
     let mut q = [0; GROUPELEMENTBYTES];
     unsafe {
-        assert_eq!(0, ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(), n.as_ptr(), p.as_ptr()));
+        let _todo_use_result = ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(),
+                                                                 n.as_ptr(),
+                                                                 p.as_ptr());
     }
     GroupElement(q)
 }
@@ -41,7 +43,7 @@ pub fn scalarmult(&Scalar(ref n): &Scalar, &GroupElement(ref p): &GroupElement) 
 pub fn scalarmult_base(&Scalar(ref n): &Scalar) -> GroupElement {
     let mut q = [0; GROUPELEMENTBYTES];
     unsafe {
-        assert_eq!(0, ffi::crypto_scalarmult_curve25519_base(q.as_mut_ptr(), n.as_ptr()));
+        let _todo_use_result = ffi::crypto_scalarmult_curve25519_base(q.as_mut_ptr(), n.as_ptr());
     }
     GroupElement(q)
 }

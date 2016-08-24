@@ -60,10 +60,10 @@ pub fn stream(len: usize,
               &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
         let mut c: Vec<u8> = repeat(0u8).take(len).collect();
-        assert_eq!(0, $stream_name(c.as_mut_ptr(),
-                                   c.len() as c_ulonglong,
-                                   n.as_ptr(),
-                                   k.as_ptr()));
+        let _todo_use_result = $stream_name(c.as_mut_ptr(),
+                                            c.len() as c_ulonglong,
+                                            n.as_ptr(),
+                                            k.as_ptr());
         c
     }
 }
@@ -79,11 +79,11 @@ pub fn stream_xor(m: &[u8],
                   &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
         let mut c: Vec<u8> = repeat(0u8).take(m.len()).collect();
-        assert_eq!(0, $xor_name(c.as_mut_ptr(),
-                                m.as_ptr(),
-                                m.len() as c_ulonglong,
-                                n.as_ptr(),
-                                k.as_ptr()));
+        let _todo_use_result = $xor_name(c.as_mut_ptr(),
+                                         m.as_ptr(),
+                                         m.len() as c_ulonglong,
+                                         n.as_ptr(),
+                                         k.as_ptr());
         c
     }
 }
@@ -98,11 +98,11 @@ pub fn stream_xor_inplace(m: &mut [u8],
                           &Nonce(ref n): &Nonce,
                           &Key(ref k): &Key) {
     unsafe {
-        assert_eq!(0, $xor_name(m.as_mut_ptr(),
-                                m.as_ptr(),
-                                m.len() as c_ulonglong,
-                                n.as_ptr(),
-                                k.as_ptr()));
+        let _todo_use_result = $xor_name(m.as_mut_ptr(),
+                                         m.as_ptr(),
+                                         m.len() as c_ulonglong,
+                                         n.as_ptr(),
+                                         k.as_ptr());
     }
 }
 

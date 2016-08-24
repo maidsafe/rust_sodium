@@ -40,11 +40,10 @@ pub fn gen_key() -> Key {
 pub fn shorthash(m: &[u8], &Key(ref k): &Key) -> Digest {
     unsafe {
         let mut h = [0; DIGESTBYTES];
-        assert_eq!(0,
-                   ffi::crypto_shorthash_siphash24(h.as_mut_ptr(),
-                                                   m.as_ptr(),
-                                                   m.len() as c_ulonglong,
-                                                   k.as_ptr()));
+        let _todo_use_result = ffi::crypto_shorthash_siphash24(h.as_mut_ptr(),
+                                                               m.as_ptr(),
+                                                               m.len() as c_ulonglong,
+                                                               k.as_ptr());
         Digest(h)
     }
 }

@@ -58,9 +58,8 @@ pub fn gen_keypair() -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        assert_eq!(0,
-                   ffi::crypto_box_curve25519xsalsa20poly1305_keypair(pk.as_mut_ptr(),
-                                                                      sk.as_mut_ptr()));
+        let _todo_use_result =
+            ffi::crypto_box_curve25519xsalsa20poly1305_keypair(pk.as_mut_ptr(), sk.as_mut_ptr());
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -85,13 +84,12 @@ pub fn seal(m: &[u8],
             -> Vec<u8> {
     let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| {
         unsafe {
-            assert_eq!(0,
-                       ffi::crypto_box_curve25519xsalsa20poly1305(dst,
-                                                                  src,
-                                                                  len,
-                                                                  n.as_ptr(),
-                                                                  pk.as_ptr(),
-                                                                  sk.as_ptr()));
+            let _todo_use_result = ffi::crypto_box_curve25519xsalsa20poly1305(dst,
+                                                                              src,
+                                                                              len,
+                                                                              n.as_ptr(),
+                                                                              pk.as_ptr(),
+                                                                              sk.as_ptr());
         }
     });
     c
@@ -138,10 +136,10 @@ pub fn precompute(&PublicKey(ref pk): &PublicKey,
                   -> PrecomputedKey {
     let mut k = [0u8; PRECOMPUTEDKEYBYTES];
     unsafe {
-        assert_eq!(0,
-                   ffi::crypto_box_curve25519xsalsa20poly1305_beforenm(k.as_mut_ptr(),
-                                                                       pk.as_ptr(),
-                                                                       sk.as_ptr()));
+        let _todo_use_result =
+            ffi::crypto_box_curve25519xsalsa20poly1305_beforenm(k.as_mut_ptr(),
+                                                                pk.as_ptr(),
+                                                                sk.as_ptr());
     }
     PrecomputedKey(k)
 }
@@ -154,12 +152,12 @@ pub fn seal_precomputed(m: &[u8],
                         -> Vec<u8> {
     let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| {
         unsafe {
-            assert_eq!(0,
-                       ffi::crypto_box_curve25519xsalsa20poly1305_afternm(dst,
-                                                                          src,
-                                                                          len,
-                                                                          n.as_ptr(),
-                                                                          k.as_ptr()));
+            let _todo_use_result =
+                ffi::crypto_box_curve25519xsalsa20poly1305_afternm(dst,
+                                                                   src,
+                                                                   len,
+                                                                   n.as_ptr(),
+                                                                   k.as_ptr());
         }
     });
     c

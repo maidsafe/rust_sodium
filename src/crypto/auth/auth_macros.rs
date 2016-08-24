@@ -47,10 +47,10 @@ pub fn authenticate(m: &[u8],
                     &Key(ref k): &Key) -> Tag {
     unsafe {
         let mut tag = [0; TAGBYTES];
-        assert_eq!(0, $auth_name(tag.as_mut_ptr(),
-                                 m.as_ptr(),
-                                 m.len() as c_ulonglong,
-                                 k.as_ptr()));
+        let _todo_use_result = $auth_name(tag.as_mut_ptr(),
+                                          m.as_ptr(),
+                                          m.len() as c_ulonglong,
+                                          k.as_ptr());
         Tag(tag)
     }
 }
@@ -220,7 +220,7 @@ impl State {
     pub fn init(k: &[u8]) -> State {
         unsafe {
             let mut s = mem::uninitialized();
-            assert_eq!(0, $init_name(&mut s, k.as_ptr(), k.len()));
+            let _todo_use_result = $init_name(&mut s, k.as_ptr(), k.len());
             State(s)
         }
     }
@@ -230,7 +230,7 @@ impl State {
     pub fn update(&mut self, in_: &[u8]) {
         let &mut State(ref mut state) = self;
         unsafe {
-            assert_eq!(0, $update_name(state, in_.as_ptr(), in_.len() as c_ulonglong));
+            let _todo_use_result = $update_name(state, in_.as_ptr(), in_.len() as c_ulonglong);
         }
     }
 
@@ -240,7 +240,7 @@ impl State {
         unsafe {
             let &mut State(ref mut state) = self;
             let mut tag = [0; $tagbytes as usize];
-            assert_eq!(0, $final_name(state, tag.as_mut_ptr()));
+            let _todo_use_result = $final_name(state, tag.as_mut_ptr());
             Tag(tag)
         }
     }

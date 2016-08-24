@@ -19,11 +19,10 @@ const SEALBYTES: usize = ffi::crypto_box_SEALBYTES;
 pub fn seal(m: &[u8], &box_::PublicKey(ref pk): &box_::PublicKey) -> Vec<u8> {
     let mut c = vec![0u8; m.len() + SEALBYTES];
     unsafe {
-        assert_eq!(0,
-                   ffi::crypto_box_seal(c.as_mut_ptr(),
-                                        m.as_ptr(),
-                                        m.len() as c_ulonglong,
-                                        pk.as_ptr()));
+        let _todo_use_result = ffi::crypto_box_seal(c.as_mut_ptr(),
+                                                    m.as_ptr(),
+                                                    m.len() as c_ulonglong,
+                                                    pk.as_ptr());
     }
     c
 }

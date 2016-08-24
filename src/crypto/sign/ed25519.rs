@@ -60,8 +60,7 @@ pub fn gen_keypair() -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        assert_eq!(0,
-                   ffi::crypto_sign_ed25519_keypair(pk.as_mut_ptr(), sk.as_mut_ptr()));
+        let _todo_use_result = ffi::crypto_sign_ed25519_keypair(pk.as_mut_ptr(), sk.as_mut_ptr());
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -72,10 +71,8 @@ pub fn keypair_from_seed(&Seed(ref seed): &Seed) -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        assert_eq!(0,
-                   ffi::crypto_sign_ed25519_seed_keypair(pk.as_mut_ptr(),
-                                                         sk.as_mut_ptr(),
-                                                         seed.as_ptr()));
+        let _todo_use_result =
+            ffi::crypto_sign_ed25519_seed_keypair(pk.as_mut_ptr(), sk.as_mut_ptr(), seed.as_ptr());
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -86,12 +83,11 @@ pub fn sign(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Vec<u8> {
     unsafe {
         let mut sm: Vec<u8> = repeat(0u8).take(m.len() + SIGNATUREBYTES).collect();
         let mut smlen = 0;
-        assert_eq!(0,
-                   ffi::crypto_sign_ed25519(sm.as_mut_ptr(),
-                                            &mut smlen,
-                                            m.as_ptr(),
-                                            m.len() as c_ulonglong,
-                                            sk.as_ptr()));
+        let _todo_use_result = ffi::crypto_sign_ed25519(sm.as_mut_ptr(),
+                                                        &mut smlen,
+                                                        m.as_ptr(),
+                                                        m.len() as c_ulonglong,
+                                                        sk.as_ptr());
         sm.truncate(smlen as usize);
         sm
     }
@@ -123,12 +119,11 @@ pub fn sign_detached(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Signature {
     unsafe {
         let mut sig = [0u8; SIGNATUREBYTES];
         let mut siglen: c_ulonglong = 0;
-        assert_eq!(0,
-                   ffi::crypto_sign_ed25519_detached(sig.as_mut_ptr(),
-                                                     &mut siglen,
-                                                     m.as_ptr(),
-                                                     m.len() as c_ulonglong,
-                                                     sk.as_ptr()));
+        let _todo_use_result = ffi::crypto_sign_ed25519_detached(sig.as_mut_ptr(),
+                                                                 &mut siglen,
+                                                                 m.as_ptr(),
+                                                                 m.len() as c_ulonglong,
+                                                                 sk.as_ptr());
         assert_eq!(siglen, SIGNATUREBYTES as c_ulonglong);
         Signature(sig)
     }

@@ -19,7 +19,7 @@ unwrap = "~1.1.0"
 
 [build-dependencies]
 flate2 = { version = "~0.2.14", optional = true }
-gcc = { version = "~0.3.34", optional = true }
+gcc = { version = "~0.3.35", optional = true }
 pkg-config = { version = "~0.3.8", optional = true }
 tar = { version = "~0.4.8", optional = true }
 unwrap = "~1.1.0"
