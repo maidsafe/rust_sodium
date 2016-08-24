@@ -10,6 +10,6 @@ pub fn marshal<T, F>(buf: &[u8], padbefore: usize, bytestodrop: usize, f: F) -> 
     let pdst = dst.as_mut_ptr();
     let psrc = dst.as_ptr();
     let res = f(pdst, psrc, dst.len() as c_ulonglong);
-    dst.drain(..bytestodrop);
+    let _ = dst.drain(..bytestodrop);
     (dst, res)
 }
