@@ -167,6 +167,8 @@
 <span id="123">123</span>
 <span id="124">124</span>
 <span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Rust bindings to the [sodium library](https://github.com/jedisct1/libsodium).</span>
 <span class='doccomment'>//!</span>
@@ -231,10 +233,12 @@
         <span class='ident'>private_no_mangle_fns</span>, <span class='ident'>private_no_mangle_statics</span>, <span class='ident'>stable_features</span>, <span class='ident'>unconditional_recursion</span>,
         <span class='ident'>unknown_lints</span>, <span class='ident'>unused</span>, <span class='ident'>unused_allocation</span>, <span class='ident'>unused_attributes</span>, <span class='ident'>unused_comparisons</span>,
         <span class='ident'>unused_features</span>, <span class='ident'>unused_parens</span>, <span class='ident'>while_true</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>trivial_casts</span>, <span class='ident'>trivial_numeric_casts</span>, <span class='ident'>unused_extern_crates</span>, <span class='ident'>unused_import_braces</span>,
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>trivial_numeric_casts</span>, <span class='ident'>unused_extern_crates</span>, <span class='ident'>unused_import_braces</span>,
         <span class='ident'>unused_qualifications</span>, <span class='ident'>unused_results</span>)]</span>
+<span class='comment'>// Allow `trivial_casts` to cast `u8` to `c_char`, which is `u8` or `i8`, depending on the</span>
+<span class='comment'>// architecture.</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>box_pointers</span>, <span class='ident'>fat_ptr_transmutes</span>, <span class='ident'>missing_copy_implementations</span>,
-         <span class='ident'>missing_debug_implementations</span>, <span class='ident'>unsafe_code</span>, <span class='ident'>variant_size_differences</span>)]</span>
+         <span class='ident'>missing_debug_implementations</span>, <span class='ident'>trivial_casts</span>, <span class='ident'>unsafe_code</span>, <span class='ident'>variant_size_differences</span>)]</span>
 
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;clippy&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>plugin</span>))]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;clippy&quot;</span>, <span class='ident'>plugin</span>(<span class='ident'>clippy</span>))]</span>
