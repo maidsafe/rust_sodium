@@ -68,15 +68,16 @@ fn main() {
 
     let command = "(New-Object System.Net.WebClient).DownloadFile(\"".to_string() + &url +
                   "\", \"" + &gz_path + "\")";
-    let download_output = Command::new("powershell")
-        .arg("-Command")
+    let mut download_cmd = Command::new("powershell");
+    let download_output = download_cmd.arg("-Command")
         .arg(&command)
         .output()
         .unwrap_or_else(|error| {
             panic!("Failed to run powershell download command: {}", error);
         });
     if !download_output.status.success() {
-        panic!("\n{}\n{}\n",
+        panic!("\n{:?}\n{}\n{}\n",
+               download_cmd,
                String::from_utf8_lossy(&download_output.stdout),
                String::from_utf8_lossy(&download_output.stderr));
     }
@@ -117,14 +118,14 @@ fn main() {
 
     // Get path to gcc in order to guess location of libpthread.a
     let mut lib_search_dirs = vec![Path::new(&install_dir).join("lib")];
-    let where_output = Command::new("where")
-        .arg(gcc::Config::new().get_compiler().path())
+    let where_cmd = Command::new("where");
+    let where_output = where_cmd.arg(gcc::Config::new().get_compiler().path())
         .output()
         .unwrap_or_else(|error| {
             panic!("Failed to run where command: {}", error);
         });
     if !where_output.status.success() {
-        panic!("\n{}\n{}\n",
+        panic!("\n{:?}\n{}\n{}\n",
                String::from_utf8_lossy(&where_output.stdout),
                String::from_utf8_lossy(&where_output.stderr));
     }
@@ -179,8 +180,8 @@ fn main() {
     unwrap!(fs::create_dir_all(&install_dir));
     unwrap!(fs::create_dir_all(&source_dir));
 
-    let curl_output = Command::new("curl")
-        .arg(&url)
+    let mut curl_cmd = Command::new("curl");
+    let curl_output = curl_cmd.arg(&url)
         .arg("-sSLvo")
         .arg(&gz_path)
         .output()
@@ -188,7 +189,8 @@ fn main() {
             panic!("Failed to run curl command: {}", error);
         });
     if !curl_output.status.success() {
-        panic!("\n{}\n{}\n",
+        panic!("\n{:?}\n{}\n{}\n",
+               curl_cmd,
                String::from_utf8_lossy(&curl_output.stdout),
                String::from_utf8_lossy(&curl_output.stderr));
     }
@@ -216,8 +218,8 @@ fn main() {
     let host = unwrap!(env::var("HOST"));
     let host_arg = format!("--host={}", target);
 
-    let configure_output = Command::new("./configure")
-        .current_dir(&source_dir)
+    let mut configure_cmd = Command::new("./configure");
+    let configure_output = configure_cmd.current_dir(&source_dir)
         .env("CC", &cc)
         .env("CFLAGS", &cflags)
         .arg(&prefix_arg)
@@ -229,7 +231,10 @@ fn main() {
             panic!("Failed to run './configure': {}", error);
         });
     if !configure_output.status.success() {
-        panic!("\n{}\n{}\n",
+        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n",
+               configure_cmd,
+               cflags,
+               cc,
                String::from_utf8_lossy(&configure_output.stdout),
                String::from_utf8_lossy(&configure_output.stderr));
     }
@@ -238,8 +243,8 @@ fn main() {
     let j_arg = format!("-j{}", unwrap!(env::var("NUM_JOBS")));
     let cross_compiling = target != host;
     let make_arg = if cross_compiling { "all" } else { "check" };
-    let make_output = Command::new("make")
-        .current_dir(&source_dir)
+    let mut make_cmd = Command::new("make");
+    let make_output = make_cmd.current_dir(&source_dir)
         .env("CC", &cc)
         .env("CFLAGS", &cflags)
         .env("V", "1")
@@ -259,7 +264,10 @@ fn main() {
         } else {
             ""
         };
-        panic!("\n{}\n{}\n{}\n{}",
+        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n{}",
+               make_cmd,
+               &cflags,
+               &cc,
                String::from_utf8_lossy(&configure_output.stdout),
                String::from_utf8_lossy(&make_output.stdout),
                String::from_utf8_lossy(&make_output.stderr),
@@ -267,8 +275,8 @@ fn main() {
     }
 
     // Run `make install`
-    let install_output = Command::new("make")
-        .current_dir(&source_dir)
+    let mut install_cmd = Command::new("make");
+    let install_output = install_cmd.current_dir(&source_dir)
         .env("CC", &cc)
         .env("CFLAGS", &cflags)
         .arg("install")
@@ -277,7 +285,8 @@ fn main() {
             panic!("Failed to run 'make install': {}", error);
         });
     if !install_output.status.success() {
-        panic!("\n{}\n{}\n{}\n{}\n",
+        panic!("\n{:?}\n{}\n{}\n{}\n{}\n",
+               install_cmd,
                String::from_utf8_lossy(&configure_output.stdout),
                String::from_utf8_lossy(&make_output.stdout),
                String::from_utf8_lossy(&install_output.stdout),
