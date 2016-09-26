@@ -66,8 +66,9 @@ fn main() {
     let gz_path = install_dir.clone() + "/" + &gz_filename;
     unwrap!(fs::create_dir_all(Path::new(&install_dir).join("lib")));
 
-    let command = "(New-Object System.Net.WebClient).DownloadFile(\"".to_string() + &url +
-                  "\", \"" + &gz_path + "\")";
+    let command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
+                   ((New-Object System.Net.WebClient).DownloadFile(\""
+        .to_string() + &url + "\", \"" + &gz_path + "\"))";
     let mut download_cmd = Command::new("powershell");
     let download_output = download_cmd.arg("-Command")
         .arg(&command)
@@ -118,14 +119,14 @@ fn main() {
 
     // Get path to gcc in order to guess location of libpthread.a
     let mut lib_search_dirs = vec![Path::new(&install_dir).join("lib")];
-    let where_cmd = Command::new("where");
+    let mut where_cmd = Command::new("where");
     let where_output = where_cmd.arg(gcc::Config::new().get_compiler().path())
         .output()
         .unwrap_or_else(|error| {
             panic!("Failed to run where command: {}", error);
         });
     if !where_output.status.success() {
-        panic!("\n{:?}\n{}\n{}\n",
+        panic!("\n{:?}\n{}\n",
                String::from_utf8_lossy(&where_output.stdout),
                String::from_utf8_lossy(&where_output.stderr));
     }
