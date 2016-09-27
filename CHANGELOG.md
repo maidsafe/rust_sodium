@@ -1,6 +1,9 @@
 # rust_sodium - Change Log
 
 ## [0.1.2]
+- Fix Windows build scripts by using curl.
+- Fix ARM build by allowing the `trivial_casts` lint.
+- Print build commands on failure.
 - [Upstream pull - Make vector manipulation more efficient.](https://github.com/dnaq/sodiumoxide/commit/f509c90de1a5825abf67e1d8cd8cd70a35b91880)
 - Added `init()` to every test.
 - Updated dependencies.
