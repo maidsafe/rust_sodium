@@ -126,7 +126,8 @@ fn main() {
             panic!("Failed to run where command: {}", error);
         });
     if !where_output.status.success() {
-        panic!("\n{:?}\n{}\n",
+        panic!("\n{:?}\n{}\n{}\n",
+               where_cmd,
                String::from_utf8_lossy(&where_output.stdout),
                String::from_utf8_lossy(&where_output.stderr));
     }
