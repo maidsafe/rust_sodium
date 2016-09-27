@@ -8,7 +8,7 @@ license = "MIT OR Apache-2.0"
 links = "sodium"
 name = "rust_sodium-sys"
 repository = "https://github.com/maidsafe/rust_sodium"
-version = "0.1.1"
+version = "0.1.2"
 
 [dependencies]
 clippy = {version = "~0.0.85", optional = true}
