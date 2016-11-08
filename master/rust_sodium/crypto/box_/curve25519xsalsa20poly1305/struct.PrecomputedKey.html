@@ -49,7 +49,7 @@
                    </a>
                </span><a id='src-424' class='srclink' href='../../../../src/rust_sodium/src/newtype_macros.rs.html#246' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>#[must_use]
-pub struct PrecomputedKey(pub <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; PRECOMPUTEDKEYBYTES]</a>);</pre><div class='docblock'><p>Applications that send several messages to the same receiver can gain speed by
+pub struct PrecomputedKey(pub <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 32]</a>);</pre><div class='docblock'><p>Applications that send several messages to the same receiver can gain speed by
 splitting <code>seal()</code> into two steps, <code>precompute()</code> and <code>seal_precomputed()</code>.
 Similarly, applications that receive several messages from the same sender can gain
 speed by splitting <code>open()</code> into two steps, <code>precompute()</code> and <code>open_precomputed()</code>.</p>

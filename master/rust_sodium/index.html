@@ -47,55 +47,56 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/rust_sodium/src/lib.rs.html#1-127' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-0' class='srclink' href='../src/rust_sodium/src/lib.rs.html#1-128' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Rust bindings to the <a href="https://github.com/jedisct1/libsodium">sodium library</a>.</p>
 
 <p>Sodium is a portable implementation of Dan Bernsteins <a href="http://nacl.cr.yp.to"><code>NaCl</code>: Networking and
 Cryptography library</a></p>
 
 <p>For most users, if you want public-key (asymmetric) cryptography you should use
-the functions in <code>crypto::box_</code> for encryption/decryption.</p>
+the functions in <a href="crypto/box_/index.html"><code>crypto::box_</code></a> for encryption/decryption.</p>
 
 <p>If you want secret-key (symmetric) cryptography you should be using the
-functions in <code>crypto::secretbox</code> for encryption/decryption.</p>
+functions in <a href="crypto/secretbox/index.html"><code>crypto::secretbox</code></a> for encryption/decryption.</p>
 
-<p>For public-key signatures you should use the functions in <code>crypto::sign</code> for
-signature creation and verification.</p>
+<p>For public-key signatures you should use the functions in
+<a href="crypto/sign/index.html"><code>crypto::sign</code></a> for signature creation and verification.</p>
 
 <p>Unless you know what you&#39;re doing you most certainly don&#39;t want to use the
-functions in <code>crypto::scalarmult</code>, <code>crypto::stream</code>, <code>crypto::auth</code> and
-<code>crypto::onetimeauth</code>.</p>
+functions in <a href="crypto/scalarmult/index.html"><code>crypto::scalarmult</code></a>,
+<a href="crypto/stream/index.html"><code>crypto::stream</code></a>, <a href="crypto/auth/index.html"><code>crypto::auth</code></a> and
+<a href="crypto/onetimeauth/index.html"><code>crypto::onetimeauth</code></a>.</p>
 
 <h2 id='thread-safety' class='section-header'><a href='#thread-safety'>Thread Safety</a></h2>
-<p>All functions in this library are thread-safe provided that the <code>init()</code>
+<p>All functions in this library are thread-safe provided that the <a href="fn.init.html"><code>init()</code></a>
 function has been called during program execution.</p>
 
-<p>If <code>init()</code> hasn&#39;t been called then all functions except the random-number
+<p>If <a href="fn.init.html"><code>init()</code></a> hasn&#39;t been called then all functions except the random-number
 generation functions and the key-generation functions are thread-safe.</p>
 
 <h1 id='public-key-cryptography' class='section-header'><a href='#public-key-cryptography'>Public-key cryptography</a></h1>
-<p><code>crypto::box_</code></p>
+<p><a href="crypto/box_/index.html"><code>crypto::box_</code></a></p>
 
-<p><code>crypto::sign</code></p>
+<p><a href="crypto/sign/index.html"><code>crypto::sign</code></a></p>
 
 <h1 id='sealed-boxes' class='section-header'><a href='#sealed-boxes'>Sealed boxes</a></h1>
-<p><code>crypto::sealedox</code></p>
+<p><a href="crypto/sealedbox/index.html"><code>crypto::sealedbox</code></a></p>
 
 <h1 id='secret-key-cryptography' class='section-header'><a href='#secret-key-cryptography'>Secret-key cryptography</a></h1>
-<p><code>crypto::secretbox</code></p>
+<p><a href="crypto/secretbox/index.html"><code>crypto::secretbox</code></a></p>
 
-<p><code>crypto::stream</code></p>
+<p><a href="crypto/stream/index.html"><code>crypto::stream</code></a></p>
 
-<p><code>crypto::auth</code></p>
+<p><a href="crypto/auth/index.html"><code>crypto::auth</code></a></p>
 
-<p><code>crypto::onetimeauth</code></p>
+<p><a href="crypto/onetimeauth/index.html"><code>crypto::onetimeauth</code></a></p>
 
 <h1 id='low-level-functions' class='section-header'><a href='#low-level-functions'>Low-level functions</a></h1>
-<p><code>crypto::hash</code></p>
+<p><a href="crypto/hash/index.html"><code>crypto::hash</code></a></p>
 
-<p><code>crypto::verify</code></p>
+<p><a href="crypto/verify/index.html"><code>crypto::verify</code></a></p>
 
-<p><code>crypto::shorthash</code></p>
+<p><a href="crypto/shorthash/index.html"><code>crypto::shorthash</code></a></p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>

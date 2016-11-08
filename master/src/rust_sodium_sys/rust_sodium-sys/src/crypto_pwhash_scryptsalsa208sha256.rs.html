@@ -265,6 +265,7 @@
 <span id="221">221</span>
 <span id="222">222</span>
 <span id="223">223</span>
+<span id="224">224</span>
 </pre><pre class='rust '>
 <span class='comment'>// crypto_pwhash_scryptsalsa208sha256.h</span>
 
@@ -370,11 +371,12 @@
                 <span class='kw'>as</span> <span class='ident'>size_t</span>)
     };
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ret_hash</span> <span class='op'>==</span> <span class='number'>0</span>);
-    <span class='kw'>let</span> <span class='ident'>ret_verify</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-        <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str_verify</span>(<span class='ident'>hashed_password</span>.<span class='ident'>as_ptr</span>(),
-                                                      <span class='ident'>password</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
-                                                      <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_ulonglong</span>)
-    };
+    <span class='kw'>let</span> <span class='ident'>ret_verify</span> <span class='op'>=</span>
+        <span class='kw'>unsafe</span> {
+            <span class='ident'>crypto_pwhash_scryptsalsa208sha256_str_verify</span>(<span class='ident'>hashed_password</span>.<span class='ident'>as_ptr</span>(),
+                                                          <span class='ident'>password</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                                                          <span class='ident'>password</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_ulonglong</span>)
+        };
     <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ret_verify</span> <span class='op'>==</span> <span class='number'>0</span>);
 }
 <span class='attribute'>#[<span class='ident'>test</span>]</span>

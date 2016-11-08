@@ -47,16 +47,20 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-559' class='srclink' href='../../../src/rust_sodium/src/crypto/sign/mod.rs.html#1-46' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-559' class='srclink' href='../../../src/rust_sodium/src/crypto/sign/mod.rs.html#1-51' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Public-key signatures</p>
 
+<p>This module re-exports all members of the default signing scheme, currently
+<a href="ed25519/index.html"><code>ed25519</code></a>, hence e.g. <code>sign</code> refers to
+<a href="ed25519/fn.sign.html"><code>ed25519::sign</code></a>.</p>
+
 <h1 id='security-model' class='section-header'><a href='#security-model'>Security model</a></h1>
-<p>The <code>sign()</code> function is designed to meet the standard
+<p>The <a href="ed25519/fn.sign.html"><code>sign()</code></a> function is designed to meet the standard
 notion of unforgeability for a public-key signature scheme under
 chosen-message attacks.</p>
 
 <h1 id='selected-primitive' class='section-header'><a href='#selected-primitive'>Selected primitive</a></h1>
-<p><code>crypto::sign::sign</code> is <code>ed25519</code>, a signature scheme specified in
+<p><a href="ed25519/fn.sign.html"><code>crypto::sign::sign</code></a> is <code>ed25519</code>, a signature scheme specified in
 <a href="http://ed25519.cr.yp.to/">Ed25519</a>. This function is conjectured to meet the
 standard notion of unforgeability for a public-key signature scheme under
 chosen-message attacks.</p>

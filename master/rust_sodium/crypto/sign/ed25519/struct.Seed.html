@@ -49,7 +49,7 @@
                    </a>
                </span><a id='src-570' class='srclink' href='../../../../src/rust_sodium/src/newtype_macros.rs.html#246' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>#[must_use]
-pub struct Seed(pub <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; SEEDBYTES]</a>);</pre><div class='docblock'><p><code>Seed</code> that can be used for keypair generation</p>
+pub struct Seed(pub <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 32]</a>);</pre><div class='docblock'><p><code>Seed</code> that can be used for keypair generation</p>
 
 <p>The <code>Seed</code> is used by <code>keypair_from_seed()</code> to generate
 a secret and public signature key.</p>
