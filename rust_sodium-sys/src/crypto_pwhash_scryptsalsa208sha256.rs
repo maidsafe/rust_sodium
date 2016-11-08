@@ -102,11 +102,12 @@ fn test_crypto_pwhash_scryptsalsa208sha256_str() {
                 as size_t)
     };
     assert!(ret_hash == 0);
-    let ret_verify = unsafe {
-        crypto_pwhash_scryptsalsa208sha256_str_verify(hashed_password.as_ptr(),
-                                                      password.as_ptr() as *const c_char,
-                                                      password.len() as c_ulonglong)
-    };
+    let ret_verify =
+        unsafe {
+            crypto_pwhash_scryptsalsa208sha256_str_verify(hashed_password.as_ptr(),
+                                                          password.as_ptr() as *const c_char,
+                                                          password.len() as c_ulonglong)
+        };
     assert!(ret_verify == 0);
 }
 #[test]
