@@ -17,6 +17,20 @@ extern "C" {
                                       n: *const u8,
                                       k: *const u8)
                                       -> c_int;
+    pub fn crypto_secretbox_detached(c: *mut u8,
+                                     mac: *mut u8,
+                                     m: *const u8,
+                                     mlen: c_ulonglong,
+                                     n: *const u8,
+                                     k: *const u8)
+                                     -> c_int;
+    pub fn crypto_secretbox_open_detached(m: *mut u8,
+                                          c: *const u8,
+                                          mac: *const u8,
+                                          clen: c_ulonglong,
+                                          n: *const u8,
+                                          k: *const u8)
+                                          -> c_int;
     pub fn crypto_secretbox_keybytes() -> size_t;
     pub fn crypto_secretbox_noncebytes() -> size_t;
     pub fn crypto_secretbox_macbytes() -> size_t;

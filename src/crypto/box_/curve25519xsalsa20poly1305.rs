@@ -41,6 +41,13 @@ new_type! {
 }
 
 new_type! {
+    /// Authentication `Tag` for the detached encryption mode
+    ///
+    /// In the combined mode, the tag occupies the first MACBYTES bytes of the ciphertext.
+    public Tag(MACBYTES);
+}
+
+new_type! {
     /// `Nonce` for asymmetric authenticated encryption
     nonce Nonce(NONCEBYTES);
 }
@@ -92,6 +99,28 @@ pub fn seal(m: &[u8],
     c
 }
 
+/// `seal_detached()` encrypts and authenticates a message `m` using the senders secret key `sk`,
+/// the receivers public key `pk` and a nonce `n`. `m` is encrypted in place, so after this
+/// function returns it will contain the ciphertext. The detached authentication tag is returned by
+/// value.
+pub fn seal_detached(m: &mut [u8],
+                     &Nonce(ref n): &Nonce,
+                     &PublicKey(ref pk): &PublicKey,
+                     &SecretKey(ref sk): &SecretKey)
+                     -> Tag {
+    let mut tag = [0; MACBYTES];
+    unsafe {
+        let _ = ffi::crypto_box_detached(m.as_mut_ptr(),
+                                         tag.as_mut_ptr(),
+                                         m.as_ptr(),
+                                         m.len() as u64,
+                                         n.as_ptr(),
+                                         pk.as_ptr(),
+                                         sk.as_ptr());
+    };
+    Tag(tag)
+}
+
 /// `open()` verifies and decrypts a ciphertext `c` using the receiver's secret key `sk`,
 /// the senders public key `pk`, and a nonce `n`. It returns a plaintext `Ok(m)`.
 /// If the ciphertext fails verification, `open()` returns `Err(())`.
@@ -115,6 +144,28 @@ pub fn open(c: &[u8],
                                   sk.as_ptr())
     };
     if ret == 0 { Ok(m) } else { Err(()) }
+}
+
+/// `open_detached()` verifies and decrypts a ciphertext `c` using the receiver's secret key `sk`,
+/// the senders public key `pk`, and a nonce `n`. `c` is decrypted in place, so if this function is
+/// successful it will contain the plaintext. If the ciphertext fails verification,
+/// `open_detached()` returns `Err(())`, and the ciphertext is not modified.
+pub fn open_detached(c: &mut [u8],
+                     mac: &Tag,
+                     &Nonce(ref n): &Nonce,
+                     &PublicKey(ref pk): &PublicKey,
+                     &SecretKey(ref sk): &SecretKey)
+                     -> Result<(), ()> {
+    let ret = unsafe {
+        ffi::crypto_box_open_detached(c.as_mut_ptr(),
+                                      c.as_ptr(),
+                                      mac.0.as_ptr(),
+                                      c.len() as u64,
+                                      n.as_ptr(),
+                                      pk.as_ptr(),
+                                      sk.as_ptr())
+    };
+    if ret == 0 { Ok(()) } else { Err(()) }
 }
 
 new_type! {
@@ -160,6 +211,25 @@ pub fn seal_precomputed(m: &[u8],
     c
 }
 
+/// `seal_detached_precomputed()` encrypts and authenticates a message `m` using a precomputed key
+/// `k` and a nonce `n`. `m` is encrypted in place, so after this function returns it will contain
+/// the ciphertext. The detached authentication tag is returned by value.
+pub fn seal_detached_precomputed(m: &mut [u8],
+                                 &Nonce(ref n): &Nonce,
+                                 &PrecomputedKey(ref k): &PrecomputedKey)
+                                 -> Tag {
+    let mut tag = [0; MACBYTES];
+    unsafe {
+        let _ = ffi::crypto_box_detached_afternm(m.as_mut_ptr(),
+                                                 tag.as_mut_ptr(),
+                                                 m.as_ptr(),
+                                                 m.len() as u64,
+                                                 n.as_ptr(),
+                                                 k.as_ptr());
+    };
+    Tag(tag)
+}
+
 /// `open_precomputed()` verifies and decrypts a ciphertext `c` using a precomputed
 /// key `k` and a nonce `n`. It returns a plaintext `Ok(m)`.
 /// If the ciphertext fails verification, `open_precomputed()` returns `Err(())`.
@@ -181,6 +251,26 @@ pub fn open_precomputed(c: &[u8],
                                           k.as_ptr())
     };
     if ret == 0 { Ok(m) } else { Err(()) }
+}
+
+/// `open_detached_precomputed()` verifies and decrypts a ciphertext `c` using a precomputed key
+/// `k` and a nonce `n`. `c` is decrypted in place, so if this function is successful it will
+/// contain the plaintext. If the ciphertext fails verification, `open_detached()` returns
+/// `Err(())`, and the ciphertext is not modified.
+pub fn open_detached_precomputed(c: &mut [u8],
+                                 mac: &Tag,
+                                 &Nonce(ref n): &Nonce,
+                                 &PrecomputedKey(ref k): &PrecomputedKey)
+                                 -> Result<(), ()> {
+    let ret = unsafe {
+        ffi::crypto_box_open_detached_afternm(c.as_mut_ptr(),
+                                              c.as_ptr(),
+                                              mac.0.as_ptr(),
+                                              c.len() as u64,
+                                              n.as_ptr(),
+                                              k.as_ptr())
+    };
+    if ret == 0 { Ok(()) } else { Err(()) }
 }
 
 #[cfg(test)]
