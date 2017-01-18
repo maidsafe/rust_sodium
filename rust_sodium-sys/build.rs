@@ -163,8 +163,8 @@ fn main() {
     // Download gz tarball
     let basename = "libsodium-".to_string() + VERSION;
     let gz_filename = basename.clone() + ".tar.gz";
-    let url = "https://github.com/jedisct1/libsodium/releases/download/".to_string() + VERSION +
-              "/" + &gz_filename;
+    let url = "https://github.com/jedisct1/libsodium/releases/download/".to_string() +
+              VERSION + "/" + &gz_filename;
     let mut install_dir = get_install_dir();
     let mut source_dir = unwrap!(env::var("OUT_DIR")) + "/source";
     // Avoid issues with paths containing spaces by falling back to using /tmp
@@ -219,6 +219,15 @@ fn main() {
     let prefix_arg = format!("--prefix={}", install_dir);
     let host = unwrap!(env::var("HOST"));
     let host_arg = format!("--host={}", target);
+    let cross_compiling = target != host;
+    let help = if cross_compiling {
+        "***********************************************************\n\
+         Possible missing dependencies.\n\
+         See https://github.com/maidsafe/rust_sodium#cross-compiling\n\
+         ***********************************************************\n\n"
+    } else {
+        ""
+    };
 
     let mut configure_cmd = Command::new("./configure");
     let configure_output = configure_cmd.current_dir(&source_dir)
@@ -230,57 +239,42 @@ fn main() {
         .arg("--disable-pie")
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run './configure': {}", error);
+            panic!("Failed to run './configure': {}\n{}", error, help);
         });
     if !configure_output.status.success() {
-        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n",
+        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n",
                configure_cmd,
                cflags,
                cc,
                String::from_utf8_lossy(&configure_output.stdout),
-               String::from_utf8_lossy(&configure_output.stderr));
+               String::from_utf8_lossy(&configure_output.stderr),
+               help);
     }
 
     // Run `make check`, or `make all` if we're cross-compiling
     let j_arg = format!("-j{}", unwrap!(env::var("NUM_JOBS")));
-    let cross_compiling = target != host;
     let make_arg = if cross_compiling { "all" } else { "check" };
     let mut make_cmd = Command::new("make");
     let make_output = make_cmd.current_dir(&source_dir)
-        .env("CC", &cc)
-        .env("CFLAGS", &cflags)
         .env("V", "1")
         .arg(make_arg)
         .arg(&j_arg)
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run 'make check': {}", error);
+            panic!("Failed to run 'make {}': {}\n{}", make_arg, error, help);
         });
     if !make_output.status.success() {
-        let need_i386 = if cross_compiling &&
-                           String::from_utf8_lossy(&make_output.stderr)
-            .contains("fatal error: asm/errno.h: No such file or directory") {
-            "********************************************\nPossible missing dependencies.  Try \
-             running:\n  sudo apt-get install \
-             linux-libc-dev:i386\n********************************************\n\n"
-        } else {
-            ""
-        };
-        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n{}",
+        panic!("\n{:?}\n{}\n{}\n{}\n{}",
                make_cmd,
-               &cflags,
-               &cc,
                String::from_utf8_lossy(&configure_output.stdout),
                String::from_utf8_lossy(&make_output.stdout),
                String::from_utf8_lossy(&make_output.stderr),
-               need_i386);
+               help);
     }
 
     // Run `make install`
     let mut install_cmd = Command::new("make");
     let install_output = install_cmd.current_dir(&source_dir)
-        .env("CC", &cc)
-        .env("CFLAGS", &cflags)
         .arg("install")
         .output()
         .unwrap_or_else(|error| {
