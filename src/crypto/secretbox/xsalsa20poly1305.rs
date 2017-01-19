@@ -6,7 +6,6 @@
 //! authenticity.
 
 use ffi;
-use marshal::marshal;
 use randombytes::randombytes_into;
 #[cfg(feature = "rustc-serialize")]
 use rustc_serialize;
@@ -29,9 +28,6 @@ new_type! {
     /// `Nonce` for symmetric authenticated encryption
     nonce Nonce(NONCEBYTES);
 }
-
-const ZEROBYTES: usize = 32;
-const BOXZEROBYTES: usize = 16;
 
 /// Number of bytes in the authenticator tag of an encrypted message
 /// i.e. the number of bytes by which the ciphertext is larger than the
@@ -63,9 +59,16 @@ pub fn gen_nonce() -> Nonce {
 /// `seal()` encrypts and authenticates a message `m` using a secret key `k` and a
 /// nonce `n`.  It returns a ciphertext `c`.
 pub fn seal(m: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Vec<u8> {
-    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| unsafe {
-        ffi::crypto_secretbox_xsalsa20poly1305(dst, src, len, n.as_ptr(), k.as_ptr())
-    });
+    let clen = m.len() + MACBYTES;
+    let mut c = Vec::with_capacity(clen);
+    unsafe {
+        c.set_len(clen);
+        let _ = ffi::crypto_secretbox_easy(c.as_mut_ptr(),
+                                           m.as_ptr(),
+                                           m.len() as u64,
+                                           n.as_ptr(),
+                                           k.as_ptr());
+    }
     c
 }
 
@@ -73,13 +76,19 @@ pub fn seal(m: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Vec<u8> {
 /// It returns a plaintext `Ok(m)`.
 /// If the ciphertext fails verification, `open()` returns `Err(())`.
 pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8>, ()> {
-    if c.len() < BOXZEROBYTES {
+    if c.len() < MACBYTES {
         return Err(());
     }
-    let (m, ret) =
-        marshal(c, BOXZEROBYTES, ZEROBYTES, |dst, src, len| unsafe {
-            ffi::crypto_secretbox_xsalsa20poly1305_open(dst, src, len, n.as_ptr(), k.as_ptr())
-        });
+    let mlen = c.len() - MACBYTES;
+    let mut m = Vec::with_capacity(mlen);
+    let ret = unsafe {
+        m.set_len(mlen);
+        ffi::crypto_secretbox_open_easy(m.as_mut_ptr(),
+                                        c.as_ptr(),
+                                        c.len() as u64,
+                                        n.as_ptr(),
+                                        k.as_ptr())
+    };
     if ret == 0 { Ok(m) } else { Err(()) }
 }
 

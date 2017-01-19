@@ -91,6 +91,18 @@ extern "C" {
                                 pk: *const u8,
                                 sk: *const u8)
                                 -> c_int;
+    pub fn crypto_box_easy_afternm(c: *mut u8,
+                                   m: *const u8,
+                                   mlen: c_ulonglong,
+                                   n: *const u8,
+                                   k: *const u8)
+                                   -> c_int;
+    pub fn crypto_box_open_easy_afternm(m: *mut u8,
+                                        c: *const u8,
+                                        clen: c_ulonglong,
+                                        n: *const u8,
+                                        k: *const u8)
+                                        -> c_int;
 }
 
 #[test]
