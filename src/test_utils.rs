@@ -1,6 +1,8 @@
 #[cfg(all(test, feature = "serde"))]
 extern crate serde_json;
 #[cfg(all(test, feature = "serde"))]
+extern crate rmp_serde;
+#[cfg(all(test, feature = "serde"))]
 extern crate core;
 #[cfg(all(test, feature = "serde"))]
 use serde::{Deserialize, Serialize};
@@ -12,6 +14,14 @@ pub fn round_trip<T>(value: T)
 {
     let encoded_value = unwrap!(serde_json::to_string(&value));
     let decoded_value = unwrap!(serde_json::from_str(&encoded_value));
+    assert_eq!(value, decoded_value);
+
+    let mut buf = Vec::new();
+    value
+        .serialize(&mut rmp_serde::Serializer::new(&mut buf))
+        .unwrap();
+    let mut de = rmp_serde::Deserializer::new(&buf[..]);
+    let decoded_value = Deserialize::deserialize(&mut de).unwrap();
     assert_eq!(value, decoded_value);
 }
 
