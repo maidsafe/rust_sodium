@@ -163,7 +163,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -192,7 +192,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_detached_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -225,7 +225,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper_seed() {
         use randombytes::{randombytes, randombytes_into};
         assert!(::init());
@@ -332,8 +332,8 @@ mod test {
 #[cfg(test)]
 mod bench {
     extern crate test;
-    use randombytes::randombytes;
     use super::*;
+    use randombytes::randombytes;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 
@@ -341,14 +341,10 @@ mod bench {
     fn bench_sign(b: &mut test::Bencher) {
         assert!(::init());
         let (_, sk) = gen_keypair();
-        let ms: Vec<Vec<u8>> = BENCH_SIZES.iter()
-            .map(|s| randombytes(*s))
-            .collect();
-        b.iter(|| {
-            for m in ms.iter() {
-                sign(m, &sk);
-            }
-        });
+        let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
+        b.iter(|| for m in ms.iter() {
+                   sign(m, &sk);
+               });
     }
 
     #[bench]
@@ -357,14 +353,12 @@ mod bench {
         let (pk, sk) = gen_keypair();
         let sms: Vec<Vec<u8>> = BENCH_SIZES.iter()
             .map(|s| {
-                let m = randombytes(*s);
-                sign(&m, &sk)
-            })
+                     let m = randombytes(*s);
+                     sign(&m, &sk)
+                 })
             .collect();
-        b.iter(|| {
-            for sm in sms.iter() {
-                verify(sm, &pk);
-            }
-        });
+        b.iter(|| for sm in sms.iter() {
+                   verify(sm, &pk);
+               });
     }
 }

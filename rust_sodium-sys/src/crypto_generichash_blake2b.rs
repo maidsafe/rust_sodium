@@ -53,7 +53,7 @@ extern "C" {
         outlen: size_t,
         salt: *const u8,
         personal: *const u8)
-        -> c_int;
+-> c_int;
 
     pub fn crypto_generichash_blake2b_update(state: *mut crypto_generichash_blake2b_state,
                                              in_: *const u8,

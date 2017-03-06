@@ -1,5 +1,5 @@
 //! Public-key signatures
-//! 
+//!
 //! This module re-exports all members of the default signing scheme, currently
 //! [`ed25519`](ed25519/index.html), hence e.g. `sign` refers to
 //! [`ed25519::sign`](ed25519/fn.sign.html).

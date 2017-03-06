@@ -6,8 +6,8 @@ pub const crypto_generichash_BYTES: usize = crypto_generichash_blake2b_BYTES;
 pub const crypto_generichash_KEYBYTES_MIN: usize = crypto_generichash_blake2b_KEYBYTES_MIN;
 pub const crypto_generichash_KEYBYTES_MAX: usize = crypto_generichash_blake2b_KEYBYTES_MAX;
 pub const crypto_generichash_KEYBYTES: usize = crypto_generichash_blake2b_KEYBYTES;
-pub const crypto_generichash_PRIMITIVE: *const c_char =
-    (b"blake2b\0" as *const u8) as *const c_char;
+pub const crypto_generichash_PRIMITIVE: *const c_char = (b"blake2b\0" as *const u8) as
+                                                        *const c_char;
 
 #[allow(non_camel_case_types)]
 pub enum crypto_generichash_state { }

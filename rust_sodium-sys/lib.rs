@@ -1,7 +1,7 @@
 #![doc(html_logo_url =
            "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
        html_favicon_url = "https://maidsafe.net/img/favicon.ico",
-       html_root_url = "https://maidsafe.github.io/rust_sodium/master/rust_sodium_sys")]
+       html_root_url = "https://docs.rs/rust_sodium/master/rust_sodium_sys")]
 
 // For explanation of lint checks, run `rustc -W help` or see
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
@@ -17,11 +17,6 @@
 #![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
          missing_debug_implementations, missing_docs, non_upper_case_globals, trivial_casts,
          trivial_numeric_casts, unsafe_code, variant_size_differences)]
-
-#![cfg_attr(feature="clippy", feature(plugin))]
-#![cfg_attr(feature="clippy", plugin(clippy))]
-#![cfg_attr(feature="clippy", deny(clippy, unicode_not_nfc, wrong_pub_self_convention,
-                                   option_unwrap_used))]
 
 #[macro_use]
 extern crate lazy_static;

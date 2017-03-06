@@ -1,7 +1,7 @@
 [package]
 authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 description = "Fast cryptographic library for Rust (bindings to libsodium)"
-documentation = "http://docs.maidsafe.net/rust_sodium/latest"
+documentation = "https://docs.rs/rust_sodium"
 homepage = "https://maidsafe.net"
 license = "MIT OR Apache-2.0"
 name = "rust_sodium"
@@ -10,7 +10,6 @@ repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.1.2"
 
 [dependencies]
-clippy = {version = "~0.0.85", optional = true}
 libc = "~0.2.15"
 rand = "~0.3.14"
 rust_sodium-sys = { path = "rust_sodium-sys", version = "~0.1.2" }

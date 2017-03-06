@@ -2,8 +2,8 @@
 
 pub const crypto_scalarmult_BYTES: usize = crypto_scalarmult_curve25519_BYTES;
 pub const crypto_scalarmult_SCALARBYTES: usize = crypto_scalarmult_curve25519_SCALARBYTES;
-pub const crypto_scalarmult_PRIMITIVE: *const c_char =
-    (b"curve25519\0" as *const u8) as *const c_char;
+pub const crypto_scalarmult_PRIMITIVE: *const c_char = (b"curve25519\0" as *const u8) as
+                                                       *const c_char;
 
 extern "C" {
     pub fn crypto_scalarmult_bytes() -> size_t;

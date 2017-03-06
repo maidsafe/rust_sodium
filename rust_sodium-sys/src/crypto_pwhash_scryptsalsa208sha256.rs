@@ -2,8 +2,8 @@
 
 pub const crypto_pwhash_scryptsalsa208sha256_SALTBYTES: usize = 32;
 pub const crypto_pwhash_scryptsalsa208sha256_STRBYTES: usize = 102;
-pub const crypto_pwhash_scryptsalsa208sha256_STRPREFIX: *const c_char =
-    (b"$7$\0" as *const u8) as *const c_char;
+pub const crypto_pwhash_scryptsalsa208sha256_STRPREFIX: *const c_char = (b"$7$\0" as *const u8) as
+                                                                        *const c_char;
 pub const crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE: usize = 524288;
 pub const crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE: usize = 16777216;
 pub const crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE: usize = 33554432;
@@ -102,12 +102,11 @@ fn test_crypto_pwhash_scryptsalsa208sha256_str() {
                 as size_t)
     };
     assert!(ret_hash == 0);
-    let ret_verify =
-        unsafe {
-            crypto_pwhash_scryptsalsa208sha256_str_verify(hashed_password.as_ptr(),
-                                                          password.as_ptr() as *const c_char,
-                                                          password.len() as c_ulonglong)
-        };
+    let ret_verify = unsafe {
+        crypto_pwhash_scryptsalsa208sha256_str_verify(hashed_password.as_ptr(),
+                                                      password.as_ptr() as *const c_char,
+                                                      password.len() as c_ulonglong)
+    };
     assert!(ret_verify == 0);
 }
 #[test]

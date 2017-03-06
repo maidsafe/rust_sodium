@@ -8,8 +8,8 @@ pub const crypto_box_NONCEBYTES: usize = crypto_box_curve25519xsalsa20poly1305_N
 pub const crypto_box_ZEROBYTES: usize = crypto_box_curve25519xsalsa20poly1305_ZEROBYTES;
 pub const crypto_box_BOXZEROBYTES: usize = crypto_box_curve25519xsalsa20poly1305_BOXZEROBYTES;
 pub const crypto_box_MACBYTES: usize = crypto_box_curve25519xsalsa20poly1305_MACBYTES;
-pub const crypto_box_PRIMITIVE: *const c_char =
-    (b"curve25519xsalsa20poly1305\0" as *const u8) as *const c_char;
+pub const crypto_box_PRIMITIVE: *const c_char = (b"curve25519xsalsa20poly1305\0" as *const u8) as
+                                                *const c_char;
 pub const crypto_box_SEALBYTES: usize = (crypto_box_PUBLICKEYBYTES + crypto_box_MACBYTES);
 
 
