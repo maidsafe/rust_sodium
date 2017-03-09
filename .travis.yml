@@ -1,32 +1,48 @@
 env:
   global:
-    - secure: Yeb64OKVBkkQzzZFais950cZfiybBoeE9k9MYz4ukUeyiaDUWdjf1tYOGirKFzLrXiugYm7jVydHUan9v/xhERFUcgJdv9gQc2ahqpXuFqIhAMrB1Ton188F8JLHAN0xfayMerS4qxnNX7Ar7og8ngvjEaf4zsXsQd7pCJI65KK3KEwRrd02VHUVK7ztIaVrH9C7mDhD1Fxy18ytgaHJjERlSu8whtbmWEsKYNVET4NDNIK+FJti7obVFooPypASqUkMiE0WE5WOPpdlm0cdZe2QWk2/M7gEk0LZcCBz9eSPaEoQ904Gj9Xor2lsimVTteM4pylglehQONVODnt/cUOF8ZngP4IsHbjLAYf8rvoi3X7mIj2w4soPx125OXhAx7sa7oHhAvG0g3taQpjaLSHUaTvcDv6h1yN5oS5vBDmdbZZvxyAgmE94TwW4OhRnjYe62wgUVqIToIxqQ1avZtYqEJG9CkRSlbqvSaF9CSUdx3Vd3aKOvRmcZhdfWmCPdjK9Q2+NunTAKuDdVnG57NrufQph/R8CQgOqM0sHVrM2mmatpzR5ugj+KidvJj7rxwc1AE+XY/R14BAjCRnPDYGZ4mYQzTAPNcCJ1Ym7aj1Ca6yjMsSakl7XmFdTL7EExZZonsx7wcCYqG4rfgksv7pgoSvGszD5oczyGIx9qGQ=
     - RUST_BACKTRACE=1
-branches:
-  only:
-    - master
+    - PATH=$PATH:$HOME/.cargo/bin
 os:
   - linux
   - osx
 language: rust
 rust:
   - stable
-  - nightly
-matrix:
-  allow_failures:
-    - rust: nightly
+  - nightly-2016-12-19
 sudo: false
+branches:
+  only:
+    - master
 cache:
   cargo: true
-  directories:
-    - $HOME/elfutils
+before_script:
+  - (which cargo-install-update && cargo install-update cargo-update) || cargo install cargo-update
+  - (which cargo-prune && cargo install-update cargo-prune) || cargo install cargo-prune
+  - if [ "${TRAVIS_RUST_VERSION}" = stable ]; then
+      (which rustfmt && cargo install-update rustfmt) || cargo install rustfmt;
+    elif [ "${TRAVIS_OS_NAME}" = linux ]; then
+      clippy_vers=0.0.104;
+      if ! cargo clippy --version | grep -q $clippy_vers; then
+        cargo install clippy --vers=$clippy_vers --force;
+      fi
+    fi
 script:
-  - curl -sSL https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/build_and_run_tests.sh | bash
-  - cd $TRAVIS_BUILD_DIR
-  - cargo run --manifest-path systest/Cargo.toml
-  - cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium
+  - if [ "${TRAVIS_RUST_VERSION}" = stable ]; then
+      (
+        set -x;
+        cargo fmt -- --write-mode=diff &&
+        cargo test --release --verbose &&
+        cargo run --manifest-path systest/Cargo.toml &&
+        cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium
+      );
+    elif [ "${TRAVIS_OS_NAME}" = linux ]; then
+      (
+        set -x;
+        cargo clippy &&
+        cargo clippy --profile=test &&
+        cargo clippy --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium &&
+        cargo clippy --profile=test --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium
+      );
+    fi
 before_cache:
-  - curl -sSLO https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/install_elfutils.sh
-  - . install_elfutils.sh
-after_success:
-  - curl -sSL https://github.com/maidsafe/QA/raw/master/Bash%20Scripts/Travis/after_success.sh | bash
+ - cargo prune

@@ -1,10 +1,10 @@
 //! A particular combination of Curve25519, Blake2B, Salsa20 and Poly1305.
 
+
+use super::super::box_::curve25519xsalsa20poly1305 as box_;
 use ffi;
 
 use libc::c_ulonglong;
-
-use super::super::box_::curve25519xsalsa20poly1305 as box_;
 
 /// Number of additional bytes in a ciphertext compared to the corresponding
 /// plaintext.
@@ -75,7 +75,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         assert!(::init());

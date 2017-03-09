@@ -56,7 +56,7 @@ extern "C" fn random() -> uint32_t {
     RNG.with(|rng| rng.borrow_mut().gen())
 }
 
-#[cfg_attr(feature="clippy", allow(cast_possible_wrap))]
+#[cfg_attr(feature="cargo-clippy", allow(cast_possible_wrap))]
 extern "C" fn buf(buf: *mut c_void, size: size_t) {
     unsafe {
         let ptr = buf as *mut u8;
@@ -92,10 +92,10 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
     let mut init_result = &mut *unwrap!(INIT_RESULT.lock());
     if let Some(ref existing_result) = *init_result {
         return if *existing_result == 0 {
-            Ok(())
-        } else {
-            Err(*existing_result)
-        };
+                   Ok(())
+               } else {
+                   Err(*existing_result)
+               };
     }
     let mut sodium_result;
     let seed = [rng.gen(), rng.gen(), rng.gen(), rng.gen()];
@@ -138,7 +138,8 @@ fn test_seeded_init_with_rng() {
     let mut private_key = [0u8; crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES];
     unsafe {
         assert_eq!(crypto_box_curve25519xsalsa20poly1305_keypair(public_key.as_mut_ptr(),
-                                                                 private_key.as_mut_ptr()), 0);
+                                                                 private_key.as_mut_ptr()),
+                   0);
     }
     assert_eq!(expected_public_key, public_key);
     assert_eq!(expected_private_key, private_key);
@@ -148,7 +149,8 @@ fn test_seeded_init_with_rng() {
         let mut private_key = [0u8; crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES];
         unsafe {
             assert_eq!(crypto_box_curve25519xsalsa20poly1305_keypair(public_key.as_mut_ptr(),
-                                                                     private_key.as_mut_ptr()), 0);
+                                                                     private_key.as_mut_ptr()),
+                       0);
         }
         assert_eq!(expected_public_key, public_key);
         assert_eq!(expected_private_key, private_key);
@@ -158,7 +160,8 @@ fn test_seeded_init_with_rng() {
         let mut private_key = [0u8; crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES];
         unsafe {
             assert_eq!(crypto_box_curve25519xsalsa20poly1305_keypair(public_key.as_mut_ptr(),
-                                                                     private_key.as_mut_ptr()), 0);
+                                                                     private_key.as_mut_ptr()),
+                       0);
         }
         assert_eq!(expected_public_key, public_key);
         assert_eq!(expected_private_key, private_key);

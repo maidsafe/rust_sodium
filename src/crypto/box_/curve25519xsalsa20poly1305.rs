@@ -58,8 +58,8 @@ pub fn gen_keypair() -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        let _todo_use_result =
-            ffi::crypto_box_curve25519xsalsa20poly1305_keypair(pk.as_mut_ptr(), sk.as_mut_ptr());
+        let _todo_use_result = ffi::crypto_box_curve25519xsalsa20poly1305_keypair(pk.as_mut_ptr(),
+                                                                                  sk.as_mut_ptr());
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -82,15 +82,13 @@ pub fn seal(m: &[u8],
             &PublicKey(ref pk): &PublicKey,
             &SecretKey(ref sk): &SecretKey)
             -> Vec<u8> {
-    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| {
-        unsafe {
-            let _todo_use_result = ffi::crypto_box_curve25519xsalsa20poly1305(dst,
-                                                                              src,
-                                                                              len,
-                                                                              n.as_ptr(),
-                                                                              pk.as_ptr(),
-                                                                              sk.as_ptr());
-        }
+    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| unsafe {
+        let _todo_use_result = ffi::crypto_box_curve25519xsalsa20poly1305(dst,
+                                                                          src,
+                                                                          len,
+                                                                          n.as_ptr(),
+                                                                          pk.as_ptr(),
+                                                                          sk.as_ptr());
     });
     c
 }
@@ -106,15 +104,13 @@ pub fn open(c: &[u8],
     if c.len() < BOXZEROBYTES {
         return Err(());
     }
-    let (m, ret) = marshal(c, BOXZEROBYTES, ZEROBYTES, |dst, src, len| {
-        unsafe {
-            ffi::crypto_box_curve25519xsalsa20poly1305_open(dst,
-                                                            src,
-                                                            len,
-                                                            n.as_ptr(),
-                                                            pk.as_ptr(),
-                                                            sk.as_ptr())
-        }
+    let (m, ret) = marshal(c, BOXZEROBYTES, ZEROBYTES, |dst, src, len| unsafe {
+        ffi::crypto_box_curve25519xsalsa20poly1305_open(dst,
+                                                        src,
+                                                        len,
+                                                        n.as_ptr(),
+                                                        pk.as_ptr(),
+                                                        sk.as_ptr())
     });
     if ret == 0 { Ok(m) } else { Err(()) }
 }
@@ -136,10 +132,9 @@ pub fn precompute(&PublicKey(ref pk): &PublicKey,
                   -> PrecomputedKey {
     let mut k = [0u8; PRECOMPUTEDKEYBYTES];
     unsafe {
-        let _todo_use_result =
-            ffi::crypto_box_curve25519xsalsa20poly1305_beforenm(k.as_mut_ptr(),
-                                                                pk.as_ptr(),
-                                                                sk.as_ptr());
+        let _todo_use_result = ffi::crypto_box_curve25519xsalsa20poly1305_beforenm(k.as_mut_ptr(),
+                                                                                   pk.as_ptr(),
+                                                                                   sk.as_ptr());
     }
     PrecomputedKey(k)
 }
@@ -150,15 +145,12 @@ pub fn seal_precomputed(m: &[u8],
                         &Nonce(ref n): &Nonce,
                         &PrecomputedKey(ref k): &PrecomputedKey)
                         -> Vec<u8> {
-    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| {
-        unsafe {
-            let _todo_use_result =
-                ffi::crypto_box_curve25519xsalsa20poly1305_afternm(dst,
-                                                                   src,
-                                                                   len,
-                                                                   n.as_ptr(),
-                                                                   k.as_ptr());
-        }
+    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| unsafe {
+        let _todo_use_result = ffi::crypto_box_curve25519xsalsa20poly1305_afternm(dst,
+                                                                                  src,
+                                                                                  len,
+                                                                                  n.as_ptr(),
+                                                                                  k.as_ptr());
     });
     c
 }
@@ -225,7 +217,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -244,7 +236,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_precomputed_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -373,8 +365,8 @@ mod test {
 #[cfg(test)]
 mod bench {
     extern crate test;
-    use randombytes::randombytes;
     use super::*;
+    use randombytes::randombytes;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 
@@ -383,14 +375,10 @@ mod bench {
         assert!(::init());
         let (pk, sk) = gen_keypair();
         let n = gen_nonce();
-        let ms: Vec<Vec<u8>> = BENCH_SIZES.iter()
-            .map(|s| randombytes(*s))
-            .collect();
-        b.iter(|| {
-            for m in ms.iter() {
-                unwrap!(open(&seal(m, &n, &pk, &sk), &n, &pk, &sk));
-            }
-        });
+        let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
+        b.iter(|| for m in ms.iter() {
+                   unwrap!(open(&seal(m, &n, &pk, &sk), &n, &pk, &sk));
+               });
     }
 
     #[bench]

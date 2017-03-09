@@ -3,6 +3,7 @@
 //! This function is conjectured to be strong. For background see Bernstein,
 //! "Curve25519: new Diffie-Hellman speed records," Lecture Notes in Computer
 //! Science 3958 (2006), 207–228, http://cr.yp.to/papers.html#curve25519.
+
 use ffi;
 
 /// Number of bytes in a `GroupElement`.
@@ -30,9 +31,8 @@ new_type! {
 pub fn scalarmult(&Scalar(ref n): &Scalar, &GroupElement(ref p): &GroupElement) -> GroupElement {
     let mut q = [0; GROUPELEMENTBYTES];
     unsafe {
-        let _todo_use_result = ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(),
-                                                                 n.as_ptr(),
-                                                                 p.as_ptr());
+        let _todo_use_result =
+            ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(), n.as_ptr(), p.as_ptr());
     }
     GroupElement(q)
 }
@@ -121,8 +121,8 @@ mod test {
 #[cfg(test)]
 mod bench {
     extern crate test;
-    use randombytes::randombytes_into;
     use super::*;
+    use randombytes::randombytes_into;
 
     #[bench]
     fn bench_scalarmult(b: &mut test::Bencher) {
@@ -133,9 +133,7 @@ mod bench {
         randombytes_into(&mut sbs);
         let g = GroupElement(gbs);
         let s = Scalar(sbs);
-        b.iter(|| {
-            scalarmult(&s, &g);
-        });
+        b.iter(|| { scalarmult(&s, &g); });
     }
 
     #[bench]
@@ -144,8 +142,6 @@ mod bench {
         let mut sbs = [0u8; SCALARBYTES];
         randombytes_into(&mut sbs);
         let s = Scalar(sbs);
-        b.iter(|| {
-            scalarmult_base(&s);
-        });
+        b.iter(|| { scalarmult_base(&s); });
     }
 }

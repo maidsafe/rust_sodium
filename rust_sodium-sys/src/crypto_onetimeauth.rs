@@ -2,8 +2,8 @@
 
 pub const crypto_onetimeauth_BYTES: usize = crypto_onetimeauth_poly1305_BYTES;
 pub const crypto_onetimeauth_KEYBYTES: usize = crypto_onetimeauth_poly1305_KEYBYTES;
-pub const crypto_onetimeauth_PRIMITIVE: *const c_char =
-    (b"poly1305\0" as *const u8) as *const c_char;
+pub const crypto_onetimeauth_PRIMITIVE: *const c_char = (b"poly1305\0" as *const u8) as
+                                                        *const c_char;
 
 
 extern "C" {

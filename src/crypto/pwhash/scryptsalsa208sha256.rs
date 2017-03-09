@@ -111,14 +111,14 @@ pub fn derive_key<'a>(key: &'a mut [u8],
                       MemLimit(memlimit): MemLimit)
                       -> Result<&'a [u8], ()> {
     if unsafe {
-        ffi::crypto_pwhash_scryptsalsa208sha256(key.as_mut_ptr(),
-                                                key.len() as c_ulonglong,
-                                                passwd.as_ptr() as *const c_char,
-                                                passwd.len() as c_ulonglong,
-                                                sb.as_ptr(),
-                                                opslimit as c_ulonglong,
-                                                memlimit)
-    } == 0 {
+           ffi::crypto_pwhash_scryptsalsa208sha256(key.as_mut_ptr(),
+                                                   key.len() as c_ulonglong,
+                                                   passwd.as_ptr() as *const c_char,
+                                                   passwd.len() as c_ulonglong,
+                                                   sb.as_ptr(),
+                                                   opslimit as c_ulonglong,
+                                                   memlimit)
+       } == 0 {
         Ok(key)
     } else {
         Err(())
@@ -145,13 +145,13 @@ pub fn pwhash(passwd: &[u8],
               -> Result<HashedPassword, ()> {
     let mut out = HashedPassword([0; HASHEDPASSWORDBYTES]);
     if unsafe {
-        let HashedPassword(ref mut str_) = out;
-        ffi::crypto_pwhash_scryptsalsa208sha256_str(str_.as_mut_ptr() as *mut c_char,
-                                                    passwd.as_ptr() as *const c_char,
-                                                    passwd.len() as c_ulonglong,
-                                                    opslimit as c_ulonglong,
-                                                    memlimit)
-    } == 0 {
+           let HashedPassword(ref mut str_) = out;
+           ffi::crypto_pwhash_scryptsalsa208sha256_str(str_.as_mut_ptr() as *mut c_char,
+                                                       passwd.as_ptr() as *const c_char,
+                                                       passwd.len() as c_ulonglong,
+                                                       opslimit as c_ulonglong,
+                                                       memlimit)
+       } == 0 {
         Ok(out)
     } else {
         Err(())
@@ -172,16 +172,17 @@ pub fn pwhash_verify(&HashedPassword(ref str_): &HashedPassword, passwd: &[u8]) 
 
 #[cfg(test)]
 mod test {
+    use super::*;
     use ffi;
     use std::ffi::CStr;
-    use super::*;
 
     #[test]
     fn test_str_prefix() {
         assert!(::init());
-        let str_prefix = unsafe {
-            unwrap!(CStr::from_ptr(ffi::crypto_pwhash_scryptsalsa208sha256_STRPREFIX).to_str())
-        };
+        let str_prefix =
+            unsafe {
+                unwrap!(CStr::from_ptr(ffi::crypto_pwhash_scryptsalsa208sha256_STRPREFIX).to_str())
+            };
         assert_eq!(STRPREFIX, str_prefix);
     }
 
@@ -216,7 +217,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_pwhash_verify_tamper() {
         use randombytes::randombytes;
         assert!(::init());

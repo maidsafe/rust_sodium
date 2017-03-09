@@ -68,14 +68,14 @@ fn main() {
 
     let command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
                    ((New-Object System.Net.WebClient).DownloadFile(\""
-        .to_string() + &url + "\", \"" + &gz_path + "\"))";
+            .to_string() + &url + "\", \"" + &gz_path + "\"))";
     let mut download_cmd = Command::new("powershell");
     let download_output = download_cmd.arg("-Command")
         .arg(&command)
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run powershell download command: {}", error);
-        });
+                            panic!("Failed to run powershell download command: {}", error);
+                        });
     if !download_output.status.success() {
         panic!("\n{:?}\n{}\n{}\n",
                download_cmd,
@@ -123,8 +123,8 @@ fn main() {
     let where_output = where_cmd.arg(gcc::Config::new().get_compiler().path())
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run where command: {}", error);
-        });
+                            panic!("Failed to run where command: {}", error);
+                        });
     if !where_output.status.success() {
         panic!("\n{:?}\n{}\n{}\n",
                where_cmd,
@@ -163,8 +163,8 @@ fn main() {
     // Download gz tarball
     let basename = "libsodium-".to_string() + VERSION;
     let gz_filename = basename.clone() + ".tar.gz";
-    let url = "https://github.com/jedisct1/libsodium/releases/download/".to_string() + VERSION +
-              "/" + &gz_filename;
+    let url = "https://github.com/jedisct1/libsodium/releases/download/".to_string() +
+              VERSION + "/" + &gz_filename;
     let mut install_dir = get_install_dir();
     let mut source_dir = unwrap!(env::var("OUT_DIR")) + "/source";
     // Avoid issues with paths containing spaces by falling back to using /tmp
@@ -188,8 +188,8 @@ fn main() {
         .arg(&gz_path)
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run curl command: {}", error);
-        });
+                            panic!("Failed to run curl command: {}", error);
+                        });
     if !curl_output.status.success() {
         panic!("\n{:?}\n{}\n{}\n",
                curl_cmd,
@@ -230,8 +230,8 @@ fn main() {
         .arg("--disable-pie")
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run './configure': {}", error);
-        });
+                            panic!("Failed to run './configure': {}", error);
+                        });
     if !configure_output.status.success() {
         panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n",
                configure_cmd,
@@ -254,8 +254,8 @@ fn main() {
         .arg(&j_arg)
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run 'make check': {}", error);
-        });
+                            panic!("Failed to run 'make check': {}", error);
+                        });
     if !make_output.status.success() {
         let need_i386 = if cross_compiling &&
                            String::from_utf8_lossy(&make_output.stderr)
@@ -284,8 +284,8 @@ fn main() {
         .arg("install")
         .output()
         .unwrap_or_else(|error| {
-            panic!("Failed to run 'make install': {}", error);
-        });
+                            panic!("Failed to run 'make install': {}", error);
+                        });
     if !install_output.status.success() {
         panic!("\n{:?}\n{}\n{}\n{}\n{}\n",
                install_cmd,

@@ -63,8 +63,8 @@ pub fn gen_nonce() -> Nonce {
 /// `seal()` encrypts and authenticates a message `m` using a secret key `k` and a
 /// nonce `n`.  It returns a ciphertext `c`.
 pub fn seal(m: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Vec<u8> {
-    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| {
-        unsafe { ffi::crypto_secretbox_xsalsa20poly1305(dst, src, len, n.as_ptr(), k.as_ptr()) }
+    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| unsafe {
+        ffi::crypto_secretbox_xsalsa20poly1305(dst, src, len, n.as_ptr(), k.as_ptr())
     });
     c
 }
@@ -76,11 +76,10 @@ pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8
     if c.len() < BOXZEROBYTES {
         return Err(());
     }
-    let (m, ret) = marshal(c, BOXZEROBYTES, ZEROBYTES, |dst, src, len| {
-        unsafe {
+    let (m, ret) =
+        marshal(c, BOXZEROBYTES, ZEROBYTES, |dst, src, len| unsafe {
             ffi::crypto_secretbox_xsalsa20poly1305_open(dst, src, len, n.as_ptr(), k.as_ptr())
-        }
-    });
+        });
     if ret == 0 { Ok(m) } else { Err(()) }
 }
 
@@ -103,7 +102,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -178,8 +177,8 @@ mod test {
 #[cfg(test)]
 mod bench {
     extern crate test;
-    use randombytes::randombytes;
     use super::*;
+    use randombytes::randombytes;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 
@@ -188,13 +187,9 @@ mod bench {
         assert!(::init());
         let k = gen_key();
         let n = gen_nonce();
-        let ms: Vec<Vec<u8>> = BENCH_SIZES.iter()
-            .map(|s| randombytes(*s))
-            .collect();
-        b.iter(|| {
-            for m in ms.iter() {
-                unwrap!(open(&seal(&m, &n, &k), &n, &k));
-            }
-        });
+        let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
+        b.iter(|| for m in ms.iter() {
+                   unwrap!(open(&seal(&m, &n, &k), &n, &k));
+               });
     }
 }
