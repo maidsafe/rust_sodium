@@ -68,6 +68,8 @@
 // architecture.
 #![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
          missing_debug_implementations, trivial_casts, unsafe_code, variant_size_differences)]
+// FIXME(nbaksalyar): fix and remove these
+#![cfg_attr(feature="cargo-clippy", allow(doc_markdown, should_assert_eq, needless_pass_by_value))]
 
 extern crate rust_sodium_sys as ffi;
 extern crate libc;

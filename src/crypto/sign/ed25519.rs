@@ -351,7 +351,8 @@ mod bench {
     fn bench_verify(b: &mut test::Bencher) {
         assert!(::init());
         let (pk, sk) = gen_keypair();
-        let sms: Vec<Vec<u8>> = BENCH_SIZES.iter()
+        let sms: Vec<Vec<u8>> = BENCH_SIZES
+            .iter()
             .map(|s| {
                      let m = randombytes(*s);
                      sign(&m, &sk)
