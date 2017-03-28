@@ -386,12 +386,12 @@ mod bench {
         assert!(::init());
         let (pk, sk) = gen_keypair();
         b.iter(|| {
-            // we do this benchmark as many times as the other benchmarks so
-            // that we can compare the times
-            for _ in BENCH_SIZES.iter() {
-                precompute(&pk, &sk);
-                precompute(&pk, &sk);
-            }
-        });
+                   // we do this benchmark as many times as the other benchmarks so
+                   // that we can compare the times
+                   for _ in BENCH_SIZES.iter() {
+                       precompute(&pk, &sk);
+                       precompute(&pk, &sk);
+                   }
+               });
     }
 }

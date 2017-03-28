@@ -17,7 +17,7 @@
 #![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
          missing_debug_implementations, missing_docs, non_upper_case_globals, trivial_casts,
          trivial_numeric_casts, unsafe_code, variant_size_differences)]
-
+#![cfg_attr(feature="cargo-clippy", allow(should_assert_eq))]
 #[macro_use]
 extern crate lazy_static;
 extern crate libc;
