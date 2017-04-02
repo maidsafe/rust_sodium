@@ -144,7 +144,9 @@ fn test_seeded_init_with_rng() {
     assert_eq!(expected_public_key, public_key);
     assert_eq!(expected_private_key, private_key);
 
-    let child1 = unwrap!(Builder::new().name("child1".to_string()).spawn(move || {
+    let child1 = unwrap!(Builder::new()
+                             .name("child1".to_string())
+                             .spawn(move || {
         let mut public_key = [0u8; crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES];
         let mut private_key = [0u8; crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES];
         unsafe {
@@ -155,7 +157,9 @@ fn test_seeded_init_with_rng() {
         assert_eq!(expected_public_key, public_key);
         assert_eq!(expected_private_key, private_key);
     }));
-    let child2 = unwrap!(Builder::new().name("child2".to_string()).spawn(move || {
+    let child2 = unwrap!(Builder::new()
+                             .name("child2".to_string())
+                             .spawn(move || {
         let mut public_key = [0u8; crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES];
         let mut private_key = [0u8; crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES];
         unsafe {

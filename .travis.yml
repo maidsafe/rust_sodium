@@ -10,6 +10,10 @@ rust:
   - stable
   - nightly-2017-03-16
 sudo: false
+addons:
+  apt:
+    packages:
+      - libssl-dev
 branches:
   only:
     - master
@@ -45,4 +49,4 @@ script:
       );
     fi
 before_cache:
- - cargo prune
+  - cargo prune

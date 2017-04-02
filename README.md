@@ -21,6 +21,47 @@ differences are:
 | [MaidSafe website](https://maidsafe.net) | [SAFE Dev Forum](https://forum.safedev.org) | [SAFE Network Forum](https://safenetforum.org) |
 |:----------------------------------------:|:-------------------------------------------:|:----------------------------------------------:|
 
+## Cross-Compiling
+
+### Cross-Compiling for ARM
+
+1. Install dependencies and toolchain:
+
+   ```sh
+   sudo apt update
+   sudo apt install build-essential gcc-arm-linux-gnueabihf libc6-armhf-cross libc6-dev-armhf-cross -y
+   rustup target add armv7-unknown-linux-gnueabihf
+   ```
+
+1. Add the following to a [.cargo/config file](http://doc.crates.io/config.html):
+
+   ```
+   [target.armv7-unknown-linux-gnueabihf]
+   linker = "arm-linux-gnueabihf-gcc"
+   ```
+
+1. Build by running:
+
+   ```sh
+   cargo build --release --target armv7-unknown-linux-gnueabihf
+   ```
+
+### Cross-Compiling for 32-bit Linux
+
+1. Install dependencies and toolchain:
+
+   ```sh
+   sudo apt update
+   sudo apt install build-essential gcc-multilib -y
+   rustup target add i686-unknown-linux-gnu
+   ```
+
+1. Build by running:
+
+   ```sh
+   cargo build --release --target i686-unknown-linux-gnu
+   ```
+
 ## License
 
 Licensed under either of
