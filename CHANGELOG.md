@@ -1,5 +1,10 @@
 # rust_sodium - Change Log
 
+## [0.2.0]
+- Default to serde instead of rustc-serialize
+- rustfmt 0.8.1
+- enforce min powershell major version of 4 for compilation on Windows
+
 ## [0.1.2]
 - Fix Windows build scripts by using curl.
 - Fix ARM build by allowing the `trivial_casts` lint.
