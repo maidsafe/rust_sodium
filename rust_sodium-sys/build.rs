@@ -58,6 +58,22 @@ fn main() {
         panic!("This feature currently can't be used with MSVC builds.");
     }
 
+    // Check the version of Powershell available
+    let mut check_ps_version_cmd = Command::new("powershell");
+    let check_ps_version_output = check_ps_version_cmd
+        .arg("-Command")
+        .arg("If ($PSVersionTable.PSVersion.Major -lt 4) { exit 1 }")
+        .output()
+        .unwrap_or_else(|error| {
+                            panic!("Failed to run powershell command: {}", error);
+                        });
+    if !check_ps_version_output.status.success() {
+        panic!("\n{:?}\n{}\n{}\nYou must have Powershell v4.0 or greater installed.\n\n",
+               check_ps_version_cmd,
+               String::from_utf8_lossy(&check_ps_version_output.stdout),
+               String::from_utf8_lossy(&check_ps_version_output.stderr));
+    }
+
     // Download gz tarball
     let basename = "libsodium-".to_string() + VERSION;
     let gz_filename = basename.clone() + "-mingw.tar.gz";
@@ -70,7 +86,8 @@ fn main() {
                    ((New-Object System.Net.WebClient).DownloadFile(\""
             .to_string() + &url + "\", \"" + &gz_path + "\"))";
     let mut download_cmd = Command::new("powershell");
-    let download_output = download_cmd.arg("-Command")
+    let download_output = download_cmd
+        .arg("-Command")
         .arg(&command)
         .output()
         .unwrap_or_else(|error| {
@@ -120,7 +137,8 @@ fn main() {
     // Get path to gcc in order to guess location of libpthread.a
     let mut lib_search_dirs = vec![Path::new(&install_dir).join("lib")];
     let mut where_cmd = Command::new("where");
-    let where_output = where_cmd.arg(gcc::Config::new().get_compiler().path())
+    let where_output = where_cmd
+        .arg(gcc::Config::new().get_compiler().path())
         .output()
         .unwrap_or_else(|error| {
                             panic!("Failed to run where command: {}", error);
@@ -183,7 +201,8 @@ fn main() {
     unwrap!(fs::create_dir_all(&source_dir));
 
     let mut curl_cmd = Command::new("curl");
-    let curl_output = curl_cmd.arg(&url)
+    let curl_output = curl_cmd
+        .arg(&url)
         .arg("-sSLvo")
         .arg(&gz_path)
         .output()
@@ -219,9 +238,19 @@ fn main() {
     let prefix_arg = format!("--prefix={}", install_dir);
     let host = unwrap!(env::var("HOST"));
     let host_arg = format!("--host={}", target);
+    let cross_compiling = target != host;
+    let help = if cross_compiling {
+        "***********************************************************\n\
+         Possible missing dependencies.\n\
+         See https://github.com/maidsafe/rust_sodium#cross-compiling\n\
+         ***********************************************************\n\n"
+    } else {
+        ""
+    };
 
     let mut configure_cmd = Command::new("./configure");
-    let configure_output = configure_cmd.current_dir(&source_dir)
+    let configure_output = configure_cmd
+        .current_dir(&source_dir)
         .env("CC", &cc)
         .env("CFLAGS", &cflags)
         .arg(&prefix_arg)
@@ -230,57 +259,44 @@ fn main() {
         .arg("--disable-pie")
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run './configure': {}", error);
+                            panic!("Failed to run './configure': {}\n{}", error, help);
                         });
     if !configure_output.status.success() {
-        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n",
+        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n",
                configure_cmd,
                cflags,
                cc,
                String::from_utf8_lossy(&configure_output.stdout),
-               String::from_utf8_lossy(&configure_output.stderr));
+               String::from_utf8_lossy(&configure_output.stderr),
+               help);
     }
 
     // Run `make check`, or `make all` if we're cross-compiling
     let j_arg = format!("-j{}", unwrap!(env::var("NUM_JOBS")));
-    let cross_compiling = target != host;
     let make_arg = if cross_compiling { "all" } else { "check" };
     let mut make_cmd = Command::new("make");
-    let make_output = make_cmd.current_dir(&source_dir)
-        .env("CC", &cc)
-        .env("CFLAGS", &cflags)
+    let make_output = make_cmd
+        .current_dir(&source_dir)
         .env("V", "1")
         .arg(make_arg)
         .arg(&j_arg)
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run 'make check': {}", error);
+                            panic!("Failed to run 'make {}': {}\n{}", make_arg, error, help);
                         });
     if !make_output.status.success() {
-        let need_i386 = if cross_compiling &&
-                           String::from_utf8_lossy(&make_output.stderr)
-            .contains("fatal error: asm/errno.h: No such file or directory") {
-            "********************************************\nPossible missing dependencies.  Try \
-             running:\n  sudo apt-get install \
-             linux-libc-dev:i386\n********************************************\n\n"
-        } else {
-            ""
-        };
-        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n{}",
+        panic!("\n{:?}\n{}\n{}\n{}\n{}",
                make_cmd,
-               &cflags,
-               &cc,
                String::from_utf8_lossy(&configure_output.stdout),
                String::from_utf8_lossy(&make_output.stdout),
                String::from_utf8_lossy(&make_output.stderr),
-               need_i386);
+               help);
     }
 
     // Run `make install`
     let mut install_cmd = Command::new("make");
-    let install_output = install_cmd.current_dir(&source_dir)
-        .env("CC", &cc)
-        .env("CFLAGS", &cflags)
+    let install_output = install_cmd
+        .current_dir(&source_dir)
         .arg("install")
         .output()
         .unwrap_or_else(|error| {
