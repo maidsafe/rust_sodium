@@ -7,7 +7,7 @@ license = "MIT OR Apache-2.0"
 name = "rust_sodium"
 readme = "README.md"
 repository = "https://github.com/maidsafe/rust_sodium"
-version = "0.1.2"
+version = "0.2.0"
 
 [dependencies]
 libc = "~0.2.15"
