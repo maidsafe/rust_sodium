@@ -69,7 +69,8 @@ fn main() {
     cfg.type_name(|s, _| s.to_string());
     cfg.skip_signededness(|s| s == "crypto_auth_hmacsha512256_state");
     cfg.skip_const(|s| {
-        s.ends_with("_PRIMITIVE") || s == "crypto_pwhash_scryptsalsa208sha256_STRPREFIX"
-    });
+                       s.ends_with("_PRIMITIVE") ||
+                       s == "crypto_pwhash_scryptsalsa208sha256_STRPREFIX"
+                   });
     cfg.generate("../rust_sodium-sys/lib.rs", "all.rs");
 }

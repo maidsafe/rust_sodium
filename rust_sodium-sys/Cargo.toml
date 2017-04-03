@@ -11,7 +11,6 @@ repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.1.2"
 
 [dependencies]
-clippy = {version = "~0.0.85", optional = true}
 lazy_static = "~0.2.1"
 libc = "~0.2.15"
 rand = "~0.3.14"
