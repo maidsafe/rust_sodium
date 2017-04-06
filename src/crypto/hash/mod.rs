@@ -31,6 +31,7 @@
 //!
 //! # Example
 //! ```
+//! # #![allow(unused_variables)]
 //! use rust_sodium::crypto::hash;
 //!
 //! let data_to_hash = b"some data";

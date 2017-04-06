@@ -14,6 +14,7 @@
 //!
 //! # Example
 //! ```
+//! # #![allow(unused_variables)]
 //! use rust_sodium::crypto::shorthash;
 //!
 //! let key = shorthash::gen_key();

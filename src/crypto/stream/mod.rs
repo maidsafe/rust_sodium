@@ -52,6 +52,7 @@
 //!
 //! # Example (keystream generation)
 //! ```
+//! # #![allow(unused_variables)]
 //! use rust_sodium::crypto::stream;
 //!
 //! let key = stream::gen_key();
