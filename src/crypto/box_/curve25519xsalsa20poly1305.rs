@@ -401,6 +401,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_detached_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -497,6 +498,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_detached_precomputed_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {

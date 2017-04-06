@@ -154,6 +154,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -164,7 +165,7 @@ mod test {
             for i in 0..c.len() {
                 c[i] ^= 0x20;
                 // Test the combined mode.
-                assert_eq!(Err(()), open(&mut c, &n, &k));
+                assert_eq!(Err(()), open(&c, &n, &k));
                 // Test the detached mode.
                 let tag = Tag::from_slice(&c[..MACBYTES]).unwrap();
                 assert_eq!(Err(()), open_detached(&mut c[MACBYTES..], &tag, &n, &k));
