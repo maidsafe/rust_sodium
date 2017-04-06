@@ -248,6 +248,21 @@ fn main() {
         ""
     };
 
+    // Disable PIE for Ubuntu < 15.04 (see https://github.com/jedisct1/libsodium/issues/292)
+    let disable_pie_arg = match Command::new("lsb_release").arg("-irs").output() {
+        Ok(id_output) => {
+            let stdout = String::from_utf8_lossy(&id_output.stdout);
+            let mut lines = stdout.lines();
+            if lines.next() == Some("Ubuntu") {
+                let v = unwrap!(unwrap!(unwrap!(lines.next()).split('.').next()).parse::<u32>());
+                if v < 15 { "--disable-pie" } else { "" }
+            } else {
+                ""
+            }
+        }
+        _ => "",
+    };
+
     let mut configure_cmd = Command::new("./configure");
     let configure_output = configure_cmd
         .current_dir(&source_dir)
@@ -256,7 +271,7 @@ fn main() {
         .arg(&prefix_arg)
         .arg(&host_arg)
         .arg("--enable-shared=no")
-        .arg("--disable-pie")
+        .arg(disable_pie_arg)
         .output()
         .unwrap_or_else(|error| {
                             panic!("Failed to run './configure': {}\n{}", error, help);
