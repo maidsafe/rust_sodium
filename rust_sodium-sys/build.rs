@@ -1,12 +1,12 @@
 #[macro_use]
 extern crate unwrap;
 
-#[cfg(not(feature = "get-libsodium"))]
+#[cfg(feature = "use-installed-libsodium")]
 extern crate pkg_config;
 
 const VERSION: &'static str = "1.0.12";
 
-#[cfg(not(feature = "get-libsodium"))]
+#[cfg(feature = "use-installed-libsodium")]
 fn main() {
     use std::env;
     if let Ok(lib_dir) = env::var("SODIUM_LIB_DIR") {
@@ -33,20 +33,20 @@ fn main() {
 
 
 
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 extern crate gcc;
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 extern crate flate2;
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 extern crate tar;
 
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 fn get_install_dir() -> String {
     use std::env;
     unwrap!(env::var("OUT_DIR")) + "/installed"
 }
 
-#[cfg(all(windows, feature = "get-libsodium"))]
+#[cfg(all(windows, not(feature = "use-installed-libsodium")))]
 fn main() {
     use std::fs::{self, File};
     use std::path::{Path, PathBuf};
@@ -170,7 +170,7 @@ fn main() {
 
 
 
-#[cfg(all(not(windows), feature = "get-libsodium"))]
+#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
 fn main() {
     use std::env;
     use std::fs::{self, File};

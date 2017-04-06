@@ -35,5 +35,5 @@ test_script:
         cargo test --verbose --release
         cargo run --manifest-path systest/Cargo.toml > output.log
         type output.log
-        cargo test --release --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium > output.log
+        cargo test --release --manifest-path rust_sodium-sys/Cargo.toml > output.log
         type output.log

@@ -33,15 +33,15 @@ script:
         cargo fmt -- --write-mode=diff &&
         cargo test --release --verbose &&
         cargo run --manifest-path systest/Cargo.toml &&
-        cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium
+        cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml
       );
     elif [ "${TRAVIS_OS_NAME}" = linux ]; then
       (
         set -x;
         cargo clippy &&
         cargo clippy --profile=test &&
-        cargo clippy --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium &&
-        cargo clippy --profile=test --manifest-path rust_sodium-sys/Cargo.toml --features get-libsodium
+        cargo clippy --manifest-path rust_sodium-sys/Cargo.toml &&
+        cargo clippy --profile=test --manifest-path rust_sodium-sys/Cargo.toml
       );
     fi
 before_cache:

@@ -14,6 +14,3 @@ libc = "~0.2.15"
 [build-dependencies]
 ctest = "~0.1.1"
 unwrap = "~1.1.0"
-
-[features]
-default = ["rust_sodium-sys/get-libsodium"]
