@@ -437,7 +437,9 @@ mod test {
         let failure = open_detached(&mut buf, &tag, &n, &pk2, &sk1);
         assert!(failure.is_err());
         // Make sure the input hasn't been touched.
-        assert_eq!(buf, copy, "input should not be modified if authentication fails");
+        assert_eq!(buf,
+                   copy,
+                   "input should not be modified if authentication fails");
     }
 
     #[test]
@@ -535,7 +537,9 @@ mod test {
         let failure = open_detached_precomputed(&mut buf, &tag, &n, &k2);
         assert!(failure.is_err());
         // Make sure the input hasn't been touched.
-        assert_eq!(buf, copy, "input should not be modified if authentication fails");
+        assert_eq!(buf,
+                   copy,
+                   "input should not be modified if authentication fails");
     }
 
     #[test]

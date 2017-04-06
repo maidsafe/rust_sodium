@@ -4,7 +4,7 @@ extern crate unwrap;
 #[cfg(not(feature = "get-libsodium"))]
 extern crate pkg_config;
 
-const VERSION: &'static str = "1.0.11";
+const VERSION: &'static str = "1.0.12";
 
 #[cfg(not(feature = "get-libsodium"))]
 fn main() {
