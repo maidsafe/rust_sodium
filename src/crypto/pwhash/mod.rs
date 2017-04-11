@@ -42,6 +42,7 @@
 //!
 //! # Example (password hashing)
 //! ```
+//! # #![allow(unused_variables)]
 //! use rust_sodium::crypto::pwhash;
 //! let passwd = b"Correct Horse Battery Staple";
 //! let pwh = pwhash::pwhash(passwd,

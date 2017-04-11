@@ -6,7 +6,6 @@
 //! authenticity.
 
 use ffi;
-use marshal::marshal;
 use randombytes::randombytes_into;
 #[cfg(feature = "rustc-serialize")]
 use rustc_serialize;
@@ -26,12 +25,16 @@ new_type! {
 }
 
 new_type! {
+    /// Authentication `Tag` for the detached encryption mode
+    ///
+    /// In the combined mode, the tag occupies the first MACBYTES bytes of the ciphertext.
+    public Tag(MACBYTES);
+}
+
+new_type! {
     /// `Nonce` for symmetric authenticated encryption
     nonce Nonce(NONCEBYTES);
 }
-
-const ZEROBYTES: usize = 32;
-const BOXZEROBYTES: usize = 16;
 
 /// Number of bytes in the authenticator tag of an encrypted message
 /// i.e. the number of bytes by which the ciphertext is larger than the
@@ -63,24 +66,73 @@ pub fn gen_nonce() -> Nonce {
 /// `seal()` encrypts and authenticates a message `m` using a secret key `k` and a
 /// nonce `n`.  It returns a ciphertext `c`.
 pub fn seal(m: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Vec<u8> {
-    let (c, _) = marshal(m, ZEROBYTES, BOXZEROBYTES, |dst, src, len| unsafe {
-        ffi::crypto_secretbox_xsalsa20poly1305(dst, src, len, n.as_ptr(), k.as_ptr())
-    });
+    let clen = m.len() + MACBYTES;
+    let mut c = Vec::with_capacity(clen);
+    unsafe {
+        c.set_len(clen);
+        let _ = ffi::crypto_secretbox_easy(c.as_mut_ptr(),
+                                           m.as_ptr(),
+                                           m.len() as u64,
+                                           n.as_ptr(),
+                                           k.as_ptr());
+    }
     c
+}
+
+/// `seal_detached()` encrypts and authenticates a message `m` using a secret key `k` and a nonce
+/// `n`.  `m` is encrypted in place, so after this function returns it will contain the ciphertext.
+/// The detached authentication tag is returned by value.
+pub fn seal_detached(m: &mut [u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Tag {
+    let mut tag = [0; MACBYTES];
+    unsafe {
+        let _ = ffi::crypto_secretbox_detached(m.as_mut_ptr(),
+                                               tag.as_mut_ptr(),
+                                               m.as_ptr(),
+                                               m.len() as u64,
+                                               n.as_ptr(),
+                                               k.as_ptr());
+    };
+    Tag(tag)
 }
 
 /// `open()` verifies and decrypts a ciphertext `c` using a secret key `k` and a nonce `n`.
 /// It returns a plaintext `Ok(m)`.
 /// If the ciphertext fails verification, `open()` returns `Err(())`.
 pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8>, ()> {
-    if c.len() < BOXZEROBYTES {
+    if c.len() < MACBYTES {
         return Err(());
     }
-    let (m, ret) =
-        marshal(c, BOXZEROBYTES, ZEROBYTES, |dst, src, len| unsafe {
-            ffi::crypto_secretbox_xsalsa20poly1305_open(dst, src, len, n.as_ptr(), k.as_ptr())
-        });
+    let mlen = c.len() - MACBYTES;
+    let mut m = Vec::with_capacity(mlen);
+    let ret = unsafe {
+        m.set_len(mlen);
+        ffi::crypto_secretbox_open_easy(m.as_mut_ptr(),
+                                        c.as_ptr(),
+                                        c.len() as u64,
+                                        n.as_ptr(),
+                                        k.as_ptr())
+    };
     if ret == 0 { Ok(m) } else { Err(()) }
+}
+
+/// `open_detached()` verifies and decrypts a ciphertext `c` and and authentication tag `tag`,
+/// using a secret key `k` and a nonce `n`. `c` is decrypted in place, so if this function is
+/// successful it will contain the plaintext. If the ciphertext fails verification,
+/// `open_detached()` returns `Err(())`, and the ciphertext is not modified.
+pub fn open_detached(c: &mut [u8],
+                     tag: &Tag,
+                     &Nonce(ref n): &Nonce,
+                     &Key(ref k): &Key)
+                     -> Result<(), ()> {
+    let ret = unsafe {
+        ffi::crypto_secretbox_open_detached(c.as_mut_ptr(),
+                                            c.as_ptr(),
+                                            tag.0.as_ptr(),
+                                            c.len() as u64,
+                                            n.as_ptr(),
+                                            k.as_ptr())
+    };
+    if ret == 0 { Ok(()) } else { Err(()) }
 }
 
 #[cfg(test)]
@@ -97,7 +149,7 @@ mod test {
             let n = gen_nonce();
             let c = seal(&m, &n, &k);
             let opened = open(&c, &n, &k);
-            assert!(Ok(m) == opened);
+            assert_eq!(Ok(m), opened);
         }
     }
 
@@ -105,7 +157,6 @@ mod test {
     #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -113,10 +164,102 @@ mod test {
             let mut c = seal(&m, &n, &k);
             for i in 0..c.len() {
                 c[i] ^= 0x20;
-                assert!(Err(()) == open(&c, &n, &k));
+                // Test the combined mode.
+                assert_eq!(Err(()), open(&c, &n, &k));
+                // Test the detached mode.
+                let tag = Tag::from_slice(&c[..MACBYTES]).unwrap();
+                assert_eq!(Err(()), open_detached(&mut c[MACBYTES..], &tag, &n, &k));
                 c[i] ^= 0x20;
             }
         }
+    }
+
+    #[test]
+    fn test_seal_open_detached() {
+        use randombytes::randombytes;
+        for i in 0..256usize {
+            let k = gen_key();
+            let m = randombytes(i);
+            let n = gen_nonce();
+            let mut buf = m.clone();
+            let tag = seal_detached(&mut buf, &n, &k);
+            open_detached(&mut buf, &tag, &n, &k).unwrap();
+            assert_eq!(m, buf);
+        }
+    }
+
+    #[test]
+    fn test_seal_combined_then_open_detached() {
+        use randombytes::randombytes;
+        for i in 0..256usize {
+            let k = gen_key();
+            let m = randombytes(i);
+            let n = gen_nonce();
+            let mut c = seal(&m, &n, &k);
+            let tag = Tag::from_slice(&c[..MACBYTES]).unwrap();
+            let buf = &mut c[MACBYTES..];
+            open_detached(buf, &tag, &n, &k).unwrap();
+            assert_eq!(buf, &*m);
+        }
+    }
+
+    #[test]
+    fn test_seal_detached_then_open_combined() {
+        use randombytes::randombytes;
+        for i in 0..256usize {
+            let k = gen_key();
+            let m = randombytes(i);
+            let n = gen_nonce();
+            let mut buf = vec![0; MACBYTES];
+            buf.extend_from_slice(&m);
+            let tag = seal_detached(&mut buf[MACBYTES..], &n, &k);
+            buf[..MACBYTES].copy_from_slice(&tag.0[..]);
+            let opened = open(&buf, &n, &k);
+            assert_eq!(Ok(m), opened);
+        }
+    }
+
+
+    #[test]
+    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
+    fn test_seal_open_detached_tamper() {
+        use randombytes::randombytes;
+        assert!(::init());
+        for i in 0..32usize {
+            let k = gen_key();
+            let mut m = randombytes(i);
+            let n = gen_nonce();
+            let mut tag = seal_detached(&mut m, &n, &k);
+            for j in 0..m.len() {
+                m[j] ^= 0x20;
+                assert_eq!(Err(()), open_detached(&mut m, &tag, &n, &k));
+                m[j] ^= 0x20;
+            }
+            for j in 0..tag.0.len() {
+                tag.0[j] ^= 0x20;
+                assert_eq!(Err(()), open_detached(&mut m, &tag, &n, &k));
+                tag.0[j] ^= 0x20;
+            }
+        }
+    }
+
+    #[test]
+    fn test_open_detached_failure_does_not_modify() {
+        let mut buf = b"hello world".to_vec();
+        let k = gen_key();
+        let n = gen_nonce();
+        let tag = seal_detached(&mut buf, &n, &k);
+        // Flip the last bit in the ciphertext, to break authentication.
+        *buf.last_mut().unwrap() ^= 1;
+        // Make a copy that we can compare against after the failure below.
+        let copy = buf.clone();
+        // Now try to open the message. This will fail.
+        let failure = open_detached(&mut buf, &tag, &n, &k);
+        assert!(failure.is_err());
+        // Make sure the input hasn't been touched.
+        assert_eq!(buf,
+                   copy,
+                   "input should not be modified if authentication fails");
     }
 
     #[test]

@@ -27,5 +27,5 @@ unwrap = "~1.1.0"
 path = "lib.rs"
 
 [features]
-default = ["pkg-config"]
-get-libsodium = ["flate2", "gcc", "tar"]
+default = ["flate2", "gcc", "tar"]
+use-installed-libsodium = ["pkg-config"]

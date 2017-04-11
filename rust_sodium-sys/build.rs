@@ -1,21 +1,21 @@
 #[macro_use]
 extern crate unwrap;
 
-#[cfg(not(feature = "get-libsodium"))]
+#[cfg(feature = "use-installed-libsodium")]
 extern crate pkg_config;
 
-const VERSION: &'static str = "1.0.11";
+const VERSION: &'static str = "1.0.12";
 
-#[cfg(not(feature = "get-libsodium"))]
+#[cfg(feature = "use-installed-libsodium")]
 fn main() {
     use std::env;
     if let Ok(lib_dir) = env::var("SODIUM_LIB_DIR") {
-        println!("cargo:rustc-flags=-L native={}", lib_dir);
+        println!("cargo:rustc-link-search=native={}", lib_dir);
         let mode = match env::var_os("SODIUM_STATIC") {
             Some(_) => "static",
             None => "dylib",
         };
-        println!("cargo:rustc-flags=-l {0}=sodium", mode);
+        println!("cargo:rustc-link-lib={0}=sodium", mode);
         println!("cargo:warning=Using unknown libsodium version.  This crate is tested against \
                   {} and may not be fully compatible with other versions.",
                  VERSION);
@@ -33,20 +33,20 @@ fn main() {
 
 
 
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 extern crate gcc;
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 extern crate flate2;
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 extern crate tar;
 
-#[cfg(feature = "get-libsodium")]
+#[cfg(not(feature = "use-installed-libsodium"))]
 fn get_install_dir() -> String {
     use std::env;
     unwrap!(env::var("OUT_DIR")) + "/installed"
 }
 
-#[cfg(all(windows, feature = "get-libsodium"))]
+#[cfg(all(windows, not(feature = "use-installed-libsodium")))]
 fn main() {
     use std::fs::{self, File};
     use std::path::{Path, PathBuf};
@@ -170,7 +170,7 @@ fn main() {
 
 
 
-#[cfg(all(not(windows), feature = "get-libsodium"))]
+#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
 fn main() {
     use std::env;
     use std::fs::{self, File};
@@ -248,6 +248,21 @@ fn main() {
         ""
     };
 
+    // Disable PIE for Ubuntu < 15.04 (see https://github.com/jedisct1/libsodium/issues/292)
+    let disable_pie_arg = match Command::new("lsb_release").arg("-irs").output() {
+        Ok(id_output) => {
+            let stdout = String::from_utf8_lossy(&id_output.stdout);
+            let mut lines = stdout.lines();
+            if lines.next() == Some("Ubuntu") {
+                let v = unwrap!(unwrap!(unwrap!(lines.next()).split('.').next()).parse::<u32>());
+                if v < 15 { "--disable-pie" } else { "" }
+            } else {
+                ""
+            }
+        }
+        _ => "",
+    };
+
     let mut configure_cmd = Command::new("./configure");
     let configure_output = configure_cmd
         .current_dir(&source_dir)
@@ -256,7 +271,7 @@ fn main() {
         .arg(&prefix_arg)
         .arg(&host_arg)
         .arg("--enable-shared=no")
-        .arg("--disable-pie")
+        .arg(disable_pie_arg)
         .output()
         .unwrap_or_else(|error| {
                             panic!("Failed to run './configure': {}\n{}", error, help);

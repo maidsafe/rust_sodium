@@ -53,7 +53,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
                 -> Result<(), E::Error> {
             encoder.emit_seq($len, |encoder| {
                 for (i, e) in self[..].iter().enumerate() {
-                    try!(encoder.emit_seq_elt(i, |encoder| e.encode(encoder)))
+                    (encoder.emit_seq_elt(i, |encoder| e.encode(encoder)))?
                 }
                 Ok(())
             })
@@ -78,7 +78,7 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
                     {
                         let $newtype(ref mut arr) = res;
                         for r in arr.iter_mut() {
-                            if let Some(value) = try!(visitor.visit()) {
+                            if let Some(value) = (visitor.visit())? {
                                 *r = value;
                             }
                         }
@@ -111,8 +111,8 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
                 {
                     let $newtype(ref mut arr) = res;
                     for (i, val) in arr.iter_mut().enumerate() {
-                        *val = try!(decoder.read_seq_elt(i,
-                            |decoder| rustc_serialize::Decodable::decode(decoder)));
+                        *val = (decoder.read_seq_elt(i,
+                            |decoder| rustc_serialize::Decodable::decode(decoder)))?;
                     }
                 }
                 Ok(res)

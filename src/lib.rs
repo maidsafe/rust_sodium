@@ -81,7 +81,6 @@ extern crate serde;
 #[macro_use]
 extern crate unwrap;
 
-mod marshal;
 #[macro_use]
 mod newtype_macros;
 pub mod randombytes;

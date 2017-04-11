@@ -16,7 +16,10 @@ struct RandomBytesImpl {
 
 impl Default for RandomBytesImpl {
     fn default() -> RandomBytesImpl {
-        let seed = [rand::random(), rand::random(), rand::random(), rand::random()];
+        let seed = [rand::random(),
+                    rand::random(),
+                    rand::random(),
+                    rand::random()];
         RandomBytesImpl {
             function_pointers: randombytes_implementation::default(),
             name: unwrap!(CString::new("Rust XorShiftRng")),

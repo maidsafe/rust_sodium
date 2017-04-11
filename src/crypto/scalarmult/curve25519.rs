@@ -26,15 +26,20 @@ new_type! {
 }
 
 /// `scalarmult()` multiplies a group element `p`
-/// by an integer `n`. It returns the resulting group element
-/// `q`.
-pub fn scalarmult(&Scalar(ref n): &Scalar, &GroupElement(ref p): &GroupElement) -> GroupElement {
+/// by an integer `n`. It returns the resulting group element `Ok(q)`.
+/// If the the `GroupElement` is all zero, `scalarmult()` returns `Err(())` since
+/// the resulting `GroupElement` would be all zero, no matter the `Scalar`.
+pub fn scalarmult(&Scalar(ref n): &Scalar,
+                  &GroupElement(ref p): &GroupElement)
+                  -> Result<GroupElement, ()> {
     let mut q = [0; GROUPELEMENTBYTES];
     unsafe {
-        let _todo_use_result =
-            ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(), n.as_ptr(), p.as_ptr());
+        if ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(), n.as_ptr(), p.as_ptr()) != 0 {
+            Err(())
+        } else {
+            Ok(GroupElement(q))
+        }
     }
-    GroupElement(q)
 }
 
 /// `scalarmult_base()` computes the scalar product of a standard
@@ -51,6 +56,7 @@ pub fn scalarmult_base(&Scalar(ref n): &Scalar) -> GroupElement {
 #[cfg(test)]
 mod test {
     use super::*;
+    use randombytes::randombytes_into;
 
     #[test]
     fn test_vector_1() {
@@ -94,7 +100,7 @@ mod test {
         let k_expected = [0x4a, 0x5d, 0x9d, 0x5b, 0xa4, 0xce, 0x2d, 0xe1, 0x72, 0x8e, 0x3b, 0xf4,
                           0x80, 0x35, 0x0f, 0x25, 0xe0, 0x7e, 0x21, 0xc9, 0x47, 0xd1, 0x9e, 0x33,
                           0x76, 0xf0, 0x9b, 0x3c, 0x1e, 0x16, 0x17, 0x42];
-        let GroupElement(k) = scalarmult(&alicesk, &bobpk);
+        let GroupElement(k) = scalarmult(&alicesk, &bobpk).unwrap();
         assert!(k == k_expected);
     }
 
@@ -112,8 +118,18 @@ mod test {
         let k_expected = [0x4a, 0x5d, 0x9d, 0x5b, 0xa4, 0xce, 0x2d, 0xe1, 0x72, 0x8e, 0x3b, 0xf4,
                           0x80, 0x35, 0x0f, 0x25, 0xe0, 0x7e, 0x21, 0xc9, 0x47, 0xd1, 0x9e, 0x33,
                           0x76, 0xf0, 0x9b, 0x3c, 0x1e, 0x16, 0x17, 0x42];
-        let GroupElement(k) = scalarmult(&bobsk, &alicepk);
+        let GroupElement(k) = scalarmult(&bobsk, &alicepk).unwrap();
         assert!(k == k_expected);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_all_zero() {
+        let mut sk = [0; SCALARBYTES];
+        randombytes_into(&mut sk);
+        let sk = Scalar(sk);
+        let pk = GroupElement([0; GROUPELEMENTBYTES]);
+        let _ = scalarmult(&sk, &pk).unwrap();
     }
 }
 
