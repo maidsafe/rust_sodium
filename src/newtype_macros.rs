@@ -172,12 +172,6 @@ macro_rules! newtype_traits (($newtype:ident, $len:expr) => (
             b.index(_index)
         }
     }
-    impl ::std::fmt::Debug for $newtype  {
-        fn fmt(&self,
-               formatter: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-            write!(formatter, "{}({:?})", stringify!($newtype), &self[..])
-        }
-    }
     ));
 
 macro_rules! public_newtype_traits (($newtype:ident) => (
@@ -264,6 +258,13 @@ macro_rules! new_type {
                 memzero(v);
             }
         }
+        impl ::std::fmt::Debug for $name {
+            fn fmt(&self,
+                   formatter: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                // Hide secrets from debug output.
+                write!(formatter, "{}(****)", stringify!($name))
+            }
+        }
         );
     ( $(#[$meta:meta])*
       public $name:ident($bytes:expr);
@@ -277,6 +278,12 @@ macro_rules! new_type {
         public_newtype_traits!($name);
         impl $name {
             newtype_from_slice!($name, $bytes);
+        }
+        impl ::std::fmt::Debug for $name {
+            fn fmt(&self,
+                   formatter: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                write!(formatter, "{}({:?})", stringify!($name), &self[..])
+            }
         }
         );
     ( $(#[$meta:meta])*
@@ -318,6 +325,12 @@ macro_rules! new_type {
                 increment_le(r);
             }
 
+        }
+        impl ::std::fmt::Debug for $name {
+            fn fmt(&self,
+                   formatter: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                write!(formatter, "{}({:?})", stringify!($name), &self[..])
+            }
         }
         );
 }
