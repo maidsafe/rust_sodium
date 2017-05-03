@@ -66,7 +66,7 @@ mod test {
                 let _ = unwrap!(r.read_line(&mut line));
                 let md = unwrap!(line[5..].from_hex());
                 let Digest(digest) = hash(msg);
-                assert!(&digest[..] == &md[..]);
+                assert!(digest[..] == md[..]);
             }
         }
     }
