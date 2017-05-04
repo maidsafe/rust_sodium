@@ -6,11 +6,13 @@ extern crate rmp_serde;
 extern crate core;
 #[cfg(all(test, feature = "serde"))]
 use serde::{Deserialize, Serialize};
+#[cfg(all(test, feature = "serde"))]
+use serde::de::DeserializeOwned;
 
 // Encodes then decodes `value` using JSON
 #[cfg(all(test, feature = "serde"))]
 pub fn round_trip<T>(value: T)
-    where T: Serialize + Deserialize + Eq + core::fmt::Debug
+    where T: Serialize + DeserializeOwned + Eq + core::fmt::Debug
 {
     let encoded_value = unwrap!(serde_json::to_string(&value));
     let decoded_value = unwrap!(serde_json::from_str(&encoded_value));

@@ -27,7 +27,7 @@ mod test {
                           0x1d, 0x13, 0x8b, 0xc7, 0xaa, 0xd1, 0xaf, 0x3e, 0xf7, 0xbf, 0xd5, 0xec,
                           0x64, 0x6d, 0x6c, 0x28];
         let Digest(h) = hash(&x);
-        assert!(&h[..] == &h_expected[..]);
+        assert!(h[..] == h_expected[..]);
     }
 
     fn test_nist_vector(filename: &str) {
@@ -55,7 +55,7 @@ mod test {
                 let _ = unwrap!(r.read_line(&mut line));
                 let md = unwrap!(line[5..].from_hex());
                 let Digest(digest) = hash(msg);
-                assert!(&digest[..] == &md[..]);
+                assert!(digest[..] == md[..]);
             }
         }
     }
