@@ -257,7 +257,7 @@ fn main() {
                 let v = unwrap!(unwrap!(unwrap!(lines.next()).split('.').next()).parse::<u32>());
                 if v < 15 { "--disable-pie" } else { "" }
             } else {
-                ""
+                "--disable-pie"
             }
         }
         _ => "",
