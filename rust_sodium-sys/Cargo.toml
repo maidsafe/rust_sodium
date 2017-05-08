@@ -12,20 +12,22 @@ version = "0.2.0"
 
 [dependencies]
 lazy_static = "~0.2.1"
-libc = "~0.2.15"
+libc = "~0.2.22"
 rand = "~0.3.14"
 unwrap = "~1.1.0"
 
 [build-dependencies]
 flate2 = { version = "~0.2.14", optional = true }
 gcc = { version = "~0.3.35", optional = true }
+libc = "~0.2.22"
 pkg-config = { version = "~0.3.8", optional = true }
 tar = { version = "~0.4.8", optional = true }
 unwrap = "~1.1.0"
+zip = { version = "~0.2.3", optional = true }
 
 [lib]
 path = "lib.rs"
 
 [features]
-default = ["flate2", "gcc", "tar"]
+default = ["flate2", "gcc", "tar", "zip"]
 use-installed-libsodium = ["pkg-config"]
