@@ -1,5 +1,14 @@
 # rust_sodium - Change Log
 
+## [0.3.0]
+- Ported several updates from sodiumoxide
+- Upgraded libsodium version to 1.0.12
+- Changed the default feature behaviour for rust_sodium-sys to download and unpack/build libsodium
+- For Linux distros, only enable PIE for Ubuntu >= 15.04
+- Added support for MSVC builds
+- Changed to use rust 1.17 stable
+- Updated CI script to run cargo_install from QA
+
 ## [0.2.0]
 - Default to serde instead of rustc-serialize
 - rustfmt 0.8.1
