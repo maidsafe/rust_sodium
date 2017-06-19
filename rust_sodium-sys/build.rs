@@ -80,11 +80,32 @@ fn download_compressed_file() -> String {
     };
     let url = "https://download.libsodium.org/libsodium/releases/".to_string() + &zip_filename;
     let zip_path = get_install_dir() + "/" + &zip_filename;
-    let command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
+    let mut command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
                ((New-Object System.Net.WebClient).DownloadFile(\""
             .to_string() + &url + "\", \"" + &zip_path + "\"))";
     let mut download_cmd = Command::new("powershell");
-    let download_output = download_cmd
+    let mut download_output = download_cmd
+        .arg("-Command")
+        .arg(&command)
+        .output()
+        .unwrap_or_else(|error| {
+                            panic!("Failed to run powershell download command: {}", error);
+                        });
+    if download_output.status.success() {
+        return zip_path;
+    }
+
+    let fallback_url = "https://raw.githubusercontent.com/maidsafe/QA/master/appveyor/"
+        .to_string() + &zip_filename;
+    println!("cargo:warning=Failed to download libsodium from {}.  Falling back to MaidSafe mirror \
+             at {}",
+             url,
+             fallback_url);
+    command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
+               ((New-Object System.Net.WebClient).DownloadFile(\""
+            .to_string() + &fallback_url + "\", \"" + &zip_path + "\"))";
+    download_cmd = Command::new("powershell");
+    download_output = download_cmd
         .arg("-Command")
         .arg(&command)
         .output()
