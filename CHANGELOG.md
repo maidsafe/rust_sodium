@@ -1,5 +1,8 @@
 # rust_sodium - Change Log
 
+## rust_sodium-sys [0.3.1]
+- Added fallback URL for Windows libsodium artefacts.
+
 ## [0.3.0]
 - Ported several updates from sodiumoxide
 - Upgraded libsodium version to 1.0.12
