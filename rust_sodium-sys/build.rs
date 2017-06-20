@@ -335,7 +335,7 @@ fn main() {
                 "--disable-pie"
             }
         }
-        _ => "",
+        _ => "--disable-pie",
     };
 
     let mut configure_cmd = Command::new("./configure");
