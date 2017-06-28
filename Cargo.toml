@@ -7,12 +7,12 @@ license = "MIT OR Apache-2.0"
 name = "rust_sodium"
 readme = "README.md"
 repository = "https://github.com/maidsafe/rust_sodium"
-version = "0.3.0"
+version = "0.4.0"
 
 [dependencies]
 libc = "~0.2.15"
 rand = "~0.3.14"
-rust_sodium-sys = { path = "rust_sodium-sys", version = "~0.3.0" }
+rust_sodium-sys = { path = "rust_sodium-sys", version = "~0.4.0" }
 rustc-serialize = { version = "~0.3.19", optional = true }
 serde = { version = "~1.0.2", optional = true }
 unwrap = "~1.1.0"

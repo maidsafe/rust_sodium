@@ -1,7 +1,10 @@
 //! Rust bindings to the [sodium library](https://github.com/jedisct1/libsodium).
 //!
 //! Sodium is a portable implementation of Dan Bernsteins [`NaCl`: Networking and
-//! Cryptography library](http://nacl.cr.yp.to)
+//! Cryptography library](http://nacl.cr.yp.to).
+//!
+//! For details on building rust_sodium, see
+//! [the README](https://github.com/maidsafe/rust_sodium/blob/master/README.md).
 //!
 //! For most users, if you want public-key (asymmetric) cryptography you should use
 //! the functions in [`crypto::box_`](crypto/box_/index.html) for encryption/decryption.

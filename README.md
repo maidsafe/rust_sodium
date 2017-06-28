@@ -26,6 +26,15 @@ differences are:
 In order to allow the build script to download libsodium, you must have Powershell v4.0 or greater
 installed.
 
+## Note for building on Linux
+
+Certain situations may require building libsodium configured with `--disable-pie`.  To enable this,
+set an environment variable `RUST_SODIUM_DISABLE_PIE` while building, e.g.
+
+```sh
+RUST_SODIUM_DISABLE_PIE=1 cargo build
+```
+
 ## Cross-Compiling
 
 ### Cross-Compiling for ARM
