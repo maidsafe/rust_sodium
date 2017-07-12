@@ -1,5 +1,8 @@
 # rust_sodium - Change Log
 
+## [0.4.0]
+- Changed build script for non-Windows platforms to only pass `--disable-pie` when a new env var is set.
+
 ## rust_sodium-sys [0.3.1]
 - Added fallback URL for Windows libsodium artefacts.
 
