@@ -55,7 +55,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop, rustfmt_skip))]
+    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_vectors() {
         assert!(::init());
         let maxlen = 64;
