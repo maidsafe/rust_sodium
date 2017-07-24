@@ -70,11 +70,13 @@ pub fn seal(m: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Vec<u8> {
     let mut c = Vec::with_capacity(clen);
     unsafe {
         c.set_len(clen);
-        let _ = ffi::crypto_secretbox_easy(c.as_mut_ptr(),
-                                           m.as_ptr(),
-                                           m.len() as u64,
-                                           n.as_ptr(),
-                                           k.as_ptr());
+        let _ = ffi::crypto_secretbox_easy(
+            c.as_mut_ptr(),
+            m.as_ptr(),
+            m.len() as u64,
+            n.as_ptr(),
+            k.as_ptr(),
+        );
     }
     c
 }
@@ -85,12 +87,14 @@ pub fn seal(m: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Vec<u8> {
 pub fn seal_detached(m: &mut [u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Tag {
     let mut tag = [0; MACBYTES];
     unsafe {
-        let _ = ffi::crypto_secretbox_detached(m.as_mut_ptr(),
-                                               tag.as_mut_ptr(),
-                                               m.as_ptr(),
-                                               m.len() as u64,
-                                               n.as_ptr(),
-                                               k.as_ptr());
+        let _ = ffi::crypto_secretbox_detached(
+            m.as_mut_ptr(),
+            tag.as_mut_ptr(),
+            m.as_ptr(),
+            m.len() as u64,
+            n.as_ptr(),
+            k.as_ptr(),
+        );
     };
     Tag(tag)
 }
@@ -106,11 +110,13 @@ pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8
     let mut m = Vec::with_capacity(mlen);
     let ret = unsafe {
         m.set_len(mlen);
-        ffi::crypto_secretbox_open_easy(m.as_mut_ptr(),
-                                        c.as_ptr(),
-                                        c.len() as u64,
-                                        n.as_ptr(),
-                                        k.as_ptr())
+        ffi::crypto_secretbox_open_easy(
+            m.as_mut_ptr(),
+            c.as_ptr(),
+            c.len() as u64,
+            n.as_ptr(),
+            k.as_ptr(),
+        )
     };
     if ret == 0 { Ok(m) } else { Err(()) }
 }
@@ -119,18 +125,21 @@ pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8
 /// using a secret key `k` and a nonce `n`. `c` is decrypted in place, so if this function is
 /// successful it will contain the plaintext. If the ciphertext fails verification,
 /// `open_detached()` returns `Err(())`, and the ciphertext is not modified.
-pub fn open_detached(c: &mut [u8],
-                     tag: &Tag,
-                     &Nonce(ref n): &Nonce,
-                     &Key(ref k): &Key)
-                     -> Result<(), ()> {
+pub fn open_detached(
+    c: &mut [u8],
+    tag: &Tag,
+    &Nonce(ref n): &Nonce,
+    &Key(ref k): &Key,
+) -> Result<(), ()> {
     let ret = unsafe {
-        ffi::crypto_secretbox_open_detached(c.as_mut_ptr(),
-                                            c.as_ptr(),
-                                            tag.0.as_ptr(),
-                                            c.len() as u64,
-                                            n.as_ptr(),
-                                            k.as_ptr())
+        ffi::crypto_secretbox_open_detached(
+            c.as_mut_ptr(),
+            c.as_ptr(),
+            tag.0.as_ptr(),
+            c.len() as u64,
+            n.as_ptr(),
+            k.as_ptr(),
+        )
     };
     if ret == 0 { Ok(()) } else { Err(()) }
 }
@@ -154,7 +163,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -221,7 +230,7 @@ mod test {
 
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_detached_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -257,12 +266,15 @@ mod test {
         let failure = open_detached(&mut buf, &tag, &n, &k);
         assert!(failure.is_err());
         // Make sure the input hasn't been touched.
-        assert_eq!(buf,
-                   copy,
-                   "input should not be modified if authentication fails");
+        assert_eq!(
+            buf,
+            copy,
+            "input should not be modified if authentication fails"
+        );
     }
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         assert!(::init());
         let firstkey = Key([0x1b, 0x27, 0x55, 0x64, 0x73, 0xe9, 0x85, 0xd4, 0x62, 0xcd, 0x51,
@@ -332,7 +344,7 @@ mod bench {
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
         b.iter(|| for m in ms.iter() {
-                   unwrap!(open(&seal(&m, &n, &k), &n, &k));
-               });
+            unwrap!(open(&seal(&m, &n, &k), &n, &k));
+        });
     }
 }

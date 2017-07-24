@@ -16,10 +16,12 @@ struct RandomBytesImpl {
 
 impl Default for RandomBytesImpl {
     fn default() -> RandomBytesImpl {
-        let seed = [rand::random(),
-                    rand::random(),
-                    rand::random(),
-                    rand::random()];
+        let seed = [
+            rand::random(),
+            rand::random(),
+            rand::random(),
+            rand::random(),
+        ];
         RandomBytesImpl {
             function_pointers: randombytes_implementation::default(),
             name: unwrap!(CString::new("Rust XorShiftRng")),
@@ -59,7 +61,7 @@ extern "C" fn random() -> uint32_t {
     RNG.with(|rng| rng.borrow_mut().gen())
 }
 
-#[cfg_attr(feature="cargo-clippy", allow(cast_possible_wrap))]
+#[cfg_attr(feature = "cargo-clippy", allow(cast_possible_wrap))]
 extern "C" fn buf(buf: *mut c_void, size: size_t) {
     unsafe {
         let ptr = buf as *mut u8;
@@ -95,10 +97,10 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
     let mut init_result = &mut *unwrap!(INIT_RESULT.lock());
     if let Some(ref existing_result) = *init_result {
         return if *existing_result == 0 {
-                   Ok(())
-               } else {
-                   Err(*existing_result)
-               };
+            Ok(())
+        } else {
+            Err(*existing_result)
+        };
     }
     let mut sodium_result;
     let seed = [rng.gen(), rng.gen(), rng.gen(), rng.gen()];
@@ -123,6 +125,7 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
 }
 
 #[test]
+#[cfg_attr(rustfmt, rustfmt_skip)]
 fn test_seeded_init_with_rng() {
     use std::thread::Builder;
     let mut rng = XorShiftRng::from_seed([0, 1, 2, 3]);

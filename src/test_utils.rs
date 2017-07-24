@@ -12,7 +12,8 @@ use serde::de::DeserializeOwned;
 // Encodes then decodes `value` using JSON
 #[cfg(all(test, feature = "serde"))]
 pub fn round_trip<T>(value: T)
-    where T: Serialize + DeserializeOwned + Eq + core::fmt::Debug
+where
+    T: Serialize + DeserializeOwned + Eq + core::fmt::Debug,
 {
     let encoded_value = unwrap!(serde_json::to_string(&value));
     let decoded_value = unwrap!(serde_json::from_str(&encoded_value));
@@ -34,7 +35,8 @@ use rustc_serialize::{Decodable, Encodable, json};
 // Encodes then decodes `value` using JSON
 #[cfg(all(test, feature = "rustc-serialize", not(feature = "serde")))]
 pub fn round_trip<T>(value: T)
-    where T: Decodable + Encodable + Eq
+where
+    T: Decodable + Encodable + Eq,
 {
     let encoded_value = unwrap!(json::encode(&value));
     let decoded_value = unwrap!(json::decode(&encoded_value));

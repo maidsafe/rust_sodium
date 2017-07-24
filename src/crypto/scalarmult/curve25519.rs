@@ -29,9 +29,10 @@ new_type! {
 /// by an integer `n`. It returns the resulting group element `Ok(q)`.
 /// If the the `GroupElement` is all zero, `scalarmult()` returns `Err(())` since
 /// the resulting `GroupElement` would be all zero, no matter the `Scalar`.
-pub fn scalarmult(&Scalar(ref n): &Scalar,
-                  &GroupElement(ref p): &GroupElement)
-                  -> Result<GroupElement, ()> {
+pub fn scalarmult(
+    &Scalar(ref n): &Scalar,
+    &GroupElement(ref p): &GroupElement,
+) -> Result<GroupElement, ()> {
     let mut q = [0; GROUPELEMENTBYTES];
     unsafe {
         if ffi::crypto_scalarmult_curve25519(q.as_mut_ptr(), n.as_ptr(), p.as_ptr()) != 0 {
@@ -59,6 +60,7 @@ mod test {
     use randombytes::randombytes_into;
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // corresponding to tests/scalarmult.c and tests/scalarmult3.cpp from NaCl
         assert!(::init());
@@ -73,6 +75,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_2() {
         // corresponding to tests/scalarmult2.c and tests/scalarmult4.cpp from NaCl
         assert!(::init());
@@ -87,6 +90,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_3() {
         // corresponding to tests/scalarmult5.c and tests/scalarmult7.cpp from NaCl
         assert!(::init());
@@ -105,6 +109,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_4() {
         // corresponding to tests/scalarmult6.c from NaCl
         assert!(::init());

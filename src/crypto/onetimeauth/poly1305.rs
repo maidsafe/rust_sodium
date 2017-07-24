@@ -6,16 +6,19 @@
 use ffi::{crypto_onetimeauth_poly1305, crypto_onetimeauth_poly1305_BYTES,
           crypto_onetimeauth_poly1305_KEYBYTES, crypto_onetimeauth_poly1305_verify};
 
-auth_module!(crypto_onetimeauth_poly1305,
-             crypto_onetimeauth_poly1305_verify,
-             crypto_onetimeauth_poly1305_KEYBYTES,
-             crypto_onetimeauth_poly1305_BYTES);
+auth_module!(
+    crypto_onetimeauth_poly1305,
+    crypto_onetimeauth_poly1305_verify,
+    crypto_onetimeauth_poly1305_KEYBYTES,
+    crypto_onetimeauth_poly1305_BYTES
+);
 
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // corresponding to tests/onetimeauth.c, tests/onetimeauth2.c,
         // tests/onetimeauth5.cpp and tests/onetimeauth6.cpp from NaCl

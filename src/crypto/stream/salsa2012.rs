@@ -5,7 +5,9 @@
 use ffi::{crypto_stream_salsa2012, crypto_stream_salsa2012_KEYBYTES,
           crypto_stream_salsa2012_NONCEBYTES, crypto_stream_salsa2012_xor};
 
-stream_module!(crypto_stream_salsa2012,
-               crypto_stream_salsa2012_xor,
-               crypto_stream_salsa2012_KEYBYTES,
-               crypto_stream_salsa2012_NONCEBYTES);
+stream_module!(
+    crypto_stream_salsa2012,
+    crypto_stream_salsa2012_xor,
+    crypto_stream_salsa2012_KEYBYTES,
+    crypto_stream_salsa2012_NONCEBYTES
+);

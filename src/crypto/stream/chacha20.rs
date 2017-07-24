@@ -3,16 +3,19 @@
 use ffi::{crypto_stream_chacha20, crypto_stream_chacha20_KEYBYTES,
           crypto_stream_chacha20_NONCEBYTES, crypto_stream_chacha20_xor};
 
-stream_module!(crypto_stream_chacha20,
-               crypto_stream_chacha20_xor,
-               crypto_stream_chacha20_KEYBYTES,
-               crypto_stream_chacha20_NONCEBYTES);
+stream_module!(
+    crypto_stream_chacha20,
+    crypto_stream_chacha20_xor,
+    crypto_stream_chacha20_KEYBYTES,
+    crypto_stream_chacha20_NONCEBYTES
+);
 
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // the fifth test from
         // https://tools.ietf.org/html/draft-agl-tls-chacha20poly1305-04#section-7

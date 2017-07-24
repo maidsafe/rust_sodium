@@ -19,10 +19,12 @@ const SEALBYTES: usize = ffi::crypto_box_SEALBYTES;
 pub fn seal(m: &[u8], &box_::PublicKey(ref pk): &box_::PublicKey) -> Vec<u8> {
     let mut c = vec![0u8; m.len() + SEALBYTES];
     unsafe {
-        let _todo_use_result = ffi::crypto_box_seal(c.as_mut_ptr(),
-                                                    m.as_ptr(),
-                                                    m.len() as c_ulonglong,
-                                                    pk.as_ptr());
+        let _todo_use_result = ffi::crypto_box_seal(
+            c.as_mut_ptr(),
+            m.as_ptr(),
+            m.len() as c_ulonglong,
+            pk.as_ptr(),
+        );
     }
     c
 }
@@ -38,20 +40,23 @@ pub fn seal(m: &[u8], &box_::PublicKey(ref pk): &box_::PublicKey) -> Vec<u8> {
 /// ciphertext already includes this information.
 ///
 /// If decryption fails it returns `Err(())`.
-pub fn open(c: &[u8],
-            &box_::PublicKey(ref pk): &box_::PublicKey,
-            &box_::SecretKey(ref sk): &box_::SecretKey)
-            -> Result<Vec<u8>, ()> {
+pub fn open(
+    c: &[u8],
+    &box_::PublicKey(ref pk): &box_::PublicKey,
+    &box_::SecretKey(ref sk): &box_::SecretKey,
+) -> Result<Vec<u8>, ()> {
     if c.len() < SEALBYTES {
         return Err(());
     }
     let mut m = vec![0u8; c.len() - SEALBYTES];
     let ret = unsafe {
-        ffi::crypto_box_seal_open(m.as_mut_ptr(),
-                                  c.as_ptr(),
-                                  c.len() as c_ulonglong,
-                                  pk.as_ptr(),
-                                  sk.as_ptr())
+        ffi::crypto_box_seal_open(
+            m.as_mut_ptr(),
+            c.as_ptr(),
+            c.len() as c_ulonglong,
+            pk.as_ptr(),
+            sk.as_ptr(),
+        )
     };
     if ret == 0 { Ok(m) } else { Err(()) }
 }
@@ -75,7 +80,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         assert!(::init());
