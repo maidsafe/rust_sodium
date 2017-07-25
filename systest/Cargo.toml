@@ -8,9 +8,9 @@ name = "systest"
 version = "0.1.0"
 
 [dependencies]
-rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.4.0" }
-libc = "~0.2.15"
+rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.5.0" }
+libc = "~0.2.28"
 
 [build-dependencies]
-ctest = "~0.1.1"
+ctest = "~0.1.4"
 unwrap = "~1.1.0"

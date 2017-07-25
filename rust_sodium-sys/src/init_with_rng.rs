@@ -93,7 +93,7 @@ extern "C" fn buf(buf: *mut c_void, size: size_t) {
 /// will generate identical keys.
 ///
 /// [1]: https://download.libsodium.org/doc/advanced/custom_rng.html
-/// [2]: http://docs.maidsafe.net/rust_sodium/master/rust_sodium/fn.init.html
+/// [2]: https://docs.rs/rust_sodium/*/rust_sodium/fn.init.html
 pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
     let mut init_result = &mut *unwrap!(INIT_RESULT.lock());
     if let Some(ref existing_result) = *init_result {
