@@ -83,11 +83,13 @@ pub fn sign(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Vec<u8> {
     unsafe {
         let mut sm: Vec<u8> = repeat(0u8).take(m.len() + SIGNATUREBYTES).collect();
         let mut smlen = 0;
-        let _todo_use_result = ffi::crypto_sign_ed25519(sm.as_mut_ptr(),
-                                                        &mut smlen,
-                                                        m.as_ptr(),
-                                                        m.len() as c_ulonglong,
-                                                        sk.as_ptr());
+        let _todo_use_result = ffi::crypto_sign_ed25519(
+            sm.as_mut_ptr(),
+            &mut smlen,
+            m.as_ptr(),
+            m.len() as c_ulonglong,
+            sk.as_ptr(),
+        );
         sm.truncate(smlen as usize);
         sm
     }
@@ -100,11 +102,14 @@ pub fn verify(sm: &[u8], &PublicKey(ref pk): &PublicKey) -> Result<Vec<u8>, ()> 
     unsafe {
         let mut m: Vec<u8> = repeat(0u8).take(sm.len()).collect();
         let mut mlen = 0;
-        if ffi::crypto_sign_ed25519_open(m.as_mut_ptr(),
-                                         &mut mlen,
-                                         sm.as_ptr(),
-                                         sm.len() as c_ulonglong,
-                                         pk.as_ptr()) == 0 {
+        if ffi::crypto_sign_ed25519_open(
+            m.as_mut_ptr(),
+            &mut mlen,
+            sm.as_ptr(),
+            sm.len() as c_ulonglong,
+            pk.as_ptr(),
+        ) == 0
+        {
             m.truncate(mlen as usize);
             Ok(m)
         } else {
@@ -119,11 +124,13 @@ pub fn sign_detached(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Signature {
     unsafe {
         let mut sig = [0u8; SIGNATUREBYTES];
         let mut siglen: c_ulonglong = 0;
-        let _todo_use_result = ffi::crypto_sign_ed25519_detached(sig.as_mut_ptr(),
-                                                                 &mut siglen,
-                                                                 m.as_ptr(),
-                                                                 m.len() as c_ulonglong,
-                                                                 sk.as_ptr());
+        let _todo_use_result = ffi::crypto_sign_ed25519_detached(
+            sig.as_mut_ptr(),
+            &mut siglen,
+            m.as_ptr(),
+            m.len() as c_ulonglong,
+            sk.as_ptr(),
+        );
         assert_eq!(siglen, SIGNATUREBYTES as c_ulonglong);
         Signature(sig)
     }
@@ -132,16 +139,19 @@ pub fn sign_detached(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Signature {
 /// `verify_detached()` verifies the signature in `sig` against the message `m`
 /// and the signer's public key `pk`.
 /// `verify_detached()` returns true if the signature is valid, false otherwise.
-pub fn verify_detached(&Signature(ref sig): &Signature,
-                       m: &[u8],
-                       &PublicKey(ref pk): &PublicKey)
-                       -> bool {
+pub fn verify_detached(
+    &Signature(ref sig): &Signature,
+    m: &[u8],
+    &PublicKey(ref pk): &PublicKey,
+) -> bool {
     unsafe {
         0 ==
-        ffi::crypto_sign_ed25519_verify_detached(sig.as_ptr(),
-                                                 m.as_ptr(),
-                                                 m.len() as c_ulonglong,
-                                                 pk.as_ptr())
+            ffi::crypto_sign_ed25519_verify_detached(
+                sig.as_ptr(),
+                m.as_ptr(),
+                m.len() as c_ulonglong,
+                pk.as_ptr(),
+            )
     }
 }
 
@@ -163,7 +173,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -192,7 +202,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_detached_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -225,7 +235,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
+    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper_seed() {
         use randombytes::{randombytes, randombytes_into};
         assert!(::init());
@@ -343,8 +353,8 @@ mod bench {
         let (_, sk) = gen_keypair();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
         b.iter(|| for m in ms.iter() {
-                   sign(m, &sk);
-               });
+            sign(m, &sk);
+        });
     }
 
     #[bench]
@@ -354,12 +364,12 @@ mod bench {
         let sms: Vec<Vec<u8>> = BENCH_SIZES
             .iter()
             .map(|s| {
-                     let m = randombytes(*s);
-                     sign(&m, &sk)
-                 })
+                let m = randombytes(*s);
+                sign(&m, &sk)
+            })
             .collect();
         b.iter(|| for sm in sms.iter() {
-                   verify(sm, &pk);
-               });
+            verify(sm, &pk);
+        });
     }
 }

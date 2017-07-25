@@ -15,6 +15,7 @@ mod test {
     use super::*;
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // hash of empty string
         assert!(::init());
@@ -27,6 +28,7 @@ mod test {
     }
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_2() {
         // The quick brown fox jumps over the lazy dog
         assert!(::init());

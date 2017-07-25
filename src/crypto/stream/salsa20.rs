@@ -5,16 +5,19 @@
 use ffi::{crypto_stream_salsa20, crypto_stream_salsa20_KEYBYTES, crypto_stream_salsa20_NONCEBYTES,
           crypto_stream_salsa20_xor};
 
-stream_module!(crypto_stream_salsa20,
-               crypto_stream_salsa20_xor,
-               crypto_stream_salsa20_KEYBYTES,
-               crypto_stream_salsa20_NONCEBYTES);
+stream_module!(
+    crypto_stream_salsa20,
+    crypto_stream_salsa20_xor,
+    crypto_stream_salsa20_KEYBYTES,
+    crypto_stream_salsa20_NONCEBYTES
+);
 
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // corresponding to tests/stream2.c and tests/stream6.cpp from NaCl
         assert!(::init());

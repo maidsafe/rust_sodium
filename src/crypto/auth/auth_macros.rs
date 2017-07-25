@@ -178,6 +178,7 @@ mod bench_m {
 /// $final_name - A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator
 ///               tag of length $tagbytes from a $state_name.
 /// $tagbytes   - The number of bytes in an authenticator tag.
+#[allow(unused)]
 macro_rules! auth_state (($state_name:ident,
                           $init_name:ident,
                           $update_name:ident,

@@ -16,10 +16,12 @@ struct RandomBytesImpl {
 
 impl Default for RandomBytesImpl {
     fn default() -> RandomBytesImpl {
-        let seed = [rand::random(),
-                    rand::random(),
-                    rand::random(),
-                    rand::random()];
+        let seed = [
+            rand::random(),
+            rand::random(),
+            rand::random(),
+            rand::random(),
+        ];
         RandomBytesImpl {
             function_pointers: randombytes_implementation::default(),
             name: unwrap!(CString::new("Rust XorShiftRng")),
@@ -59,7 +61,7 @@ extern "C" fn random() -> uint32_t {
     RNG.with(|rng| rng.borrow_mut().gen())
 }
 
-#[cfg_attr(feature="cargo-clippy", allow(cast_possible_wrap))]
+#[cfg_attr(feature = "cargo-clippy", allow(cast_possible_wrap))]
 extern "C" fn buf(buf: *mut c_void, size: size_t) {
     unsafe {
         let ptr = buf as *mut u8;
@@ -72,7 +74,7 @@ extern "C" fn buf(buf: *mut c_void, size: size_t) {
 }
 
 /// Sets [libsodium's `randombytes_implementation`]
-/// (https://download.libsodium.org/doc/advanced/custom_rng.html) to use a
+/// `https://download.libsodium.org/doc/advanced/custom_rng.html` to use a
 /// [Rust `Rng` implementation](../rand/trait.Rng.html) and initialises libsodium.
 ///
 /// This allows a seeded PRNG to be used for example, which can be helpful in test scenarios when
@@ -84,7 +86,7 @@ extern "C" fn buf(buf: *mut c_void, size: size_t) {
 /// The error will contain either `-1` or `1`.  If the error is `-1`, the initialisation of
 /// libsodium has failed.  If the error is `1`, libsodium has been successfully initialised
 /// elsewhere (e.g. via [`rust_sodium::init()`]
-/// (http://docs.maidsafe.net/rust_sodium/master/rust_sodium/fn.init.html)) but this means that our
+/// `http://docs.maidsafe.net/rust_sodium/master/rust_sodium/fn.init.html`) but this means that our
 /// attempt to apply this seeded RNG to libsodium has not been actioned.
 ///
 /// Each sodiumoxide function which uses the random generator in a new thread will cause a new
@@ -95,10 +97,10 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
     let mut init_result = &mut *unwrap!(INIT_RESULT.lock());
     if let Some(ref existing_result) = *init_result {
         return if *existing_result == 0 {
-                   Ok(())
-               } else {
-                   Err(*existing_result)
-               };
+            Ok(())
+        } else {
+            Err(*existing_result)
+        };
     }
     let mut sodium_result;
     let seed = [rng.gen(), rng.gen(), rng.gen(), rng.gen()];
@@ -108,10 +110,9 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
         sodium_result =
             unsafe { randombytes_set_implementation(&mut random_bytes.function_pointers) };
     }
-    match sodium_result {
-        0 => sodium_result = unsafe { sodium_init() },
-        _ => (),
-    };
+    if sodium_result == 0 {
+        sodium_result = unsafe { sodium_init() };
+    }
     // Since `sodium_init()` makes a call to `buf()`, reset the thread-local `RNG` so that it yields
     // consistent results with calls from new threads.
     RNG.with(|rng| *rng.borrow_mut() = XorShiftRng::from_seed(seed));
@@ -123,6 +124,7 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
 }
 
 #[test]
+#[cfg_attr(rustfmt, rustfmt_skip)]
 fn test_seeded_init_with_rng() {
     use std::thread::Builder;
     let mut rng = XorShiftRng::from_seed([0, 1, 2, 3]);
