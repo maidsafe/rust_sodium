@@ -73,8 +73,7 @@ extern "C" fn buf(buf: *mut c_void, size: size_t) {
     }
 }
 
-/// Sets [libsodium's `randombytes_implementation`]
-/// `https://download.libsodium.org/doc/advanced/custom_rng.html` to use a
+/// Sets [libsodium's `randombytes_implementation`][1] to use a
 /// [Rust `Rng` implementation](../rand/trait.Rng.html) and initialises libsodium.
 ///
 /// This allows a seeded PRNG to be used for example, which can be helpful in test scenarios when
@@ -85,14 +84,16 @@ extern "C" fn buf(buf: *mut c_void, size: size_t) {
 ///
 /// The error will contain either `-1` or `1`.  If the error is `-1`, the initialisation of
 /// libsodium has failed.  If the error is `1`, libsodium has been successfully initialised
-/// elsewhere (e.g. via [`rust_sodium::init()`]
-/// `http://docs.maidsafe.net/rust_sodium/master/rust_sodium/fn.init.html`) but this means that our
-/// attempt to apply this seeded RNG to libsodium has not been actioned.
+/// elsewhere (e.g. via [`rust_sodium::init()`][2]) but this means that our attempt to apply this
+/// seeded RNG to libsodium has not been actioned.
 ///
 /// Each sodiumoxide function which uses the random generator in a new thread will cause a new
 /// thread-local instance of the PRNG to be created.  Each such instance will be seeded with the
 /// same value, meaning for example that two newly-spawned threads calling `box_::gen_keypair()`
 /// will generate identical keys.
+///
+/// [1]: https://download.libsodium.org/doc/advanced/custom_rng.html
+/// [2]: http://docs.maidsafe.net/rust_sodium/master/rust_sodium/fn.init.html
 pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
     let mut init_result = &mut *unwrap!(INIT_RESULT.lock());
     if let Some(ref existing_result) = *init_result {
