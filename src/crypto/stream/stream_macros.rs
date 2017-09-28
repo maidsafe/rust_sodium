@@ -4,7 +4,6 @@ macro_rules! stream_module (($stream_name:ident,
                              $noncebytes:expr) => (
 
 use libc::c_ulonglong;
-use std::iter::repeat;
 use randombytes::randombytes_into;
 
 /// Number of bytes in a `Key`.
@@ -57,7 +56,7 @@ pub fn stream(len: usize,
               &Nonce(ref n): &Nonce,
               &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
-        let mut c: Vec<u8> = repeat(0u8).take(len).collect();
+        let mut c = vec![0u8; len];
         let _todo_use_result = $stream_name(c.as_mut_ptr(),
                                             c.len() as c_ulonglong,
                                             n.as_ptr(),
@@ -76,7 +75,7 @@ pub fn stream_xor(m: &[u8],
                   &Nonce(ref n): &Nonce,
                   &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
-        let mut c: Vec<u8> = repeat(0u8).take(m.len()).collect();
+        let mut c = vec![0u8; m.len()];
         let _todo_use_result = $xor_name(c.as_mut_ptr(),
                                          m.as_ptr(),
                                          m.len() as c_ulonglong,

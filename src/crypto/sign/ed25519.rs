@@ -5,7 +5,6 @@
 
 use ffi;
 use libc::c_ulonglong;
-use std::iter::repeat;
 
 /// Number of bytes in a `Seed`.
 pub const SEEDBYTES: usize = ffi::crypto_sign_ed25519_SEEDBYTES as usize;
@@ -79,7 +78,7 @@ pub fn keypair_from_seed(&Seed(ref seed): &Seed) -> (PublicKey, SecretKey) {
 /// `sign()` returns the resulting signed message `sm`.
 pub fn sign(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Vec<u8> {
     unsafe {
-        let mut sm: Vec<u8> = repeat(0u8).take(m.len() + SIGNATUREBYTES).collect();
+        let mut sm = vec![0u8; m.len() + SIGNATUREBYTES];
         let mut smlen = 0;
         let _todo_use_result = ffi::crypto_sign_ed25519(
             sm.as_mut_ptr(),
@@ -98,7 +97,7 @@ pub fn sign(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Vec<u8> {
 /// If the signature fails verification, `verify()` returns `Err(())`.
 pub fn verify(sm: &[u8], &PublicKey(ref pk): &PublicKey) -> Result<Vec<u8>, ()> {
     unsafe {
-        let mut m: Vec<u8> = repeat(0u8).take(sm.len()).collect();
+        let mut m = vec![0u8; sm.len()];
         let mut mlen = 0;
         if ffi::crypto_sign_ed25519_open(
             m.as_mut_ptr(),
