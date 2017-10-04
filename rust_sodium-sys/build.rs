@@ -244,9 +244,9 @@ fn main() {
 }
 
 
-
+/// Fetch and unpack the libsodium sources.
 #[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
-fn main() {
+fn get_sources() -> (String, String) {
     use std::env;
     use std::fs::{self, File};
     use std::process::Command;
@@ -300,6 +300,169 @@ fn main() {
 
     // Clean up
     let _ = fs::remove_file(gz_path);
+
+    (source_dir, install_dir)
+}
+
+// Build for iOS.
+//
+// Roughly based on `dist-build/ios.sh` in the libsodium sources.
+#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
+fn main_ios() {
+    use std::env;
+    use std::str;
+    use std::path::Path;
+    use std::process::Command;
+
+    // Determine build target triple
+    let target = unwrap!(env::var("TARGET"));
+
+    // Download sources
+    let (source_dir, install_dir) = get_sources();
+
+    // Determine xcode directory path
+    let xcode_select_output = unwrap!(Command::new("xcode-select")
+        .arg("-p")
+        .output());
+    if !xcode_select_output.status.success() {
+        panic!("Failed to run xcode-select -p");
+    }
+    let xcode_dir = unwrap!(str::from_utf8(&xcode_select_output.stdout)).trim().to_string();
+
+    // Determine SDK directory paths
+    let sdk_dir_simulator = Path::new(&xcode_dir)
+        .join("Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk");
+    let sdk_dir_ios = Path::new(&xcode_dir)
+        .join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk");
+
+    // Min versions
+    let ios_simulator_version_min = "6.0.0";
+    let ios_version_min = "6.0.0";
+
+    // Find compiler
+    let cc_helper = gcc::Config::new();
+    let cc = unwrap!(cc_helper.get_compiler().path().to_str()).to_owned();
+
+    // Decide on CFLAGS and the --host configure argument
+    let mut cflags = env::var("CFLAGS").unwrap_or(String::default());
+    let host_arg;
+    match &*target {
+        "aarch64-apple-ios" => {
+            cflags += " -arch arm64";
+            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_ios.to_str()));
+            cflags += &format!(" -mios-version-min={}", ios_version_min);
+            host_arg = "--host=arm-apple-darwin10";
+        },
+        "armv7-apple-ios" => {
+            cflags += " -arch armv7";
+            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_ios.to_str()));
+            cflags += &format!(" -mios-version-min={}", ios_version_min);
+            host_arg = "--host=arm-apple-darwin10";
+        },
+        "armv7s-apple-ios" => {
+            cflags += " -arch armv7s";
+            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_ios.to_str()));
+            cflags += &format!(" -mios-version-min={}", ios_version_min);
+            host_arg = "--host=arm-apple-darwin10";
+        },
+        "i386-apple-ios" => {
+            cflags += " -arch i386";
+            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_simulator.to_str()));
+            cflags += &format!(" -mios-simulator-version-min={}", ios_simulator_version_min);
+            host_arg = "--host=i686-apple-darwin10";
+        },
+        "x86_64-apple-ios" => {
+            cflags += " -arch x86_64";
+            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_simulator.to_str()));
+            cflags += &format!(" -mios-simulator-version-min={}", ios_simulator_version_min);
+            host_arg = "--host=x86_64-apple-darwin10";
+        },
+        _ => {
+            panic!(format!("Unknown iOS build target: {}", target));
+        },
+    };
+
+    // Some other configure arguments
+    let prefix_arg = format!("--prefix={}", install_dir);
+    let disable_pie_arg = env::var("RUST_SODIUM_DISABLE_PIE")
+        .map(|_| "--disable-pie")
+        .unwrap_or_default();
+
+    // Run `./configure`
+    let mut configure_cmd = Command::new("./configure");
+    let configure_output = configure_cmd
+        .current_dir(&source_dir)
+        .env("CC", &cc)
+        .env("CFLAGS", &cflags)
+        .arg(&prefix_arg)
+        .arg(&host_arg)
+        .arg("--enable-shared=no")
+        .arg(disable_pie_arg)
+        .output()
+        .unwrap_or_else(|error| { panic!("Failed to run './configure': {}", error); });
+    if !configure_output.status.success() {
+        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n",
+               configure_cmd,
+               cflags,
+               cc,
+               String::from_utf8_lossy(&configure_output.stdout),
+               String::from_utf8_lossy(&configure_output.stderr));
+    }
+
+    // Run `make all`
+    let j_arg = format!("-j{}", unwrap!(env::var("NUM_JOBS")));
+    let mut make_cmd = Command::new("make");
+    let make_output = make_cmd
+        .current_dir(&source_dir)
+        .env("V", "1")
+        .arg("all")
+        .arg(&j_arg)
+        .output()
+        .unwrap_or_else(|error| {
+                            panic!("Failed to run 'make all': {}", error);
+                        });
+    if !make_output.status.success() {
+        panic!("\n{:?}\n{}\n{}\n{}",
+               make_cmd,
+               String::from_utf8_lossy(&configure_output.stdout),
+               String::from_utf8_lossy(&make_output.stdout),
+               String::from_utf8_lossy(&make_output.stderr));
+    }
+
+    // Run `make install`
+    let mut install_cmd = Command::new("make");
+    let install_output = install_cmd
+        .current_dir(&source_dir)
+        .arg("install")
+        .output()
+        .unwrap_or_else(|error| {
+                            panic!("Failed to run 'make install': {}", error);
+                        });
+    if !install_output.status.success() {
+        panic!("\n{:?}\n{}\n{}\n{}\n{}\n",
+               install_cmd,
+               String::from_utf8_lossy(&configure_output.stdout),
+               String::from_utf8_lossy(&make_output.stdout),
+               String::from_utf8_lossy(&install_output.stdout),
+               String::from_utf8_lossy(&install_output.stderr));
+    }
+
+    println!("cargo:rustc-link-lib=static=sodium");
+    println!("cargo:rustc-link-search=native={}/lib", install_dir);
+    println!("cargo:include={}/include", install_dir);
+}
+
+// Build for non-Windows non-iOS systems
+#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
+fn main_non_ios() {
+    use std::env;
+    use std::process::Command;
+
+    // Determine build target
+    let target = unwrap!(env::var("TARGET"));
+
+    // Download sources
+    let (source_dir, install_dir) = get_sources();
 
     // Run `./configure`
     let gcc = gcc::Config::new();
@@ -393,4 +556,15 @@ fn main() {
     println!("cargo:rustc-link-lib=static=sodium");
     println!("cargo:rustc-link-search=native={}/lib", install_dir);
     println!("cargo:include={}/include", install_dir);
+}
+
+#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
+fn main() {
+    use std::env;
+    let target = unwrap!(env::var("TARGET"));
+    if target.contains("-ios") {
+        main_ios();
+    } else {
+        main_non_ios();
+    }
 }
