@@ -348,19 +348,26 @@ fn main_ios() {
         .to_string();
 
     // Determine SDK directory paths
-    let sdk_dir_simulator = Path::new(&xcode_dir).join(
-        "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk",
-    );
-    let sdk_dir_ios =
-        Path::new(&xcode_dir).join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk");
+    let sdk_dir_simulator = unwrap!(
+        Path::new(&xcode_dir)
+            .join(
+                "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk",
+            )
+            .to_str()
+    ).to_string();
+    let sdk_dir_ios = unwrap!(
+        Path::new(&xcode_dir)
+            .join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
+            .to_str()
+    ).to_string();
 
     // Min versions
     let ios_simulator_version_min = "6.0.0";
     let ios_version_min = "6.0.0";
 
     // Find compiler
-    let cc_helper = gcc::Config::new();
-    let cc = unwrap!(cc_helper.get_compiler().path().to_str()).to_owned();
+    let cc_helper = gcc::Build::new();
+    let cc = unwrap!(cc_helper.get_compiler().path().to_str()).to_string();
 
     // Decide on CFLAGS and the --host configure argument
     let mut cflags = env::var("CFLAGS").unwrap_or(String::default());
@@ -368,37 +375,38 @@ fn main_ios() {
     match &*target {
         "aarch64-apple-ios" => {
             cflags += " -arch arm64";
-            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_ios.to_str()));
+            cflags += &format!(" -isysroot {}", sdk_dir_ios);
             cflags += &format!(" -mios-version-min={}", ios_version_min);
+            cflags += " -fembed-bitcode";
             host_arg = "--host=arm-apple-darwin10";
         }
         "armv7-apple-ios" => {
             cflags += " -arch armv7";
-            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_ios.to_str()));
+            cflags += &format!(" -isysroot {}", sdk_dir_ios);
             cflags += &format!(" -mios-version-min={}", ios_version_min);
+            cflags += " -mthumb";
             host_arg = "--host=arm-apple-darwin10";
         }
         "armv7s-apple-ios" => {
             cflags += " -arch armv7s";
-            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_ios.to_str()));
+            cflags += &format!(" -isysroot {}", sdk_dir_ios);
             cflags += &format!(" -mios-version-min={}", ios_version_min);
+            cflags += " -mthumb";
             host_arg = "--host=arm-apple-darwin10";
         }
         "i386-apple-ios" => {
             cflags += " -arch i386";
-            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_simulator.to_str()));
+            cflags += &format!(" -isysroot {}", sdk_dir_simulator);
             cflags += &format!(" -mios-simulator-version-min={}", ios_simulator_version_min);
             host_arg = "--host=i686-apple-darwin10";
         }
         "x86_64-apple-ios" => {
             cflags += " -arch x86_64";
-            cflags += &format!(" -isysroot {}", unwrap!(sdk_dir_simulator.to_str()));
+            cflags += &format!(" -isysroot {}", sdk_dir_simulator);
             cflags += &format!(" -mios-simulator-version-min={}", ios_simulator_version_min);
             host_arg = "--host=x86_64-apple-darwin10";
         }
-        _ => {
-            panic!(format!("Unknown iOS build target: {}", target));
-        }
+        _ => panic!("Unknown iOS build target: {}", target),
     };
 
     // Some other configure arguments
@@ -492,7 +500,7 @@ fn main_non_ios() {
     let (source_dir, install_dir) = get_sources();
 
     // Run `./configure`
-    let gcc = gcc::Config::new();
+    let gcc = gcc::Build::new();
     let (cc, cflags) = if target.contains("i686") {
         (
             format!("{} -m32", gcc.get_compiler().path().display()),
