@@ -29,7 +29,6 @@ script:
         set -x;
         cargo fmt -- --write-mode=diff &&
         cargo test --release --verbose &&
-        cargo run --manifest-path systest/Cargo.toml &&
         cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml
       );
     elif [ "${TRAVIS_OS_NAME}" = linux ]; then

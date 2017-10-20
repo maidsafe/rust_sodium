@@ -16,17 +16,21 @@ fn main() {
             None => "dylib",
         };
         println!("cargo:rustc-link-lib={0}=sodium", mode);
-        println!("cargo:warning=Using unknown libsodium version.  This crate is tested against \
+        println!(
+            "cargo:warning=Using unknown libsodium version.  This crate is tested against \
                   {} and may not be fully compatible with other versions.",
-                 VERSION);
+            VERSION
+        );
     } else {
         let lib_details = unwrap!(pkg_config::probe_library("libsodium"));
         if lib_details.version != VERSION {
-            println!("cargo:warning=Using libsodium version {}.  This crate is tested against {} \
+            println!(
+                "cargo:warning=Using libsodium version {}.  This crate is tested against {} \
                       and may not be fully compatible with {}.",
-                     lib_details.version,
-                     VERSION,
-                     lib_details.version);
+                lib_details.version,
+                VERSION,
+                lib_details.version
+            );
         }
     }
 }
@@ -58,13 +62,15 @@ fn check_powershell_version() {
         .arg("If ($PSVersionTable.PSVersion.Major -lt 4) { exit 1 }")
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run powershell command: {}", error);
-                        });
+            panic!("Failed to run powershell command: {}", error);
+        });
     if !check_ps_version_output.status.success() {
-        panic!("\n{:?}\n{}\n{}\nYou must have Powershell v4.0 or greater installed.\n\n",
-               check_ps_version_cmd,
-               String::from_utf8_lossy(&check_ps_version_output.stdout),
-               String::from_utf8_lossy(&check_ps_version_output.stderr));
+        panic!(
+            "\n{:?}\n{}\n{}\nYou must have Powershell v4.0 or greater installed.\n\n",
+            check_ps_version_cmd,
+            String::from_utf8_lossy(&check_ps_version_output.stdout),
+            String::from_utf8_lossy(&check_ps_version_output.stderr)
+        );
     }
 }
 
@@ -82,41 +88,45 @@ fn download_compressed_file() -> String {
     let zip_path = get_install_dir() + "/" + &zip_filename;
     let mut command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
                ((New-Object System.Net.WebClient).DownloadFile(\""
-            .to_string() + &url + "\", \"" + &zip_path + "\"))";
+        .to_string() + &url + "\", \"" + &zip_path + "\"))";
     let mut download_cmd = Command::new("powershell");
     let mut download_output = download_cmd
         .arg("-Command")
         .arg(&command)
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run powershell download command: {}", error);
-                        });
+            panic!("Failed to run powershell download command: {}", error);
+        });
     if download_output.status.success() {
         return zip_path;
     }
 
     let fallback_url = "https://raw.githubusercontent.com/maidsafe/QA/master/appveyor/"
         .to_string() + &zip_filename;
-    println!("cargo:warning=Failed to download libsodium from {}.  Falling back to MaidSafe mirror \
+    println!(
+        "cargo:warning=Failed to download libsodium from {}.  Falling back to MaidSafe mirror \
              at {}",
-             url,
-             fallback_url);
+        url,
+        fallback_url
+    );
     command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
                ((New-Object System.Net.WebClient).DownloadFile(\""
-            .to_string() + &fallback_url + "\", \"" + &zip_path + "\"))";
+        .to_string() + &fallback_url + "\", \"" + &zip_path + "\"))";
     download_cmd = Command::new("powershell");
     download_output = download_cmd
         .arg("-Command")
         .arg(&command)
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run powershell download command: {}", error);
-                        });
+            panic!("Failed to run powershell download command: {}", error);
+        });
     if !download_output.status.success() {
-        panic!("\n{:?}\n{}\n{}\n",
-               download_cmd,
-               String::from_utf8_lossy(&download_output.stdout),
-               String::from_utf8_lossy(&download_output.stderr));
+        panic!(
+            "\n{:?}\n{}\n{}\n",
+            download_cmd,
+            String::from_utf8_lossy(&download_output.stdout),
+            String::from_utf8_lossy(&download_output.stderr)
+        );
     }
     zip_path
 }
@@ -181,8 +191,10 @@ fn main() {
     let _ = fs::remove_file(zip_path);
 
     println!("cargo:rustc-link-lib=static=libsodium");
-    println!("cargo:rustc-link-search=native={}",
-             lib_install_dir.display());
+    println!(
+        "cargo:rustc-link-search=native={}",
+        lib_install_dir.display()
+    );
     println!("cargo:include={}/include", install_dir);
 }
 
@@ -238,15 +250,18 @@ fn main() {
     let _ = fs::remove_file(gz_path);
 
     println!("cargo:rustc-link-lib=static=sodium");
-    println!("cargo:rustc-link-search=native={}",
-             lib_install_dir.display());
+    println!(
+        "cargo:rustc-link-search=native={}",
+        lib_install_dir.display()
+    );
     println!("cargo:include={}/include", install_dir);
 }
 
 
 
+/// Fetch and unpack the libsodium sources.
 #[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
-fn main() {
+fn get_sources() -> (String, String) {
     use std::env;
     use std::fs::{self, File};
     use std::process::Command;
@@ -257,7 +272,7 @@ fn main() {
     let basename = "libsodium-".to_string() + VERSION;
     let gz_filename = basename.clone() + ".tar.gz";
     let url = "https://github.com/jedisct1/libsodium/releases/download/".to_string() +
-              VERSION + "/" + &gz_filename;
+        VERSION + "/" + &gz_filename;
     let mut install_dir = get_install_dir();
     let mut source_dir = unwrap!(env::var("OUT_DIR")) + "/source";
     // Avoid issues with paths containing spaces by falling back to using /tmp
@@ -266,10 +281,12 @@ fn main() {
         let fallback_path = "/tmp/".to_string() + &basename + "/" + &target;
         install_dir = fallback_path.clone() + "/installed";
         source_dir = fallback_path.clone() + "/source";
-        println!("cargo:warning=The path to the usual build directory contains spaces and hence \
+        println!(
+            "cargo:warning=The path to the usual build directory contains spaces and hence \
                   can't be used to build libsodium.  Falling back to use {}.  If running `cargo \
                   clean`, ensure you also delete this fallback directory",
-                 fallback_path);
+            fallback_path
+        );
     }
     let gz_path = source_dir.clone() + "/" + &gz_filename;
     unwrap!(fs::create_dir_all(&install_dir));
@@ -282,13 +299,15 @@ fn main() {
         .arg(&gz_path)
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run curl command: {}", error);
-                        });
+            panic!("Failed to run curl command: {}", error);
+        });
     if !curl_output.status.success() {
-        panic!("\n{:?}\n{}\n{}\n",
-               curl_cmd,
-               String::from_utf8_lossy(&curl_output.stdout),
-               String::from_utf8_lossy(&curl_output.stderr));
+        panic!(
+            "\n{:?}\n{}\n{}\n",
+            curl_cmd,
+            String::from_utf8_lossy(&curl_output.stdout),
+            String::from_utf8_lossy(&curl_output.stderr)
+        );
     }
 
     // Unpack the tarball
@@ -301,28 +320,118 @@ fn main() {
     // Clean up
     let _ = fs::remove_file(gz_path);
 
-    // Run `./configure`
-    let gcc = gcc::Config::new();
-    let (cc, cflags) = if target.contains("i686") {
-        (format!("{} -m32", gcc.get_compiler().path().display()),
-         env::var("CFLAGS").unwrap_or(String::default()) + " -march=i686")
-    } else {
-        (format!("{}", gcc.get_compiler().path().display()),
-         env::var("CFLAGS").unwrap_or(String::default()))
-    };
-    let prefix_arg = format!("--prefix={}", install_dir);
-    let host = unwrap!(env::var("HOST"));
-    let host_arg = format!("--host={}", target);
-    let cross_compiling = target != host;
-    let help = if cross_compiling {
-        "***********************************************************\n\
-         Possible missing dependencies.\n\
-         See https://github.com/maidsafe/rust_sodium#cross-compiling\n\
-         ***********************************************************\n\n"
-    } else {
-        ""
-    };
+    (source_dir, install_dir)
+}
 
+
+
+#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
+fn main() {
+    use std::env;
+    use std::str;
+    use std::path::Path;
+    use std::process::Command;
+
+    // Determine build target triple
+    let target = unwrap!(env::var("TARGET"));
+
+    // Download sources
+    let (source_dir, install_dir) = get_sources();
+
+    // Decide on CC, CFLAGS and the --host configure argument
+    let gcc = gcc::Build::new();
+    let mut cc = unwrap!(gcc.get_compiler().path().to_str()).to_string();
+    let mut cflags = env::var("CFLAGS").unwrap_or(String::default());
+    let host_arg;
+    let cross_compiling;
+    let help;
+    if target.contains("-ios") {
+        // Determine Xcode directory path
+        let xcode_select_output = unwrap!(Command::new("xcode-select").arg("-p").output());
+        if !xcode_select_output.status.success() {
+            panic!("Failed to run xcode-select -p");
+        }
+        let xcode_dir = unwrap!(str::from_utf8(&xcode_select_output.stdout))
+            .trim()
+            .to_string();
+
+        // Determine SDK directory paths
+        let sdk_dir_simulator = unwrap!(
+            Path::new(&xcode_dir)
+                .join(
+                    "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk",
+                )
+                .to_str()
+        ).to_string();
+        let sdk_dir_ios = unwrap!(
+            Path::new(&xcode_dir)
+                .join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
+                .to_str()
+        ).to_string();
+
+        // Min versions
+        let ios_simulator_version_min = "6.0.0";
+        let ios_version_min = "6.0.0";
+
+        // Roughly based on `dist-build/ios.sh` in the libsodium sources
+        match &*target {
+            "aarch64-apple-ios" => {
+                cflags += " -arch arm64";
+                cflags += &format!(" -isysroot {}", sdk_dir_ios);
+                cflags += &format!(" -mios-version-min={}", ios_version_min);
+                cflags += " -fembed-bitcode";
+                host_arg = "--host=arm-apple-darwin10".to_string();
+            }
+            "armv7-apple-ios" => {
+                cflags += " -arch armv7";
+                cflags += &format!(" -isysroot {}", sdk_dir_ios);
+                cflags += &format!(" -mios-version-min={}", ios_version_min);
+                cflags += " -mthumb";
+                host_arg = "--host=arm-apple-darwin10".to_string();
+            }
+            "armv7s-apple-ios" => {
+                cflags += " -arch armv7s";
+                cflags += &format!(" -isysroot {}", sdk_dir_ios);
+                cflags += &format!(" -mios-version-min={}", ios_version_min);
+                cflags += " -mthumb";
+                host_arg = "--host=arm-apple-darwin10".to_string();
+            }
+            "i386-apple-ios" => {
+                cflags += " -arch i386";
+                cflags += &format!(" -isysroot {}", sdk_dir_simulator);
+                cflags += &format!(" -mios-simulator-version-min={}", ios_simulator_version_min);
+                host_arg = "--host=i686-apple-darwin10".to_string();
+            }
+            "x86_64-apple-ios" => {
+                cflags += " -arch x86_64";
+                cflags += &format!(" -isysroot {}", sdk_dir_simulator);
+                cflags += &format!(" -mios-simulator-version-min={}", ios_simulator_version_min);
+                host_arg = "--host=x86_64-apple-darwin10".to_string();
+            }
+            _ => panic!("Unknown iOS build target: {}", target),
+        }
+        cross_compiling = true;
+        help = "";
+    } else {
+        if target.contains("i686") {
+            cc += " -m32";
+            cflags += " -march=i686";
+        }
+        let host = unwrap!(env::var("HOST"));
+        host_arg = format!("--host={}", target);
+        cross_compiling = target != host;
+        help = if cross_compiling {
+            "***********************************************************\n\
+             Possible missing dependencies.\n\
+             See https://github.com/maidsafe/rust_sodium#cross-compiling\n\
+             ***********************************************************\n\n"
+        } else {
+            ""
+        };
+    }
+
+    // Run `./configure`
+    let prefix_arg = format!("--prefix={}", install_dir);
     let disable_pie_arg = env::var("RUST_SODIUM_DISABLE_PIE")
         .map(|_| "--disable-pie")
         .unwrap_or_default();
@@ -338,16 +447,18 @@ fn main() {
         .arg(disable_pie_arg)
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run './configure': {}\n{}", error, help);
-                        });
+            panic!("Failed to run './configure': {}\n{}", error, help);
+        });
     if !configure_output.status.success() {
-        panic!("\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n",
-               configure_cmd,
-               cflags,
-               cc,
-               String::from_utf8_lossy(&configure_output.stdout),
-               String::from_utf8_lossy(&configure_output.stderr),
-               help);
+        panic!(
+            "\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n",
+            configure_cmd,
+            cflags,
+            cc,
+            String::from_utf8_lossy(&configure_output.stdout),
+            String::from_utf8_lossy(&configure_output.stderr),
+            help
+        );
     }
 
     // Run `make check`, or `make all` if we're cross-compiling
@@ -361,15 +472,17 @@ fn main() {
         .arg(&j_arg)
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run 'make {}': {}\n{}", make_arg, error, help);
-                        });
+            panic!("Failed to run 'make {}': {}\n{}", make_arg, error, help);
+        });
     if !make_output.status.success() {
-        panic!("\n{:?}\n{}\n{}\n{}\n{}",
-               make_cmd,
-               String::from_utf8_lossy(&configure_output.stdout),
-               String::from_utf8_lossy(&make_output.stdout),
-               String::from_utf8_lossy(&make_output.stderr),
-               help);
+        panic!(
+            "\n{:?}\n{}\n{}\n{}\n{}",
+            make_cmd,
+            String::from_utf8_lossy(&configure_output.stdout),
+            String::from_utf8_lossy(&make_output.stdout),
+            String::from_utf8_lossy(&make_output.stderr),
+            help
+        );
     }
 
     // Run `make install`
@@ -379,15 +492,17 @@ fn main() {
         .arg("install")
         .output()
         .unwrap_or_else(|error| {
-                            panic!("Failed to run 'make install': {}", error);
-                        });
+            panic!("Failed to run 'make install': {}", error);
+        });
     if !install_output.status.success() {
-        panic!("\n{:?}\n{}\n{}\n{}\n{}\n",
-               install_cmd,
-               String::from_utf8_lossy(&configure_output.stdout),
-               String::from_utf8_lossy(&make_output.stdout),
-               String::from_utf8_lossy(&install_output.stdout),
-               String::from_utf8_lossy(&install_output.stderr));
+        panic!(
+            "\n{:?}\n{}\n{}\n{}\n{}\n",
+            install_cmd,
+            String::from_utf8_lossy(&configure_output.stdout),
+            String::from_utf8_lossy(&make_output.stdout),
+            String::from_utf8_lossy(&install_output.stdout),
+            String::from_utf8_lossy(&install_output.stderr)
+        );
     }
 
     println!("cargo:rustc-link-lib=static=sodium");
