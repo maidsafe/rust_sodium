@@ -225,19 +225,18 @@ impl State {
 /// `update()` can be called more than once in order to compute the authenticator
 /// from sequential chunks of the message.
     pub fn update(&mut self, in_: &[u8]) {
-        let &mut State(ref mut state) = self;
         unsafe {
-            let _todo_use_result = $update_name(state, in_.as_ptr(), in_.len() as c_ulonglong);
+            let _ = $update_name(&mut self.0, in_.as_ptr(), in_.len() as c_ulonglong);
         }
     }
 
-/// `finalize()` finalizes the authenticator computation and returns a `Tag`.
+    /// `finalize()` finalizes the authenticator computation and returns a `Tag`. `finalize`
+    /// consumes the `State` so that it cannot be accidentally reused.
     #[allow(trivial_numeric_casts)]
-    pub fn finalize(&mut self) -> Tag {
+    pub fn finalize(mut self) -> Tag {
         unsafe {
-            let &mut State(ref mut state) = self;
             let mut tag = [0; $tagbytes as usize];
-            let _todo_use_result = $final_name(state, tag.as_mut_ptr());
+            let _ = $final_name(&mut self.0, tag.as_mut_ptr());
             Tag(tag)
         }
     }
