@@ -1,5 +1,9 @@
 # rust_sodium - Change Log
 
+## [0.6.0]
+- Use rust 1.21 stable
+- Add support for iOS build targets
+
 ## [0.5.0]
 - Use rust 1.19 stable / 2017-07-20 nightly
 - rustfmt 0.9.0 and clippy-0.0.144

@@ -8,22 +8,22 @@ license = "MIT OR Apache-2.0"
 links = "sodium"
 name = "rust_sodium-sys"
 repository = "https://github.com/maidsafe/rust_sodium"
-version = "0.5.0"
+version = "0.6.0"
 
 [dependencies]
-lazy_static = "~0.2.8"
-libc = "~0.2.28"
-rand = "~0.3.15"
+lazy_static = "~0.2.9"
+libc = "~0.2.33"
+rand = "~0.3.17"
 unwrap = "~1.1.0"
 
 [build-dependencies]
-flate2 = { version = "~0.2.19", optional = true }
-gcc = { version = "~0.3.51", optional = true }
+flate2 = { version = "~0.2.20", optional = true }
+gcc = { version = "~0.3.54", optional = true }
 libc = "~0.2.28"
 pkg-config = { version = "~0.3.9", optional = true }
 tar = { version = "~0.4.13", optional = true }
 unwrap = "~1.1.0"
-zip = { version = "~0.2.5", optional = true }
+zip = { version = "~0.2.6", optional = true }
 
 [lib]
 path = "lib.rs"
