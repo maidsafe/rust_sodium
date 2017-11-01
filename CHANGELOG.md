@@ -1,7 +1,6 @@
 # rust_sodium - Change Log
 
 ## [0.6.0]
-- Use rust 1.21 stable
 - Add support for iOS build targets
 
 ## [0.5.0]
