@@ -4,6 +4,7 @@ extern crate unwrap;
 #[cfg(feature = "use-installed-libsodium")]
 extern crate pkg_config;
 
+const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
 const VERSION: &'static str = "1.0.12";
 
 #[cfg(feature = "use-installed-libsodium")]
@@ -84,7 +85,7 @@ fn download_compressed_file() -> String {
     } else {
         basename.clone() + "-mingw.tar.gz"
     };
-    let url = "https://download.libsodium.org/libsodium/releases/".to_string() + &zip_filename;
+    let url = format!("{}{}", DOWNLOAD_BASE_URL, zip_filename);
     let zip_path = get_install_dir() + "/" + &zip_filename;
     let mut command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
                ((New-Object System.Net.WebClient).DownloadFile(\""
@@ -271,8 +272,7 @@ fn get_sources() -> (String, String) {
     // Download gz tarball
     let basename = "libsodium-".to_string() + VERSION;
     let gz_filename = basename.clone() + ".tar.gz";
-    let url = "https://github.com/jedisct1/libsodium/releases/download/".to_string() +
-        VERSION + "/" + &gz_filename;
+    let url = format!("{}{}", DOWNLOAD_BASE_URL, &gz_filename);
     let mut install_dir = get_install_dir();
     let mut source_dir = unwrap!(env::var("OUT_DIR")) + "/source";
     // Avoid issues with paths containing spaces by falling back to using /tmp
