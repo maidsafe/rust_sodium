@@ -81,79 +81,39 @@ fn get_install_dir() -> String {
 }
 
 #[cfg(all(windows, not(feature = "use-installed-libsodium")))]
-fn check_powershell_version() {
-    let mut check_ps_version_cmd = ::std::process::Command::new("powershell");
-    let check_ps_version_output = check_ps_version_cmd
-        .arg("-Command")
-        .arg("If ($PSVersionTable.PSVersion.Major -lt 4) { exit 1 }")
-        .output()
-        .unwrap_or_else(|error| {
-            panic!("Failed to run powershell command: {}", error);
-        });
-    if !check_ps_version_output.status.success() {
-        panic!(
-            "\n{:?}\n{}\n{}\nYou must have Powershell v4.0 or greater installed.\n\n",
-            check_ps_version_cmd,
-            String::from_utf8_lossy(&check_ps_version_output.stdout),
-            String::from_utf8_lossy(&check_ps_version_output.stderr)
-        );
-    }
-}
-
-#[cfg(all(windows, not(feature = "use-installed-libsodium")))]
 fn download_compressed_file() -> String {
-    use std::process::Command;
+    use std::path::Path;
 
-    let basename = "libsodium-".to_string() + VERSION;
+    // Determine filenames and download URLs
+    let basename = format!("libsodium-{}", VERSION);
     let zip_filename = if cfg!(target_env = "msvc") {
-        basename.clone() + "-msvc.zip"
+        format!("{}-msvc.zip", basename)
     } else {
-        basename.clone() + "-mingw.tar.gz"
+        format!("{}-mingw.tar.gz", basename)
     };
-    let url = format!("{}{}", DOWNLOAD_BASE_URL, zip_filename);
-    let zip_path = get_install_dir() + "/" + &zip_filename;
-    let mut command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
-               ((New-Object System.Net.WebClient).DownloadFile(\""
-        .to_string() + &url + "\", \"" + &zip_path + "\"))";
-    let mut download_cmd = Command::new("powershell");
-    let mut download_output = download_cmd
-        .arg("-Command")
-        .arg(&command)
-        .output()
-        .unwrap_or_else(|error| {
-            panic!("Failed to run powershell download command: {}", error);
-        });
-    if download_output.status.success() {
-        return zip_path;
-    }
+    let url = format!("{}{}", DOWNLOAD_BASE_URL, &zip_filename);
 
-    let fallback_url = "https://raw.githubusercontent.com/maidsafe/QA/master/appveyor/"
-        .to_string() + &zip_filename;
+    // Download sources
+    let zip_path = format!("{}/{}", get_install_dir(), &zip_filename);
+    match download(&url, Path::new(&zip_path) ){
+        Ok(_) => return zip_path,
+        Err(_) => { /* Continue with fallback */ },
+    };
+
+    // Fallback download
+    let fallback_url = format!(
+        "https://raw.githubusercontent.com/maidsafe/QA/master/appveyor/{}",
+        &zip_filename
+    );
     println!(
-        "cargo:warning=Failed to download libsodium from {}.  Falling back to MaidSafe mirror \
+        "cargo:warning=Failed to download libsodium from {}. Falling back to MaidSafe mirror \
              at {}",
         url,
         fallback_url
     );
-    command = "([Net.ServicePointManager]::SecurityProtocol = 'Tls12') -and \
-               ((New-Object System.Net.WebClient).DownloadFile(\""
-        .to_string() + &fallback_url + "\", \"" + &zip_path + "\"))";
-    download_cmd = Command::new("powershell");
-    download_output = download_cmd
-        .arg("-Command")
-        .arg(&command)
-        .output()
-        .unwrap_or_else(|error| {
-            panic!("Failed to run powershell download command: {}", error);
-        });
-    if !download_output.status.success() {
-        panic!(
-            "\n{:?}\n{}\n{}\n",
-            download_cmd,
-            String::from_utf8_lossy(&download_output.stdout),
-            String::from_utf8_lossy(&download_output.stderr)
-        );
-    }
+    download(&fallback_url, Path::new(&zip_path))
+        .unwrap_or_else(|e| panic!("Download error: {}", e));
+
     zip_path
 }
 
@@ -164,8 +124,6 @@ fn main() {
     use std::io::{Read, Write};
     use std::path::Path;
     use zip::ZipArchive;
-
-    check_powershell_version();
 
     // Download zip file
     let install_dir = get_install_dir();
@@ -232,8 +190,6 @@ fn main() {
     use std::path::Path;
     use flate2::read::GzDecoder;
     use tar::Archive;
-
-    check_powershell_version();
 
     // Download gz tarball
     let install_dir = get_install_dir();
