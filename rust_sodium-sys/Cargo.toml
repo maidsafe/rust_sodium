@@ -18,7 +18,7 @@ unwrap = "~1.1.0"
 
 [build-dependencies]
 flate2 = { version = "~0.2.20", optional = true }
-gcc = { version = "~0.3.54", optional = true }
+cc = { version = "^1.0", optional = true }
 libc = "~0.2.28"
 pkg-config = { version = "~0.3.9", optional = true }
 tar = { version = "~0.4.13", optional = true }
@@ -29,5 +29,5 @@ zip = { version = "~0.2.6", optional = true }
 path = "lib.rs"
 
 [features]
-default = ["flate2", "gcc", "tar", "zip"]
+default = ["flate2", "cc", "tar", "zip"]
 use-installed-libsodium = ["pkg-config"]

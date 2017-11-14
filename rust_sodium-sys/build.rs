@@ -38,7 +38,7 @@ fn main() {
 
 
 #[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
-extern crate gcc;
+extern crate cc;
 #[cfg(all(not(target_env = "msvc"), not(feature = "use-installed-libsodium")))]
 extern crate flate2;
 #[cfg(all(not(target_env = "msvc"), not(feature = "use-installed-libsodium")))]
@@ -339,8 +339,8 @@ fn main() {
     let (source_dir, install_dir) = get_sources();
 
     // Decide on CC, CFLAGS and the --host configure argument
-    let gcc = gcc::Build::new();
-    let mut cc = unwrap!(gcc.get_compiler().path().to_str()).to_string();
+    let build = cc::Build::new();
+    let mut compiler = unwrap!(build.get_compiler().path().to_str()).to_string();
     let mut cflags = env::var("CFLAGS").unwrap_or(String::default());
     cflags += " -O2";
     let host_arg;
@@ -415,7 +415,7 @@ fn main() {
         help = "";
     } else {
         if target.contains("i686") {
-            cc += " -m32";
+            compiler += " -m32";
             cflags += " -march=i686";
         }
         let host = unwrap!(env::var("HOST"));
@@ -434,8 +434,8 @@ fn main() {
     // Run `./configure`
     let prefix_arg = format!("--prefix={}", install_dir);
     let mut configure_cmd = Command::new("./configure");
-    if !cc.is_empty() {
-        configure_cmd.env("CC", &cc);
+    if !compiler.is_empty() {
+        configure_cmd.env("CC", &compiler);
     }
     if !cflags.is_empty() {
         configure_cmd.env("CFLAGS", &cflags);
@@ -457,7 +457,7 @@ fn main() {
             "\n{:?}\nCFLAGS={}\nCC={}\n{}\n{}\n{}\n",
             configure_cmd,
             cflags,
-            cc,
+            compiler,
             String::from_utf8_lossy(&configure_output.stdout),
             String::from_utf8_lossy(&configure_output.stderr),
             help
