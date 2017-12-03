@@ -1,11 +1,13 @@
 //! `crypto_stream_chacha20` (Chacha20)
 
 use ffi::{crypto_stream_chacha20, crypto_stream_chacha20_KEYBYTES,
-          crypto_stream_chacha20_NONCEBYTES, crypto_stream_chacha20_xor};
+          crypto_stream_chacha20_NONCEBYTES, crypto_stream_chacha20_xor,
+          crypto_stream_chacha20_xor_ic};
 
 stream_module!(
     crypto_stream_chacha20,
     crypto_stream_chacha20_xor,
+    crypto_stream_chacha20_xor_ic,
     crypto_stream_chacha20_KEYBYTES as usize,
     crypto_stream_chacha20_NONCEBYTES as usize
 );
