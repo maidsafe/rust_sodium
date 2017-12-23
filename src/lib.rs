@@ -115,9 +115,13 @@ pub mod crypto {
 /// random number generation functions (`gen_key`, `gen_keypair`, `gen_nonce`, `randombytes`,
 /// `randombytes_into`) thread-safe.
 ///
-/// Returns `false` if initialisation failed.
-pub fn init() -> bool {
-    unsafe { ffi::sodium_init() != -1 }
+/// `init()` returns `Ok` if initialisation succeeded and `Err` if it failed.
+pub fn init() -> Result<(), ()> {
+    if unsafe { ffi::sodium_init() } >= 0 {
+        Ok(())
+    } else {
+        Err(())
+    }
 }
 
 #[cfg_attr(feature = "cargo-clippy", allow(doc_markdown))]
