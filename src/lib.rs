@@ -69,10 +69,10 @@
         unused_qualifications, unused_results)]
 // Allow `trivial_casts` to cast `u8` to `c_char`, which is `u8` or `i8`, depending on the
 // architecture.
-#![allow(box_pointers, fat_ptr_transmutes, missing_copy_implementations,
+#![allow(box_pointers, missing_copy_implementations,
          missing_debug_implementations, trivial_casts, unsafe_code, variant_size_differences)]
 // FIXME(nbaksalyar): fix and remove these
-#![cfg_attr(feature="cargo-clippy", allow(doc_markdown, should_assert_eq, needless_pass_by_value))]
+#![cfg_attr(feature="cargo-clippy", allow(doc_markdown, needless_pass_by_value))]
 
 extern crate rust_sodium_sys as ffi;
 extern crate libc;

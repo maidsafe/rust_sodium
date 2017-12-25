@@ -1,16 +1,11 @@
 // crypto_hash_sha512.h
 
 #[repr(C)]
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct crypto_hash_sha512_state {
     state: [u64; 8],
     count: [u64; 2],
     buf: [u8; 128],
-}
-impl Clone for crypto_hash_sha512_state {
-    fn clone(&self) -> crypto_hash_sha512_state {
-        *self
-    }
 }
 pub const crypto_hash_sha512_BYTES: usize = 64;
 

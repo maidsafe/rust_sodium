@@ -1,16 +1,11 @@
 // crypto_hash_sha256.h
 
 #[repr(C)]
-#[derive(Copy)]
+#[derive(Copy, Clone)]
 pub struct crypto_hash_sha256_state {
     state: [u32; 8],
     count: u64,
     buf: [u8; 64],
-}
-impl Clone for crypto_hash_sha256_state {
-    fn clone(&self) -> crypto_hash_sha256_state {
-        *self
-    }
 }
 pub const crypto_hash_sha256_BYTES: usize = 32;
 
