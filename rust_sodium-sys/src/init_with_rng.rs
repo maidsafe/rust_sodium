@@ -65,7 +65,7 @@ extern "C" fn random() -> uint32_t {
 extern "C" fn buf(buf: *mut c_void, size: size_t) {
     unsafe {
         let ptr = buf as *mut u8;
-        let rng_ptr = RNG.with(|rng| rng.clone());
+        let rng_ptr = RNG.with(|rng| Rc::clone(rng));
         let rng = &mut *rng_ptr.borrow_mut();
         for i in 0..size {
             *ptr.offset(i as isize) = rng.gen();
