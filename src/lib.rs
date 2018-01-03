@@ -109,6 +109,7 @@ pub mod crypto {
     pub mod stream;
     pub mod shorthash;
     pub mod verify;
+    pub mod kx;
 }
 
 /// Initialises libsodium and chooses faster versions of the primitives if possible.  Also makes the
