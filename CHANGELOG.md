@@ -3,6 +3,7 @@
 ## [0.7.0]
 - Use rust 1.22.1 stable / 2017-11-23 nightly
 - rustfmt 0.9.0 and clippy-0.0.174
+- Fixed issue in rust_sodium-sys causing libsodium to be built unoptimised on non-Windows platforms
 
 ## [0.6.0]
 - Add support for iOS build targets

@@ -342,6 +342,7 @@ fn main() {
     let gcc = gcc::Build::new();
     let mut cc = unwrap!(gcc.get_compiler().path().to_str()).to_string();
     let mut cflags = env::var("CFLAGS").unwrap_or(String::default());
+    cflags += " -O2";
     let host_arg;
     let cross_compiling;
     let help;
@@ -432,19 +433,21 @@ fn main() {
 
     // Run `./configure`
     let prefix_arg = format!("--prefix={}", install_dir);
-    let disable_pie_arg = env::var("RUST_SODIUM_DISABLE_PIE")
-        .map(|_| "--disable-pie")
-        .unwrap_or_default();
-
     let mut configure_cmd = Command::new("./configure");
+    if !cc.is_empty() {
+        configure_cmd.env("CC", &cc);
+    }
+    if !cflags.is_empty() {
+        configure_cmd.env("CFLAGS", &cflags);
+    }
+    if env::var("RUST_SODIUM_DISABLE_PIE").is_ok() {
+        configure_cmd.arg("--disable-pie");
+    }
     let configure_output = configure_cmd
         .current_dir(&source_dir)
-        .env("CC", &cc)
-        .env("CFLAGS", &cflags)
         .arg(&prefix_arg)
         .arg(&host_arg)
         .arg("--enable-shared=no")
-        .arg(disable_pie_arg)
         .output()
         .unwrap_or_else(|error| {
             panic!("Failed to run './configure': {}\n{}", error, help);
