@@ -107,7 +107,6 @@ pub fn client_session_keys(
         let r =
             ffi::crypto_kx_client_session_keys(rx.as_mut_ptr(), tx.as_mut_ptr(), client_pk.as_ptr(), client_sk.as_ptr(), server_pk.as_ptr());
 
-        println!("{}", r);
         if r != 0 {
             Err(())
         } else {
