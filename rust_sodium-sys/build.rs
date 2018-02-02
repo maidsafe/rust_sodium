@@ -54,61 +54,27 @@ use std::io::Cursor;
 ///
 /// If something fails, an error message string is returned.
 #[cfg(not(feature = "use-installed-libsodium"))]
-fn download(url: &str) -> Result<Cursor<Vec<u8>>, String> {
+fn download(url: &str) -> Cursor<Vec<u8>> {
     use reqwest::Client;
     use std::io::Read;
 
     // Send GET request
     let client = Client::new();
-    let mut response = client.get(url).send().map_err(|e| {
-        format!("Could not download: {}", e)
-    })?;
+    let mut response = unwrap!(client.get(url).send());
 
     // Only accept 2xx status codes
-    if response.status().is_success() {
-        let mut buffer = vec![];
-        let _ = unwrap!(response.read_to_end(&mut buffer));
-        Ok(Cursor::new(buffer))
-    } else {
-        Err(format!("Download error: HTTP {}", response.status()))
+    if !response.status().is_success() {
+        panic!("Download error: HTTP {}", response.status());
     }
+    let mut buffer = vec![];
+    let _ = unwrap!(response.read_to_end(&mut buffer));
+    Cursor::new(buffer)
 }
 
 #[cfg(not(feature = "use-installed-libsodium"))]
 fn get_install_dir() -> String {
     use std::env;
     unwrap!(env::var("OUT_DIR")) + "/installed"
-}
-
-#[cfg(all(windows, not(feature = "use-installed-libsodium")))]
-fn download_compressed_file() -> Cursor<Vec<u8>> {
-    // Determine filenames and download URLs
-    let basename = format!("libsodium-{}", VERSION);
-    let zip_filename = if cfg!(target_env = "msvc") {
-        format!("{}-msvc.zip", basename)
-    } else {
-        format!("{}-mingw.tar.gz", basename)
-    };
-    let url = format!("{}{}", DOWNLOAD_BASE_URL, &zip_filename);
-
-    // Download sources
-    match download(&url) {
-        Ok(compressed_file) => return compressed_file,
-        Err(_) => { /* Continue with fallback */ }
-    };
-
-    // Fallback download
-    let fallback_url = format!(
-        "https://raw.githubusercontent.com/maidsafe/QA/master/appveyor/{}",
-        &zip_filename
-    );
-    println!(
-        "cargo:warning=Failed to download libsodium from {}.  Falling back to MaidSafe mirror \
-             at {}",
-        url,
-        fallback_url
-    );
-    download(&fallback_url).unwrap_or_else(|e| panic!("Download error: {}", e))
 }
 
 #[cfg(all(windows, target_env = "msvc", not(feature = "use-installed-libsodium")))]
@@ -123,7 +89,8 @@ fn main() {
     let install_dir = get_install_dir();
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
-    let compressed_file = download_compressed_file();
+    let url = format!("{}libsodium-{}-msvc.zip", DOWNLOAD_BASE_URL, VERSION);
+    let compressed_file = download(&url);
 
     // Unpack the zip file
     let mut zip_archive = unwrap!(ZipArchive::new(compressed_file));
@@ -185,7 +152,8 @@ fn main() {
     let install_dir = get_install_dir();
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
-    let compressed_file = download_compressed_file();
+    let url = format!("{}libsodium-{}-mingw.tar.gz", DOWNLOAD_BASE_URL, VERSION);
+    let compressed_file = download(&url);
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
@@ -239,8 +207,7 @@ fn get_sources() -> (String, String) {
 
     // Determine filenames and download URLs
     let basename = format!("libsodium-{}", VERSION);
-    let gz_filename = format!("{}.tar.gz", basename);
-    let url = format!("{}{}", DOWNLOAD_BASE_URL, &gz_filename);
+    let url = format!("{}{}.tar.gz", DOWNLOAD_BASE_URL, basename);
 
     // Determine source and install dir
     let mut install_dir = get_install_dir();
@@ -266,7 +233,7 @@ fn get_sources() -> (String, String) {
     unwrap!(fs::create_dir_all(&source_dir));
 
     // Download sources
-    let compressed_file = download(&url).unwrap_or_else(|e| panic!("Download error: {}", e));
+    let compressed_file = download(&url);
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
