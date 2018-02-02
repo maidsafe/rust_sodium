@@ -11,20 +11,20 @@ repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.7.1"
 
 [dependencies]
-lazy_static = "~0.2.9"
-libc = "~0.2.33"
-rand = "~0.3.17"
+lazy_static = "~1.0.0"
+libc = "~0.2.36"
+rand = "~0.4.2"
 unwrap = "~1.1.0"
 
 [build-dependencies]
-flate2 = { version = "~0.2.20", optional = true }
-cc = { version = "^1.0", optional = true }
-libc = "~0.2.28"
+cc = { version = "~1.0.4", optional = true }
+flate2 = { version = "~1.0.1", optional = true }
+libc = "~0.2.36"
 pkg-config = { version = "~0.3.9", optional = true }
-tar = { version = "~0.4.13", optional = true }
+reqwest = { version = "~0.8.4", optional = true }
+tar = { version = "~0.4.14", optional = true }
 unwrap = "~1.1.0"
-zip = { version = "~0.2.6", optional = true }
-reqwest = { version = "^0.8", optional = true }
+zip = { version = "~0.3.0", optional = true }
 
 [lib]
 path = "lib.rs"

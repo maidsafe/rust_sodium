@@ -188,7 +188,7 @@ fn main() {
     let compressed_file = download_compressed_file();
 
     // Unpack the tarball
-    let gz_decoder = unwrap!(GzDecoder::new(compressed_file));
+    let gz_decoder = GzDecoder::new(compressed_file);
     let mut archive = Archive::new(gz_decoder);
 
     // Extract just the appropriate version of libsodium.a and headers to the install path
@@ -269,7 +269,7 @@ fn get_sources() -> (String, String) {
     let compressed_file = download(&url).unwrap_or_else(|e| panic!("Download error: {}", e));
 
     // Unpack the tarball
-    let gz_decoder = unwrap!(GzDecoder::new(compressed_file));
+    let gz_decoder = GzDecoder::new(compressed_file);
     let mut archive = Archive::new(gz_decoder);
     unwrap!(archive.unpack(&source_dir));
     source_dir.push_str(&format!("/{}", basename));
