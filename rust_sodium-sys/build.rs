@@ -50,9 +50,7 @@ fn main() {
 #[cfg(not(feature = "use-installed-libsodium"))]
 use std::io::Cursor;
 
-/// Download the specified URL into the specified target.
-///
-/// If something fails, an error message string is returned.
+/// Download the specified URL into a buffer which is returned.
 #[cfg(not(feature = "use-installed-libsodium"))]
 fn download(url: &str) -> Cursor<Vec<u8>> {
     use reqwest::Client;
