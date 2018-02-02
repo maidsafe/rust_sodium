@@ -47,31 +47,31 @@ fn main() {
     }
 }
 
+#[cfg(not(feature = "use-installed-libsodium"))]
+use std::io::Cursor;
+
 /// Download the specified URL into the specified target.
 ///
 /// If something fails, an error message string is returned.
 #[cfg(not(feature = "use-installed-libsodium"))]
-fn download(url: &str, target: &std::path::Path) -> Result<(), String> {
-    use std::fs::File;
+fn download(url: &str) -> Result<Cursor<Vec<u8>>, String> {
     use reqwest::Client;
+    use std::io::Read;
 
     // Send GET request
     let client = Client::new();
-    let mut resp = client.get(url).send()
-        .map_err(|e| format!("Could not download: {}", e))?;
+    let mut response = client.get(url).send().map_err(|e| {
+        format!("Could not download: {}", e)
+    })?;
 
     // Only accept 2xx status codes
-    if !resp.status().is_success() {
-        return Err(format!("Download error: HTTP {}", resp.status()))
+    if response.status().is_success() {
+        let mut buffer = vec![];
+        let _ = unwrap!(response.read_to_end(&mut buffer));
+        Ok(Cursor::new(buffer))
+    } else {
+        Err(format!("Download error: HTTP {}", response.status()))
     }
-
-    // Write downloaded data to tempfile
-    let mut f = File::create(target)
-        .unwrap_or_else(|e| panic!("Failed to create file \"{:?}\": {}", &target, e));
-    resp.copy_to(&mut f)
-        .map_err(|e| format!("Could not write downloaded data to file: {}", e))?;
-
-    Ok(())
 }
 
 #[cfg(not(feature = "use-installed-libsodium"))]
@@ -81,9 +81,7 @@ fn get_install_dir() -> String {
 }
 
 #[cfg(all(windows, not(feature = "use-installed-libsodium")))]
-fn download_compressed_file() -> String {
-    use std::path::Path;
-
+fn download_compressed_file() -> Cursor<Vec<u8>> {
     // Determine filenames and download URLs
     let basename = format!("libsodium-{}", VERSION);
     let zip_filename = if cfg!(target_env = "msvc") {
@@ -94,10 +92,9 @@ fn download_compressed_file() -> String {
     let url = format!("{}{}", DOWNLOAD_BASE_URL, &zip_filename);
 
     // Download sources
-    let zip_path = format!("{}/{}", get_install_dir(), &zip_filename);
-    match download(&url, Path::new(&zip_path) ){
-        Ok(_) => return zip_path,
-        Err(_) => { /* Continue with fallback */ },
+    match download(&url) {
+        Ok(compressed_file) => return compressed_file,
+        Err(_) => { /* Continue with fallback */ }
     };
 
     // Fallback download
@@ -106,15 +103,12 @@ fn download_compressed_file() -> String {
         &zip_filename
     );
     println!(
-        "cargo:warning=Failed to download libsodium from {}. Falling back to MaidSafe mirror \
+        "cargo:warning=Failed to download libsodium from {}.  Falling back to MaidSafe mirror \
              at {}",
         url,
         fallback_url
     );
-    download(&fallback_url, Path::new(&zip_path))
-        .unwrap_or_else(|e| panic!("Download error: {}", e));
-
-    zip_path
+    download(&fallback_url).unwrap_or_else(|e| panic!("Download error: {}", e))
 }
 
 #[cfg(all(windows, target_env = "msvc", not(feature = "use-installed-libsodium")))]
@@ -129,11 +123,10 @@ fn main() {
     let install_dir = get_install_dir();
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
-    let zip_path = download_compressed_file();
+    let compressed_file = download_compressed_file();
 
     // Unpack the zip file
-    let zip_file = unwrap!(File::open(&zip_path));
-    let mut zip_archive = unwrap!(ZipArchive::new(zip_file));
+    let mut zip_archive = unwrap!(ZipArchive::new(compressed_file));
 
     // Extract just the appropriate version of libsodium.lib and headers to the install path.  For
     // now, only handle MSVC 2015.
@@ -171,9 +164,6 @@ fn main() {
         }
     }
 
-    // Clean up
-    let _ = fs::remove_file(zip_path);
-
     println!("cargo:rustc-link-lib=static=libsodium");
     println!(
         "cargo:rustc-link-search=native={}",
@@ -186,7 +176,7 @@ fn main() {
 
 #[cfg(all(windows, not(target_env = "msvc"), not(feature = "use-installed-libsodium")))]
 fn main() {
-    use std::fs::{self, File};
+    use std::fs;
     use std::path::Path;
     use flate2::read::GzDecoder;
     use tar::Archive;
@@ -195,11 +185,10 @@ fn main() {
     let install_dir = get_install_dir();
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
-    let gz_path = download_compressed_file();
+    let compressed_file = download_compressed_file();
 
     // Unpack the tarball
-    let gz_archive = unwrap!(File::open(&gz_path));
-    let gz_decoder = unwrap!(GzDecoder::new(gz_archive));
+    let gz_decoder = unwrap!(GzDecoder::new(compressed_file));
     let mut archive = Archive::new(gz_decoder);
 
     // Extract just the appropriate version of libsodium.a and headers to the install path
@@ -228,9 +217,6 @@ fn main() {
         unwrap!(entry.unpack(full_install_path));
     }
 
-    // Clean up
-    let _ = fs::remove_file(gz_path);
-
     println!("cargo:rustc-link-lib=static=sodium");
     println!(
         "cargo:rustc-link-search=native={}",
@@ -247,8 +233,7 @@ fn main() {
 #[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
 fn get_sources() -> (String, String) {
     use std::env;
-    use std::fs::{self, File};
-    use std::path::Path;
+    use std::fs;
     use flate2::read::GzDecoder;
     use tar::Archive;
 
@@ -281,19 +266,13 @@ fn get_sources() -> (String, String) {
     unwrap!(fs::create_dir_all(&source_dir));
 
     // Download sources
-    let gz_path = Path::new(&source_dir).join(&gz_filename);
-    download(&url, &gz_path)
-        .unwrap_or_else(|e| panic!("Download error: {}", e));
+    let compressed_file = download(&url).unwrap_or_else(|e| panic!("Download error: {}", e));
 
     // Unpack the tarball
-    let gz_archive = unwrap!(File::open(&gz_path));
-    let gz_decoder = unwrap!(GzDecoder::new(gz_archive));
+    let gz_decoder = unwrap!(GzDecoder::new(compressed_file));
     let mut archive = Archive::new(gz_decoder);
     unwrap!(archive.unpack(&source_dir));
     source_dir.push_str(&format!("/{}", basename));
-
-    // Clean up
-    let _ = fs::remove_file(gz_path);
 
     (source_dir, install_dir)
 }
