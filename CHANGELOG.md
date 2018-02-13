@@ -1,5 +1,8 @@
 # rust_sodium - Change Log
 
+## rust_sodium_sys [0.7.2]
+- Fix Android build error
+
 ## [0.7.0]
 - Use rust 1.22.1 stable / 2017-11-23 nightly
 - rustfmt 0.9.0 and clippy-0.0.174
