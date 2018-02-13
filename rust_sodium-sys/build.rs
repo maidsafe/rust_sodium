@@ -415,7 +415,7 @@ fn main() {
         help = "";
     } else {
         if target.contains("i686") {
-            cc += " -m32";
+            cc += " -m32 -maes";
             cflags += " -march=i686";
         }
         let host = unwrap!(env::var("HOST"));
