@@ -1,31 +1,75 @@
 env:
   global:
+    - CRATE_NAME=rust_sodium
     - PATH=$PATH:$HOME/.cargo/bin
     - RUST_BACKTRACE=1
     - RUST_STABLE=1.24.0
-os:
-  - linux
-  - osx
 language: rust
-rust:
-  - 1.24.0
-  - nightly-2018-02-05
-sudo: false
+dist: trusty
+services: docker
+matrix:
+  include:
+    ### Stable ###
+    
+    # Linux
+    - os: linux
+      rust: 1.24.0
+    # OSX
+    - os: osx
+      rust: 1.24.0
+    # iOS
+    - os: osx
+      osx_image: xcode9.2
+      rust: 1.24.0
+      env: TARGET=x86_64-apple-ios
+      install:
+        - rustup target add $TARGET
+    # Android armv7-linux-androideabi
+    - os: linux
+      rust: 1.24.0
+      env: TARGET=armv7-linux-androideabi
+      install:
+        - rustup target add $TARGET
+    # Android i686-linux-android
+    - os: linux
+      rust: 1.24.0
+      env: TARGET=i686-linux-android
+      install:
+        - rustup target add $TARGET
+      
+    ### Nightly ###
+    
+    # Linux
+    - os: linux
+      rust: nightly-2018-02-05
+sudo: required
+cache:
+  cargo: true
 branches:
   only:
     - master
-cache:
-  cargo: true
 before_script:
   - curl -sSL https://github.com/maidsafe/QA/raw/master/travis/cargo_install.sh > cargo_install.sh
   - bash cargo_install.sh cargo-prune;
-  - if [ "${TRAVIS_RUST_VERSION}" = "$RUST_STABLE" ]; then
+  - if [[ "$TARGET" =~ android || "$TARGET" =~ ios ]]; then
+      echo "Skipping $TARGET";
+    elif [[ "${TRAVIS_RUST_VERSION}" = "$RUST_STABLE" ]]; then
       bash cargo_install.sh rustfmt 0.9.0;
-    elif [ "${TRAVIS_OS_NAME}" = linux ]; then
+    elif [[ "${TRAVIS_OS_NAME}" = linux ]]; then
       bash cargo_install.sh clippy 0.0.186;
     fi
 script:
-  - if [ "${TRAVIS_RUST_VERSION}" = "$RUST_STABLE" ]; then
+  - if [[ "$TARGET" =~ android ]]; then
+      cargo check &&
+      cargo check --manifest-path=rust_sodium-sys/Cargo.toml &&
+      cargo check --manifest-path=systest/Cargo.toml &&
+      sh ci/run-docker.sh $TARGET;
+    elif [[ "$TARGET" =~ ios ]]; then
+      cargo check &&
+      cargo check --manifest-path=rust_sodium-sys/Cargo.toml &&
+      cargo check --manifest-path=systest/Cargo.toml &&
+      CARGO_TARGET_DIR=`pwd` sh ci/run-ios.sh $TARGET;
+    elif [[ "${TRAVIS_RUST_VERSION}" = "$RUST_STABLE" ]]; then
       (
         set -x;
         cargo fmt -- --write-mode=diff &&
@@ -33,7 +77,7 @@ script:
         cargo run --manifest-path=systest/Cargo.toml &&
         cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml
       );
-    elif [ "${TRAVIS_OS_NAME}" = linux ]; then
+    elif [[ "${TRAVIS_OS_NAME}" = linux ]]; then
       (
         set -x;
         cargo clippy &&
@@ -43,4 +87,6 @@ script:
       );
     fi
 before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
   - cargo prune

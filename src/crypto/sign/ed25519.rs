@@ -259,11 +259,13 @@ mod test {
         // test vectors from the Python implementation
         // from the [Ed25519 Homepage](http://ed25519.cr.yp.to/software.html)
         use rustc_serialize::hex::{FromHex, ToHex};
-        use std::fs::File;
         use std::io::{BufRead, BufReader};
+        use test_utils::find_file;
 
         assert!(::init());
-        let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
+        let filepath = "testvectors/ed25519.input";
+        let file = unwrap!(find_file(filepath));
+        let r = BufReader::new(file);
         for mline in r.lines() {
             let line = unwrap!(mline);
             let mut x = line.split(':');
@@ -292,11 +294,13 @@ mod test {
         // test vectors from the Python implementation
         // from the [Ed25519 Homepage](http://ed25519.cr.yp.to/software.html)
         use rustc_serialize::hex::{FromHex, ToHex};
-        use std::fs::File;
         use std::io::{BufRead, BufReader};
+        use test_utils::find_file;
 
         assert!(::init());
-        let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
+        let filepath = "testvectors/ed25519.input";
+        let file = unwrap!(find_file(filepath));
+        let r = BufReader::new(file);
         for mline in r.lines() {
             let line = unwrap!(mline);
             let mut x = line.split(':');

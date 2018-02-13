@@ -8,3 +8,4 @@ Cargo.lock
 /target
 rust_sodium-sys/target
 systest/target
+.DS_Store

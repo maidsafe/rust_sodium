@@ -9,6 +9,8 @@ use serde::{Deserialize, Serialize};
 #[cfg(all(test, feature = "serde"))]
 use serde::de::DeserializeOwned;
 
+use std::fs::File;
+
 // Encodes then decodes `value` using JSON
 #[cfg(all(test, feature = "serde"))]
 pub fn round_trip<T>(value: T)
@@ -41,4 +43,23 @@ where
     let encoded_value = unwrap!(json::encode(&value));
     let decoded_value = unwrap!(json::decode(&encoded_value));
     assert!(value == decoded_value);
+}
+
+/// Looks for the given file in temporary directories due to filesystem limitations on mobile.
+pub fn find_file(filepath: &str) -> ::std::io::Result<File> {
+    // Check Android directory.
+    // let path = format!("/data/local/tmp/{}", filepath);
+    let path = format!("/system/{}", filepath);
+    println!("{}", path);
+    match File::open(&path) {
+        Ok(file) => Ok(file),
+        Err(_) => {
+            // Check iOS directory.
+            let path = format!("/tmp/{}", filepath);
+            match File::open(&path) {
+                Ok(file) => Ok(file),
+                Err(_) => File::open(filepath),
+            }
+        }
+    }
 }

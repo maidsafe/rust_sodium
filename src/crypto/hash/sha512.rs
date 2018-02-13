@@ -31,13 +31,14 @@ mod test {
         assert!(h[..] == h_expected[..]);
     }
 
-    fn test_nist_vector(filename: &str) {
+    fn test_nist_vector(filepath: &str) {
         use rustc_serialize::hex::FromHex;
-        use std::fs::File;
         use std::io::{BufRead, BufReader};
+        use test_utils::find_file;
 
         assert!(::init());
-        let mut r = BufReader::new(unwrap!(File::open(filename)));
+        let file = unwrap!(find_file(filepath));
+        let mut r = BufReader::new(file);
         let mut line = String::new();
         loop {
             line.clear();
