@@ -26,7 +26,5 @@
 //! ```
 //!
 
-#![cfg_attr(feature="cargo-clippy", allow(doc_markdown))]
-
 pub use self::curve25519blake2bxsalsa20poly1305::*;
 pub mod curve25519blake2bxsalsa20poly1305;

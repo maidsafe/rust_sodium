@@ -15,45 +15,48 @@ fn main() {
         .header("sodium/crypto_aead_xchacha20poly1305.h")
         .header("sodium/crypto_auth.h")
         .header("sodium/crypto_auth_hmacsha256.h")
-        .header("sodium/crypto_auth_hmacsha512.h")
         .header("sodium/crypto_auth_hmacsha512256.h")
-        .header("sodium/crypto_box.h")
+        .header("sodium/crypto_auth_hmacsha512.h")
         .header("sodium/crypto_box_curve25519xchacha20poly1305.h")
         .header("sodium/crypto_box_curve25519xsalsa20poly1305.h")
+        .header("sodium/crypto_box.h")
+        .header("sodium/crypto_core_ed25519.h")
         .header("sodium/crypto_core_hchacha20.h")
         .header("sodium/crypto_core_hsalsa20.h")
-        .header("sodium/crypto_core_salsa20.h")
         .header("sodium/crypto_core_salsa2012.h")
         .header("sodium/crypto_core_salsa208.h")
-        .header("sodium/crypto_generichash.h")
+        .header("sodium/crypto_core_salsa20.h")
         .header("sodium/crypto_generichash_blake2b.h")
+        .header("sodium/crypto_generichash.h")
         .header("sodium/crypto_hash.h")
         .header("sodium/crypto_hash_sha256.h")
         .header("sodium/crypto_hash_sha512.h")
-        .header("sodium/crypto_kdf.h")
         .header("sodium/crypto_kdf_blake2b.h")
+        .header("sodium/crypto_kdf.h")
         .header("sodium/crypto_kx.h")
         .header("sodium/crypto_onetimeauth.h")
         .header("sodium/crypto_onetimeauth_poly1305.h")
-        .header("sodium/crypto_pwhash.h")
+        .header("sodium/crypto_pwhash_argon2id.h")
         .header("sodium/crypto_pwhash_argon2i.h")
+        .header("sodium/crypto_pwhash.h")
         .header("sodium/crypto_pwhash_scryptsalsa208sha256.h")
-        .header("sodium/crypto_scalarmult.h")
         .header("sodium/crypto_scalarmult_curve25519.h")
+        .header("sodium/crypto_scalarmult_ed25519.h")
+        .header("sodium/crypto_scalarmult.h")
         .header("sodium/crypto_secretbox.h")
         .header("sodium/crypto_secretbox_xchacha20poly1305.h")
         .header("sodium/crypto_secretbox_xsalsa20poly1305.h")
+        .header("sodium/crypto_secretstream_xchacha20poly1305.h")
         .header("sodium/crypto_shorthash.h")
         .header("sodium/crypto_shorthash_siphash24.h")
-        .header("sodium/crypto_sign.h")
         .header("sodium/crypto_sign_ed25519.h")
         .header("sodium/crypto_sign_edwards25519sha512batch.h")
-        .header("sodium/crypto_stream.h")
-        .header("sodium/crypto_stream_aes128ctr.h")
+        .header("sodium/crypto_sign.h")
         .header("sodium/crypto_stream_chacha20.h")
-        .header("sodium/crypto_stream_salsa20.h")
+        .header("sodium/crypto_stream.h")
         .header("sodium/crypto_stream_salsa2012.h")
         .header("sodium/crypto_stream_salsa208.h")
+        .header("sodium/crypto_stream_salsa20.h")
         .header("sodium/crypto_stream_xchacha20.h")
         .header("sodium/crypto_stream_xsalsa20.h")
         .header("sodium/crypto_verify_16.h")
@@ -68,10 +71,20 @@ fn main() {
         .header("sodium/version.h");
     cfg.include(&include);
     cfg.type_name(|s, _| s.to_string());
-    cfg.skip_signededness(|s| s == "crypto_auth_hmacsha512256_state");
+    cfg.skip_field(|_, field| field.starts_with("__bindgen_padding_"));
+    cfg.skip_type(|_| true);
     cfg.skip_const(|s| {
-                       s.ends_with("_PRIMITIVE") ||
-                       s == "crypto_pwhash_scryptsalsa208sha256_STRPREFIX"
-                   });
-    cfg.generate("../rust_sodium-sys/lib.rs", "all.rs");
+        s.ends_with("_PRIMITIVE") || s.ends_with("_STRPREFIX") || s == "SODIUM_VERSION_STRING"
+    });
+    if cfg!(target_env = "msvc") {
+        // Suppress "warning C4324: 'crypto_generichash_blake2b_state': structure was padded due to
+        // alignment specifier"
+        cfg.flag("/wd4324");
+    }
+    // TODO - avoid skipping crypto_generichash_blake2b_state and crypto_onetimeauth_poly1305_state
+    // once https://github.com/rust-lang/rust/issues/33626 is in stable
+    cfg.skip_struct(|s| {
+        s == "crypto_generichash_blake2b_state" || s == "crypto_onetimeauth_poly1305_state"
+    });
+    cfg.generate("../rust_sodium-sys/src/lib.rs", "all.rs");
 }

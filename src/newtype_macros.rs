@@ -221,10 +221,12 @@ macro_rules! public_newtype_traits (($newtype:ident) => (
 ///
 /// Usage:
 /// Generating secret datatypes, e.g. keys
+/// ```
 /// new_type! {
 ///     /// This is some documentation for our type
 ///     secret Key(KEYBYTES);
 /// }
+/// ```
 /// Generating public datatypes, e.g. public keys
 /// ```
 /// new_type! {

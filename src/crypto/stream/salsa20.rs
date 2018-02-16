@@ -8,8 +8,8 @@ use ffi::{crypto_stream_salsa20, crypto_stream_salsa20_KEYBYTES, crypto_stream_s
 stream_module!(
     crypto_stream_salsa20,
     crypto_stream_salsa20_xor,
-    crypto_stream_salsa20_KEYBYTES,
-    crypto_stream_salsa20_NONCEBYTES
+    crypto_stream_salsa20_KEYBYTES as usize,
+    crypto_stream_salsa20_NONCEBYTES as usize
 );
 
 #[cfg(test)]

@@ -10,8 +10,8 @@ use ffi::{crypto_auth_hmacsha512256, crypto_auth_hmacsha512256_BYTES,
 auth_module!(
     crypto_auth_hmacsha512256,
     crypto_auth_hmacsha512256_verify,
-    crypto_auth_hmacsha512256_KEYBYTES,
-    crypto_auth_hmacsha512256_BYTES
+    crypto_auth_hmacsha512256_KEYBYTES as usize,
+    crypto_auth_hmacsha512256_BYTES as usize
 );
 
 auth_state!(

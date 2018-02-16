@@ -2,15 +2,15 @@
 //! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html), Sections 2, 3, and 4.
 //! This function is conjectured to be strong. For background see Bernstein,
 //! "Curve25519: new Diffie-Hellman speed records," Lecture Notes in Computer
-//! Science 3958 (2006), 207–228, http://cr.yp.to/papers.html#curve25519.
+//! Science 3958 (2006), 207–228, <http://cr.yp.to/papers.html#curve25519/>.
 
 use ffi;
 
 /// Number of bytes in a `GroupElement`.
-pub const GROUPELEMENTBYTES: usize = ffi::crypto_scalarmult_curve25519_BYTES;
+pub const GROUPELEMENTBYTES: usize = ffi::crypto_scalarmult_curve25519_BYTES as usize;
 
 /// Number of bytes in a `Scalar`.
-pub const SCALARBYTES: usize = ffi::crypto_scalarmult_curve25519_SCALARBYTES;
+pub const SCALARBYTES: usize = ffi::crypto_scalarmult_curve25519_SCALARBYTES as usize;
 
 #[cfg(feature = "rustc-serialize")]
 use rustc_serialize;

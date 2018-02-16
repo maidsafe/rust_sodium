@@ -7,10 +7,10 @@ use randombytes::randombytes_into;
 use rustc_serialize;
 
 /// Number of bytes in a `Digest`.
-pub const DIGESTBYTES: usize = ffi::crypto_shorthash_siphash24_BYTES;
+pub const DIGESTBYTES: usize = ffi::crypto_shorthash_siphash24_BYTES as usize;
 
 /// Number of bytes in a `Key`.
-pub const KEYBYTES: usize = ffi::crypto_shorthash_siphash24_KEYBYTES;
+pub const KEYBYTES: usize = ffi::crypto_shorthash_siphash24_KEYBYTES as usize;
 
 new_type! {
     /// `Digest` structure
@@ -55,7 +55,6 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_vectors() {
         assert!(::init());
         let maxlen = 64;
@@ -146,8 +145,8 @@ mod test {
             let k = gen_key();
             let m = randombytes(i);
             let d = shorthash(&m[..], &k);
-            round_trip(k);
-            round_trip(d);
+            round_trip(&k);
+            round_trip(&d);
         }
     }
 }

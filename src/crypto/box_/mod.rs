@@ -5,7 +5,7 @@
 //! third-party unforgeability for a public-key authenticated-encryption scheme
 //! using nonces. For formal definitions see, e.g., Jee Hea An, "Authenticated
 //! encryption in the public-key setting: security notions and analyses,"
-//! http://eprint.iacr.org/2001/079.
+//! <http://eprint.iacr.org/2001/079/>.
 //!
 //! Distinct messages between the same {sender, receiver} set are required
 //! to have distinct nonces. For example, the lexicographically smaller
@@ -27,7 +27,7 @@
 //! parties that this particular message came from the sender. The sender
 //! and receiver are nevertheless protected against forgeries by other
 //! parties. In the terminology of
-//! http://groups.google.com/group/sci.crypt/msg/ec5c18b23b11d82c,
+//! <http://groups.google.com/group/sci.crypt/msg/ec5c18b23b11d82c/>,
 //! `crypto_box` uses "public-key authenticators" rather than "public-key
 //! signatures."
 //!

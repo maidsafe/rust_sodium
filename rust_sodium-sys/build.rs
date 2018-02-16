@@ -16,7 +16,7 @@ extern crate zip;
 extern crate reqwest;
 
 const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
-const VERSION: &'static str = "1.0.12";
+const VERSION: &'static str = "1.0.16";
 
 #[cfg(feature = "use-installed-libsodium")]
 fn main() {
