@@ -26,4 +26,3 @@ serde_json = "~1.0.9"
 [features]
 benchmarks = []
 default = ["serde"]
-use-installed-libsodium = ["rust_sodium-sys/use-installed-libsodium"]
