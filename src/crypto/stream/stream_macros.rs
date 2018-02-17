@@ -6,8 +6,6 @@ macro_rules! stream_module (($stream_name:ident,
 use libc::c_ulonglong;
 use std::iter::repeat;
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in a `Key`.
 pub const KEYBYTES: usize = $keybytes;
@@ -160,7 +158,6 @@ mod test_m {
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;

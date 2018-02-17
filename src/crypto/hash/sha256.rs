@@ -44,7 +44,7 @@ mod test {
     }
 
     fn test_nist_vector(filename: &str) {
-        use rustc_serialize::hex::FromHex;
+        use hex;
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
@@ -62,11 +62,11 @@ mod test {
                 let len: usize = unwrap!(line[6..].trim().parse());
                 line.clear();
                 let _ = unwrap!(r.read_line(&mut line));
-                let rawmsg = unwrap!(line[6..].from_hex());
+                let rawmsg = unwrap!(hex::decode(line[6..].trim()));
                 let msg = &rawmsg[..len / 8];
                 line.clear();
                 let _ = unwrap!(r.read_line(&mut line));
-                let md = unwrap!(line[5..].from_hex());
+                let md = unwrap!(hex::decode(line[5..].trim()));
                 let Digest(digest) = hash(msg);
                 assert!(digest[..] == md[..]);
             }

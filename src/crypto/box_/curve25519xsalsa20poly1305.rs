@@ -7,8 +7,6 @@
 
 use ffi;
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in a `PublicKey`.
 pub const PUBLICKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES as
@@ -666,7 +664,6 @@ mod test {
         assert!(m_pre == mexp);
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;

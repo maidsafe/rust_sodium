@@ -1,8 +1,6 @@
 macro_rules! hash_module (($hash_name:ident, $hashbytes:expr, $blockbytes:expr) => (
 
 use libc::c_ulonglong;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in a `Digest`.
 pub const DIGESTBYTES: usize = $hashbytes;
@@ -24,7 +22,6 @@ pub fn hash(m: &[u8]) -> Digest {
     }
 }
 
-#[cfg(any(feature = "serde", feature = "rustc-serialize"))]
 #[cfg(test)]
 mod test_encode {
     use super::*;

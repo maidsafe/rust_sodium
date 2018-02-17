@@ -7,8 +7,6 @@
 
 use ffi;
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in `Key`.
 pub const KEYBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_KEYBYTES as usize;
@@ -312,7 +310,6 @@ mod test {
         assert!(Ok(m) == m2);
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;

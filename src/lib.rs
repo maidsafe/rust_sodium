@@ -73,12 +73,15 @@
          missing_debug_implementations, trivial_casts, unsafe_code, variant_size_differences)]
 
 extern crate rust_sodium_sys as ffi;
+#[cfg(test)]
+extern crate hex;
 extern crate libc;
 extern crate rand;
-#[cfg(any(test, feature = "rustc-serialize"))]
-extern crate rustc_serialize;
-#[cfg(feature = "serde")]
+#[cfg(test)]
+extern crate rmp_serde;
 extern crate serde;
+#[cfg(test)]
+extern crate serde_json;
 #[macro_use]
 extern crate unwrap;
 

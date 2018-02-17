@@ -12,9 +12,6 @@ pub const GROUPELEMENTBYTES: usize = ffi::crypto_scalarmult_curve25519_BYTES as 
 /// Number of bytes in a `Scalar`.
 pub const SCALARBYTES: usize = ffi::crypto_scalarmult_curve25519_SCALARBYTES as usize;
 
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
-
 new_type! {
     /// `Scalar` value (integer in byte representation)
     secret Scalar(SCALARBYTES);

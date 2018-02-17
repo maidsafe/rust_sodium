@@ -5,8 +5,6 @@
 
 use ffi;
 use libc::c_ulonglong;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 use std::iter::repeat;
 
 /// Number of bytes in a `Seed`.
@@ -255,7 +253,7 @@ mod test {
     fn test_vectors() {
         // test vectors from the Python implementation
         // from the [Ed25519 Homepage](http://ed25519.cr.yp.to/software.html)
-        use rustc_serialize::hex::{FromHex, ToHex};
+        use hex;
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
@@ -268,7 +266,7 @@ mod test {
             let x1 = unwrap!(x.next());
             let x2 = unwrap!(x.next());
             let x3 = unwrap!(x.next());
-            let seed_bytes = unwrap!(x0[..64].from_hex());
+            let seed_bytes = unwrap!(hex::decode(&x0[..64]));
             assert!(seed_bytes.len() == SEEDBYTES);
             let mut seedbuf = [0u8; SEEDBYTES];
             for (s, b) in seedbuf.iter_mut().zip(seed_bytes.iter()) {
@@ -276,11 +274,11 @@ mod test {
             }
             let seed = Seed(seedbuf);
             let (pk, sk) = keypair_from_seed(&seed);
-            let m = unwrap!(x2.from_hex());
+            let m = unwrap!(hex::decode(x2));
             let sm = sign(&m, &sk);
             assert!(unwrap!(verify(&sm, &pk)) == m);
-            assert!(x1 == pk[..].to_hex());
-            assert!(x3 == sm.to_hex());
+            assert!(x1 == hex::encode(&pk[..]));
+            assert!(x3 == hex::encode(&sm));
         }
     }
 
@@ -288,7 +286,7 @@ mod test {
     fn test_vectors_detached() {
         // test vectors from the Python implementation
         // from the [Ed25519 Homepage](http://ed25519.cr.yp.to/software.html)
-        use rustc_serialize::hex::{FromHex, ToHex};
+        use hex;
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
@@ -301,7 +299,7 @@ mod test {
             let x1 = unwrap!(x.next());
             let x2 = unwrap!(x.next());
             let x3 = unwrap!(x.next());
-            let seed_bytes = unwrap!(x0[..64].from_hex());
+            let seed_bytes = unwrap!(hex::decode(&x0[..64]));
             assert!(seed_bytes.len() == SEEDBYTES);
             let mut seedbuf = [0u8; SEEDBYTES];
             for (s, b) in seedbuf.iter_mut().zip(seed_bytes.iter()) {
@@ -309,16 +307,15 @@ mod test {
             }
             let seed = Seed(seedbuf);
             let (pk, sk) = keypair_from_seed(&seed);
-            let m = unwrap!(x2.from_hex());
+            let m = unwrap!(hex::decode(&x2));
             let sig = sign_detached(&m, &sk);
             assert!(verify_detached(&sig, &m, &pk));
-            assert!(x1 == pk[..].to_hex());
-            let sm = sig[..].to_hex() + x2; // x2 is m hex encoded
+            assert!(x1 == hex::encode(&pk[..]));
+            let sm = hex::encode(&sig[..]) + x2; // x2 is m hex encoded
             assert!(x3 == sm);
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use randombytes::randombytes;
