@@ -11,10 +11,10 @@ use randombytes::randombytes_into;
 use rustc_serialize;
 
 /// Number of bytes in `Key`.
-pub const KEYBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_KEYBYTES;
+pub const KEYBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_KEYBYTES as usize;
 
 /// Number of bytes in a `Nonce`.
-pub const NONCEBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_NONCEBYTES;
+pub const NONCEBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_NONCEBYTES as usize;
 
 new_type! {
     /// `Key` for symmetric authenticated encryption
@@ -39,7 +39,7 @@ new_type! {
 /// Number of bytes in the authenticator tag of an encrypted message
 /// i.e. the number of bytes by which the ciphertext is larger than the
 /// plaintext.
-pub const MACBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_MACBYTES;
+pub const MACBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_MACBYTES as usize;
 
 /// `gen_key()` randomly generates a secret key
 ///
@@ -163,7 +163,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -230,7 +229,6 @@ mod test {
 
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_detached_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -322,8 +320,8 @@ mod test {
         for _ in 0..256usize {
             let k = gen_key();
             let n = gen_nonce();
-            round_trip(k);
-            round_trip(n);
+            round_trip(&k);
+            round_trip(&n);
         }
     }
 }

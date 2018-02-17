@@ -168,8 +168,8 @@ mod test_m {
         for _ in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
-            round_trip(k);
-            round_trip(n);
+            round_trip(&k);
+            round_trip(&n);
         }
     }
 }

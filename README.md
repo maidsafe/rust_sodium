@@ -21,11 +21,6 @@ differences are:
 | [MaidSafe website](https://maidsafe.net) | [SAFE Dev Forum](https://forum.safedev.org) | [SAFE Network Forum](https://safenetforum.org) |
 |:----------------------------------------:|:-------------------------------------------:|:----------------------------------------------:|
 
-## Note for building on Windows
-
-In order to allow the build script to download libsodium, you must have Powershell v4.0 or greater
-installed.
-
 ## Note for building on Linux
 
 Certain situations may require building libsodium configured with `--disable-pie`.  To enable this,

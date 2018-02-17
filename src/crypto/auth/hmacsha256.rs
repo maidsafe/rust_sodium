@@ -8,8 +8,8 @@ use ffi::{crypto_auth_hmacsha256, crypto_auth_hmacsha256_BYTES, crypto_auth_hmac
 auth_module!(
     crypto_auth_hmacsha256,
     crypto_auth_hmacsha256_verify,
-    crypto_auth_hmacsha256_KEYBYTES,
-    crypto_auth_hmacsha256_BYTES
+    crypto_auth_hmacsha256_KEYBYTES as usize,
+    crypto_auth_hmacsha256_BYTES as usize
 );
 
 auth_state!(

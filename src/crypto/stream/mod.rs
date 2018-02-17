@@ -7,7 +7,7 @@
 //! of Bellare, Kilian, and Rogaway, "The security of the cipher block
 //! chaining message authentication code," Journal of Computer and System
 //! Sciences 61 (2000), 362–399;
-//! http://www-cse.ucsd.edu/~mihir/papers/cbc.html.
+//! <http://www-cse.ucsd.edu/~mihir/papers/cbc.html/>.
 //!
 //! This means that an attacker cannot distinguish this function from a
 //! uniform random function. Consequently, if a series of messages is
@@ -38,7 +38,6 @@
 //! |`crypto_stream`           |primitive     |KEYBYTES |NONCEBYTES|
 //! |--------------------------|--------------|---------|----------|
 //! |`crypto_stream_chacha20`  |`Chacha20/20` |32       |8         |
-//! |`crypto_stream_salsa208`  |`Salsa20/8`   |32       |8         |
 //! |`crypto_stream_salsa2012` |`Salsa20/12`  |32       |8         |
 //! |`crypto_stream_salsa20`   |`Salsa20/20`  |32       |8         |
 //! |`crypto_stream_xsalsa20`  |`XSalsa20/20` |32       |24        |
@@ -90,7 +89,6 @@ pub use self::xsalsa20::*;
 #[macro_use]
 mod stream_macros;
 pub mod xsalsa20;
-pub mod salsa208;
 pub mod salsa2012;
 pub mod salsa20;
 pub mod chacha20;

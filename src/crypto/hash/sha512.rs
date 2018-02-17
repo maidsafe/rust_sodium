@@ -8,7 +8,7 @@
 
 use ffi::{crypto_hash_sha512, crypto_hash_sha512_BYTES};
 
-hash_module!(crypto_hash_sha512, crypto_hash_sha512_BYTES, 128);
+hash_module!(crypto_hash_sha512, crypto_hash_sha512_BYTES as usize, 128);
 
 #[cfg(test)]
 mod test {

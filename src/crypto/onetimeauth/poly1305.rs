@@ -9,8 +9,8 @@ use ffi::{crypto_onetimeauth_poly1305, crypto_onetimeauth_poly1305_BYTES,
 auth_module!(
     crypto_onetimeauth_poly1305,
     crypto_onetimeauth_poly1305_verify,
-    crypto_onetimeauth_poly1305_KEYBYTES,
-    crypto_onetimeauth_poly1305_BYTES
+    crypto_onetimeauth_poly1305_KEYBYTES as usize,
+    crypto_onetimeauth_poly1305_BYTES as usize
 );
 
 #[cfg(test)]

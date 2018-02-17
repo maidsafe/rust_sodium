@@ -37,7 +37,7 @@ mod test_encode {
         for i in 0..32usize {
             let m = randombytes(i);
             let d = hash(&m[..]);
-            round_trip(d);
+            round_trip(&d);
         }
     }
 }

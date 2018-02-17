@@ -1,4 +1,4 @@
-//! A particular combination of Curve25519, Blake2B, Salsa20 and Poly1305.
+//! A particular combination of `Curve25519`, `Blake2B`, `Salsa20` and `Poly1305`.
 
 
 use super::super::box_::curve25519xsalsa20poly1305 as box_;
@@ -8,7 +8,7 @@ use libc::c_ulonglong;
 
 /// Number of additional bytes in a ciphertext compared to the corresponding
 /// plaintext.
-const SEALBYTES: usize = ffi::crypto_box_SEALBYTES;
+const SEALBYTES: usize = ffi::crypto_box_SEALBYTES as usize;
 
 /// The `seal()` function encrypts a message `m` for a recipient whose public key
 /// is `pk`. It returns the ciphertext whose length is `SEALBYTES + m.len()`.
@@ -80,7 +80,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         assert!(::init());

@@ -11,21 +11,24 @@ use randombytes::randombytes_into;
 use rustc_serialize;
 
 /// Number of bytes in a `PublicKey`.
-pub const PUBLICKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES;
+pub const PUBLICKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES as
+    usize;
 
 /// Number of bytes in a `SecretKey`.
-pub const SECRETKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES;
+pub const SECRETKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES as
+    usize;
 
 /// Number of bytes in a `Nonce`.
-pub const NONCEBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_NONCEBYTES;
+pub const NONCEBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_NONCEBYTES as usize;
 
 /// Number of bytes in a `PrecomputedKey`.
-pub const PRECOMPUTEDKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES;
+pub const PRECOMPUTEDKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES as
+    usize;
 
 /// Number of bytes in the authenticator tag of an encrypted message
 /// i.e. the number of bytes by which the ciphertext is larger than the
 /// plaintext.
-pub const MACBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_MACBYTES;
+pub const MACBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_MACBYTES as usize;
 
 new_type! {
     /// `SecretKey` for asymmetric authenticated encryption
@@ -340,7 +343,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -359,7 +361,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_precomputed_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -428,7 +429,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_detached_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -527,7 +527,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_detached_precomputed_tamper() {
         use randombytes::randombytes;
         for i in 0..32usize {
@@ -675,9 +674,9 @@ mod test {
         for _ in 0..256usize {
             let (pk, sk) = gen_keypair();
             let n = gen_nonce();
-            round_trip(pk);
-            round_trip(sk);
-            round_trip(n);
+            round_trip(&pk);
+            round_trip(&sk);
+            round_trip(&n);
         }
     }
 }

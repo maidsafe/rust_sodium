@@ -10,16 +10,16 @@ use rustc_serialize;
 use std::iter::repeat;
 
 /// Number of bytes in a `Seed`.
-pub const SEEDBYTES: usize = ffi::crypto_sign_ed25519_SEEDBYTES;
+pub const SEEDBYTES: usize = ffi::crypto_sign_ed25519_SEEDBYTES as usize;
 
 /// Number of bytes in a `SecretKey`.
-pub const SECRETKEYBYTES: usize = ffi::crypto_sign_ed25519_SECRETKEYBYTES;
+pub const SECRETKEYBYTES: usize = ffi::crypto_sign_ed25519_SECRETKEYBYTES as usize;
 
 /// Number of bytes in a `PublicKey`.
-pub const PUBLICKEYBYTES: usize = ffi::crypto_sign_ed25519_PUBLICKEYBYTES;
+pub const PUBLICKEYBYTES: usize = ffi::crypto_sign_ed25519_PUBLICKEYBYTES as usize;
 
 /// Number of bytes in a `Signature`.
-pub const SIGNATUREBYTES: usize = ffi::crypto_sign_ed25519_BYTES;
+pub const SIGNATUREBYTES: usize = ffi::crypto_sign_ed25519_BYTES as usize;
 
 new_type! {
     /// `Seed` that can be used for keypair generation
@@ -173,7 +173,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -202,7 +201,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_detached_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -235,7 +233,6 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper_seed() {
         use randombytes::{randombytes, randombytes_into};
         assert!(::init());
@@ -331,9 +328,9 @@ mod test {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
             let sig = sign_detached(&m, &sk);
-            round_trip(pk);
-            round_trip(sk);
-            round_trip(sig);
+            round_trip(&pk);
+            round_trip(&sk);
+            round_trip(&sig);
         }
     }
 }

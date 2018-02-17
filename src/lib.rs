@@ -71,8 +71,6 @@
 // architecture.
 #![allow(box_pointers, missing_copy_implementations,
          missing_debug_implementations, trivial_casts, unsafe_code, variant_size_differences)]
-// FIXME(nbaksalyar): fix and remove these
-#![cfg_attr(feature="cargo-clippy", allow(doc_markdown, needless_pass_by_value))]
 
 extern crate rust_sodium_sys as ffi;
 extern crate libc;
@@ -118,10 +116,11 @@ pub fn init() -> bool {
     unsafe { ffi::sodium_init() != -1 }
 }
 
+#[cfg_attr(feature = "cargo-clippy", allow(doc_markdown))]
 /// Sets [libsodium's `randombytes_implementation`]
 /// (https://download.libsodium.org/doc/advanced/custom_rng.html) to use a
 /// [Rust `Rng` implementation](../rand/trait.Rng.html) and initialises libsodium.
-/// See [the rust_sodium-sys' docs](../rust_sodium_sys/fn.init_with_rng.html) for further details.
+/// See [the `rust_sodium-sys`' docs](../rust_sodium_sys/fn.init_with_rng.html) for further details.
 pub fn init_with_rng<T: rand::Rng>(rng: &mut T) -> Result<(), i32> {
     ffi::init_with_rng(rng)
 }

@@ -9,7 +9,7 @@
 //! sender. For a formal definition see, e.g., Section 2.4 of Bellare,
 //! Kilian, and Rogaway, "The security of the cipher block chaining message
 //! authentication code," Journal of Computer and System Sciences 61 (2000),
-//! 362–399; http://www-cse.ucsd.edu/~mihir/papers/cbc.html.
+//! 362–399; <http://www-cse.ucsd.edu/~mihir/papers/cbc.html/>.
 //!
 //! `NaCl` does not make any promises regarding "strong" unforgeability;
 //! perhaps one valid authenticator can be converted into another valid

@@ -6,7 +6,7 @@
 //! formal definitions see, e.g., Bellare and Namprempre, "Authenticated
 //! encryption: relations among notions and analysis of the generic composition
 //! paradigm," Lecture Notes in Computer Science 1976 (2000), 531–545,
-//! http://www-cse.ucsd.edu/~mihir/papers/oem.html.
+//! <http://www-cse.ucsd.edu/~mihir/papers/oem.html/>.
 //!
 //! Note that the length is not hidden. Note also that it is the caller's
 //! responsibility to ensure the uniqueness of nonces—for example, by using

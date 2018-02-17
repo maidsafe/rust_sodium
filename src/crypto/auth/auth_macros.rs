@@ -84,7 +84,6 @@ mod test_m {
     }
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_auth_verify_tamper() {
         use randombytes::randombytes;
         assert!(::init());
@@ -115,8 +114,8 @@ mod test_m {
             let k = gen_key();
             let m = randombytes(i);
             let tag = authenticate(&m, &k);
-            round_trip(k);
-            round_trip(tag);
+            round_trip(&k);
+            round_trip(&tag);
         }
     }
 }
@@ -168,16 +167,16 @@ mod bench_m {
 /// Macro for defining streaming authenticator tag computation types and functions.
 ///
 /// Parameters:
-/// $state_name - The authenticator state type.
-///               SAFETY NOTE: This needs to be a type that does not define a `Drop`
-///               implementation, otherwise undefined behaviour will occur.
-/// $init_name - A function `f(s: *mut $state_name, k: *u8, klen: size_t)` that initializes
-///              a state with a key.
-/// $update_name - A function `f(s: *mut $state_name, m: *u8, mlen: size_t)` that updates
-///                a state with a message chunk.
-/// $final_name - A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator
-///               tag of length $tagbytes from a $state_name.
-/// $tagbytes   - The number of bytes in an authenticator tag.
+/// `$state_name` -  The authenticator state type.
+///                  SAFETY NOTE: This needs to be a type that does not define a `Drop`
+///                  implementation, otherwise undefined behaviour will occur.
+/// `$init_name` -   A function `f(s: *mut $state_name, k: *u8, klen: size_t)` that initializes
+///                  a state with a key.
+/// `$update_name` - A function `f(s: *mut $state_name, m: *u8, mlen: size_t)` that updates
+///                  a state with a message chunk.
+/// `$final_name` -  A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator
+///                  tag of length `$tagbytes` from a `$state_name`.
+/// `$tagbytes`   -  The number of bytes in an authenticator tag.
 #[allow(unused)]
 macro_rules! auth_state (($state_name:ident,
                           $init_name:ident,

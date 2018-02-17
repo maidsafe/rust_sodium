@@ -8,6 +8,6 @@ use ffi::{crypto_stream_salsa2012, crypto_stream_salsa2012_KEYBYTES,
 stream_module!(
     crypto_stream_salsa2012,
     crypto_stream_salsa2012_xor,
-    crypto_stream_salsa2012_KEYBYTES,
-    crypto_stream_salsa2012_NONCEBYTES
+    crypto_stream_salsa2012_KEYBYTES as usize,
+    crypto_stream_salsa2012_NONCEBYTES as usize
 );
