@@ -5,6 +5,7 @@ description = "Test that bindings match native library's interface"
 homepage = "https://maidsafe.net"
 license = "MIT OR Apache-2.0"
 name = "systest"
+publish = false
 version = "0.1.1"
 
 [dependencies]

@@ -1,9 +1,10 @@
 [package]
 authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 build = "build.rs"
+categories = ["api-bindings", "cryptography"]
 description = "Raw bindings to libsodium"
-documentation = "http://docs.maidsafe.net/rust_sodium/latest"
 homepage = "https://maidsafe.net"
+keywords = ["crypto", "cryptographic", "cryptography", "sodium"]
 license = "MIT OR Apache-2.0"
 links = "sodium"
 name = "rust_sodium-sys"

@@ -1,8 +1,9 @@
 [package]
 authors = ["MaidSafe Developers <dev@maidsafe.net>"]
+categories = ["cryptography"]
 description = "Fast cryptographic library for Rust (bindings to libsodium)"
-documentation = "https://docs.rs/rust_sodium"
 homepage = "https://maidsafe.net"
+keywords = ["crypto", "cryptographic", "cryptography", "sodium"]
 license = "MIT OR Apache-2.0"
 name = "rust_sodium"
 readme = "README.md"
