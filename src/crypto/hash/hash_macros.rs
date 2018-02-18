@@ -75,6 +75,7 @@ mod test_m {
     #[test]
     fn test_hash_multipart() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let m = randombytes(i);
             let h = hash(&m);

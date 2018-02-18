@@ -127,6 +127,7 @@ mod test {
     #[test]
     #[should_panic]
     fn test_all_zero() {
+        unwrap!(::init());
         let mut sk = [0; SCALARBYTES];
         randombytes_into(&mut sk);
         let sk = Scalar(sk);

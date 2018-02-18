@@ -207,6 +207,7 @@ mod test_m {
     #[test]
     fn test_stream_xor_ic_same() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -220,6 +221,7 @@ mod test_m {
     #[test]
     fn test_stream_xor_ic_inplace() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();

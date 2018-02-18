@@ -182,6 +182,7 @@ mod test {
 
     #[test]
     fn test_padding_not_multiple_of_blocksize() {
+        unwrap!(::init());
         let v = vec![1, 2, 3, 4, 5, 6, 7];
         let p = pad(v.clone(), 5).unwrap();
         let u = unpad(&p, 5).unwrap();
@@ -192,6 +193,7 @@ mod test {
 
     #[test]
     fn test_padding_multiple_of_blocksize() {
+        unwrap!(::init());
         let v = vec![1, 2, 3, 4, 5, 6];
         let p = pad(v.clone(), 3).unwrap();
         let u = unpad(&p, 3).unwrap();
@@ -202,6 +204,7 @@ mod test {
 
     #[test]
     fn test_padding_not_multiple_of_blocksize_pow2() {
+        unwrap!(::init());
         let v = vec![1, 2, 3, 4, 5, 6, 7];
         let p = pad(v.clone(), 4).unwrap();
         let u = unpad(&p, 4).unwrap();
@@ -212,6 +215,7 @@ mod test {
 
     #[test]
     fn test_padding_multiple_of_blocksize_pow2() {
+        unwrap!(::init());
         let v = vec![1, 2, 3, 4, 5, 6, 7, 8];
         let p = pad(v.clone(), 4).unwrap();
         let u = unpad(&p, 4).unwrap();
@@ -222,6 +226,7 @@ mod test {
 
     #[test]
     fn test_padding_invalid_block_size() {
+        unwrap!(::init());
         // invalid block size
         pad(Vec::new(), 0).unwrap_err();
         let v = vec![0x80];
@@ -234,6 +239,7 @@ mod test {
 
     #[test]
     fn test_padding_invalid_padded_size() {
+        unwrap!(::init());
         // An empty array couldn't possibly have been created by `pad()`.
         unpad(&[], 1).unwrap_err();
 
@@ -245,6 +251,7 @@ mod test {
 
     #[test]
     fn test_padding_invalid_padded_data() {
+        unwrap!(::init());
         // A trailing padding byte is incorrect
         let mut v = pad(vec![42], 128).unwrap();
         *v.last_mut().expect("non-empty") = 99;

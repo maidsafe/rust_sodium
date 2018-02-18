@@ -163,6 +163,7 @@ mod test {
     #[test]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -183,6 +184,7 @@ mod test {
     #[test]
     fn test_seal_open_detached() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -197,6 +199,7 @@ mod test {
     #[test]
     fn test_seal_combined_then_open_detached() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -212,6 +215,7 @@ mod test {
     #[test]
     fn test_seal_detached_then_open_combined() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -250,6 +254,7 @@ mod test {
 
     #[test]
     fn test_open_detached_failure_does_not_modify() {
+        unwrap!(::init());
         let mut buf = b"hello world".to_vec();
         let k = gen_key();
         let n = gen_nonce();

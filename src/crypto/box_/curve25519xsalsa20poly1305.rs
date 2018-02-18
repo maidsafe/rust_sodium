@@ -392,6 +392,7 @@ mod test {
     #[test]
     fn test_seal_open_detached() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -407,6 +408,7 @@ mod test {
     #[test]
     fn test_seal_combined_then_open_detached() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -423,6 +425,7 @@ mod test {
     #[test]
     fn test_seal_detached_then_open_combined() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -440,6 +443,7 @@ mod test {
     #[test]
     fn test_seal_open_detached_tamper() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -461,6 +465,7 @@ mod test {
 
     #[test]
     fn test_open_detached_failure_does_not_modify() {
+        unwrap!(::init());
         let mut buf = b"hello world".to_vec();
         let (pk1, sk1) = gen_keypair();
         let (pk2, sk2) = gen_keypair();
@@ -484,6 +489,7 @@ mod test {
     #[test]
     fn test_seal_open_detached_precomputed() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -501,6 +507,7 @@ mod test {
     #[test]
     fn test_seal_combined_then_open_detached_precomputed() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -519,6 +526,7 @@ mod test {
     #[test]
     fn test_seal_detached_precomputed_then_open_combined() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -538,6 +546,7 @@ mod test {
     #[test]
     fn test_seal_open_detached_precomputed_tamper() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -561,6 +570,7 @@ mod test {
 
     #[test]
     fn test_open_detached_precomputed_failure_does_not_modify() {
+        unwrap!(::init());
         let mut buf = b"hello world".to_vec();
         let (pk1, sk1) = gen_keypair();
         let (pk2, sk2) = gen_keypair();
