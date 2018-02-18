@@ -1,21 +1,18 @@
 //! `x25519blake2b` is the current default key exchange scheme of `libsodium`.
 
-#[cfg(not(feature = "std"))]
-use prelude::*;
-
 use ffi;
 
 /// Number of bytes in a `PublicKey`.
-pub const PUBLICKEYBYTES: usize = ffi::crypto_kx_PUBLICKEYBYTES;
+pub const PUBLICKEYBYTES: usize = ffi::crypto_kx_PUBLICKEYBYTES as usize;
 
 /// Number of bytes in a `SecretKey`.
-pub const SECRETKEYBYTES: usize = ffi::crypto_kx_SECRETKEYBYTES;
+pub const SECRETKEYBYTES: usize = ffi::crypto_kx_SECRETKEYBYTES as usize;
 
 /// NUmber of bytes in a `Seed`.
-pub const SEEDBYTES: usize = ffi::crypto_kx_SEEDBYTES;
+pub const SEEDBYTES: usize = ffi::crypto_kx_SEEDBYTES as usize;
 
 /// Number of bytes in a `SessionKey`.
-pub const SESSIONKEYBYTES: usize = ffi::crypto_kx_SESSIONKEYBYTES;
+pub const SESSIONKEYBYTES: usize = ffi::crypto_kx_SESSIONKEYBYTES as usize;
 
 new_type! {
     /// `PublicKey` for key exchanges.
@@ -49,13 +46,13 @@ new_type! {
 /// key.
 ///
 /// THREAD SAFETY: `gen_keypair()` is thread-safe provided that you have
-/// called `sodiumoxide::init()` once before using any other function
-/// from sodiumoxide.
+/// called `rust_sodium::init()` once before using any other function
+/// from rust_sodium.
 pub fn gen_keypair() -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        ffi::crypto_kx_keypair(&mut pk, &mut sk);
+        let _ = ffi::crypto_kx_keypair(pk.as_mut_ptr(), sk.as_mut_ptr());
         (PublicKey(pk), SecretKey(sk))
     }
 }
@@ -66,7 +63,7 @@ pub fn keypair_from_seed(&Seed(ref seed): &Seed) -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
         let mut sk = [0u8; SECRETKEYBYTES];
-        ffi::crypto_kx_seed_keypair(&mut pk, &mut sk, seed);
+        let _ = ffi::crypto_kx_seed_keypair(pk.as_mut_ptr(), sk.as_mut_ptr(), seed.as_ptr());
         (PublicKey(pk), SecretKey(sk))
 
     }
@@ -85,7 +82,7 @@ pub fn server_session_keys(
         let mut rx = [0u8; SESSIONKEYBYTES];
         let mut tx = [0u8; SESSIONKEYBYTES];
         let r =
-            ffi::crypto_kx_server_session_keys(&mut rx, &mut tx, server_pk, server_sk, client_pk);
+            ffi::crypto_kx_server_session_keys(rx.as_mut_ptr(), tx.as_mut_ptr(), server_pk.as_ptr(), server_sk.as_ptr(), client_pk.as_ptr());
 
         if r != 0 {
             Err(())
@@ -108,7 +105,7 @@ pub fn client_session_keys(
         let mut rx = [0u8; SESSIONKEYBYTES];
         let mut tx = [0u8; SESSIONKEYBYTES];
         let r =
-            ffi::crypto_kx_client_session_keys(&mut rx, &mut tx, client_pk, client_sk, server_pk);
+            ffi::crypto_kx_client_session_keys(rx.as_mut_ptr(), tx.as_mut_ptr(), client_pk.as_ptr(), client_sk.as_ptr(), server_pk.as_ptr());
 
         if r != 0 {
             Err(())
@@ -124,6 +121,7 @@ mod test {
 
     #[test]
     fn test_kx() {
+        unwrap!(::init());
         let (client_pk, client_sk) = gen_keypair();
         let (server_pk, server_sk) = gen_keypair();
 
@@ -141,6 +139,7 @@ mod test {
 
     #[test]
     fn test_kx_non_acceptable_keys() {
+        unwrap!(::init());
         let (client_pk, client_sk) = gen_keypair();
         let (server_pk, server_sk) = gen_keypair();
 
