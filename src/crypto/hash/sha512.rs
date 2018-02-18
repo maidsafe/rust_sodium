@@ -97,6 +97,6 @@ mod test {
             hash_state.update(chunk);
         }
         let Digest(h) = hash_state.finalize();
-        assert!(&h[..] == &h_expected[..]);
+        assert!(h[..] == h_expected[..]);
     }
 }

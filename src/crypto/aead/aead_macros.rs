@@ -8,6 +8,7 @@ macro_rules! aead_module (($seal_name:ident,
 
 use libc::c_ulonglong;
 use randombytes::randombytes_into;
+use std::ptr;
 
 /// Number of bytes in a `Key`.
 pub const KEYBYTES: usize = $keybytes;
@@ -41,7 +42,7 @@ new_type! {
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_key() -> Key {
     let mut k = Key([0u8; KEYBYTES]);
     randombytes_into(&mut k.0);
@@ -52,7 +53,7 @@ pub fn gen_key() -> Key {
 ///
 /// THREAD SAFETY: `gen_key()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_nonce() -> Nonce {
     let mut n = Nonce([0u8; NONCEBYTES]);
     randombytes_into(&mut n.0);
@@ -63,7 +64,7 @@ pub fn gen_nonce() -> Nonce {
 /// using a secret key `k` and a nonce `n`. It returns a ciphertext `c`.
 pub fn seal(m: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Vec<u8> {
     let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
-        .unwrap_or((0 as *const _, 0));
+        .unwrap_or((ptr::null(), 0));
     let mut c = Vec::with_capacity(m.len() + TAGBYTES);
     let mut clen = c.len() as c_ulonglong;
 
@@ -75,7 +76,7 @@ pub fn seal(m: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Vec<u8> {
             m.len() as c_ulonglong,
             ad_p,
             ad_len,
-            0 as *mut _,
+            ptr::null_mut(),
             n.0.as_ptr(),
             k.0.as_ptr()
         );
@@ -90,7 +91,7 @@ pub fn seal(m: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Vec<u8> {
 /// The detached authentication tag is returned by value.
 pub fn seal_detached(m: &mut [u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Tag {
     let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
-        .unwrap_or((0 as *const _, 0));
+        .unwrap_or((ptr::null(), 0));
     let mut tag = Tag([0u8; TAGBYTES]);
     let mut maclen = TAGBYTES as c_ulonglong;
     unsafe {
@@ -102,7 +103,7 @@ pub fn seal_detached(m: &mut [u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Tag
             m.len() as c_ulonglong,
             ad_p,
             ad_len,
-            0 as *mut _,
+            ptr::null_mut(),
             n.0.as_ptr(),
             k.0.as_ptr()
         );
@@ -119,7 +120,7 @@ pub fn open(c: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Result<Vec<u8>, 
         return Err(());
     }
     let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
-        .unwrap_or((0 as *const _, 0));
+        .unwrap_or((ptr::null(), 0));
     let mut m = Vec::with_capacity(c.len() - TAGBYTES);
     let mut mlen = m.len() as c_ulonglong;
 
@@ -128,7 +129,7 @@ pub fn open(c: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Result<Vec<u8>, 
             $open_name(
                 m.as_mut_ptr(),
                 &mut mlen,
-                0 as *mut _,
+                ptr::null_mut(),
                 c.as_ptr(),
                 c.len() as c_ulonglong,
                 ad_p,
@@ -156,11 +157,11 @@ pub fn open_detached(
     k: &Key,
 ) -> Result<(), ()> {
     let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
-        .unwrap_or((0 as *const _, 0));
+        .unwrap_or((ptr::null(), 0));
     let ret = unsafe {
         $open_detached_name(
             c.as_mut_ptr(),
-            0 as *mut _,
+            ptr::null_mut(),
             c.as_ptr(),
             c.len() as c_ulonglong,
             t.0.as_ptr(),

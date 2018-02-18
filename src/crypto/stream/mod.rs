@@ -34,14 +34,14 @@
 //! # Alternate primitives
 //! `NaCl` supports the following secret-key encryption functions:
 //!
-//! ------------------------------------------------------------
-//! |crypto_stream           |primitive   |KEYBYTES |NONCEBYTES|
-//! |------------------------|------------|---------|----------|
-//! |crypto_stream_chacha20  |Chacha20/20 |32       |8         |
-//! |crypto_stream_salsa20   |Salsa20/20  |32       |8         |
-//! |crypto_stream_xsalsa20  |XSalsa20/20 |32       |24        |
-//! |crypto_stream_xchacha20 |XChacha20/20|32       |24        |
-//! ------------------------------------------------------------
+//! --------------------------------------------------------------
+//! |`crypto_stream`           |primitive   |KEYBYTES |NONCEBYTES|
+//! |--------------------------|------------|---------|----------|
+//! |`crypto_stream_chacha20`  |Chacha20/20 |32       |8         |
+//! |`crypto_stream_salsa20`   |Salsa20/20  |32       |8         |
+//! |`crypto_stream_xsalsa20`  |XSalsa20/20 |32       |24        |
+//! |`crypto_stream_xchacha20` |XChacha20/20|32       |24        |
+//! --------------------------------------------------------------
 //!
 //! Beware that several of these primitives have 8-byte nonces. For those
 //! primitives it is no longer true that randomly generated nonces have negligible

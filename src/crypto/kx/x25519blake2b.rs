@@ -8,7 +8,7 @@ pub const PUBLICKEYBYTES: usize = ffi::crypto_kx_PUBLICKEYBYTES as usize;
 /// Number of bytes in a `SecretKey`.
 pub const SECRETKEYBYTES: usize = ffi::crypto_kx_SECRETKEYBYTES as usize;
 
-/// NUmber of bytes in a `Seed`.
+/// Number of bytes in a `Seed`.
 pub const SEEDBYTES: usize = ffi::crypto_kx_SEEDBYTES as usize;
 
 /// Number of bytes in a `SessionKey`.
@@ -47,7 +47,7 @@ new_type! {
 ///
 /// THREAD SAFETY: `gen_keypair()` is thread-safe provided that you have
 /// called `rust_sodium::init()` once before using any other function
-/// from rust_sodium.
+/// from `rust_sodium`.
 pub fn gen_keypair() -> (PublicKey, SecretKey) {
     unsafe {
         let mut pk = [0u8; PUBLICKEYBYTES];
@@ -171,8 +171,8 @@ mod test {
             0x5f, 0x49, 0xb8, 0x00]);
 
         let mut seed = [0u8; SEEDBYTES];
-        for i in 0..seed.len() {
-            seed[i] = i as u8;
+        for (i, elt) in seed.iter_mut().enumerate() {
+            *elt = i as u8;
         }
         let mut seed = Seed(seed);
         let (mut client_pk, client_sk) = keypair_from_seed(&seed);
