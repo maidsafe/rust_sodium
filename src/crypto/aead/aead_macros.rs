@@ -62,7 +62,8 @@ pub fn gen_nonce() -> Nonce {
 /// `seal()` encrypts and authenticates a message `m` together with optional plaintext data `ad`
 /// using a secret key `k` and a nonce `n`. It returns a ciphertext `c`.
 pub fn seal(m: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Vec<u8> {
-    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong)).unwrap_or((0 as *const _, 0));
+    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
+        .unwrap_or((0 as *const _, 0));
     let mut c = Vec::with_capacity(m.len() + TAGBYTES);
     let mut clen = c.len() as c_ulonglong;
 
@@ -83,12 +84,13 @@ pub fn seal(m: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Vec<u8> {
     c
 }
 
-/// `seal_detached()` encrypts and authenticates a message `m` together with optional plaintext data `ad`
-/// using a secret key `k` and a nonce `n`.
+/// `seal_detached()` encrypts and authenticates a message `m` together with optional plaintext data
+/// `ad` using a secret key `k` and a nonce `n`.
 /// `m` is encrypted in place, so after this function returns it will contain the ciphertext.
 /// The detached authentication tag is returned by value.
 pub fn seal_detached(m: &mut [u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Tag {
-    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong)).unwrap_or((0 as *const _, 0));
+    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
+        .unwrap_or((0 as *const _, 0));
     let mut tag = Tag([0u8; TAGBYTES]);
     let mut maclen = TAGBYTES as c_ulonglong;
     unsafe {
@@ -116,7 +118,8 @@ pub fn open(c: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Result<Vec<u8>, 
     if c.len() < TAGBYTES {
         return Err(());
     }
-    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong)).unwrap_or((0 as *const _, 0));
+    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
+        .unwrap_or((0 as *const _, 0));
     let mut m = Vec::with_capacity(c.len() - TAGBYTES);
     let mut mlen = m.len() as c_ulonglong;
 
@@ -140,13 +143,20 @@ pub fn open(c: &[u8], ad: Option<&[u8]>, n: &Nonce, k: &Key) -> Result<Vec<u8>, 
     }
     Ok(m)
 }
-/// `open_detached()` verifies and decrypts a ciphertext `c` toghether with optional plaintext data `ad`
-/// and and authentication tag `tag`, using a secret key `k` and a nonce `n`.
+/// `open_detached()` verifies and decrypts a ciphertext `c` toghether with optional plaintext data
+/// `ad` and and authentication tag `tag`, using a secret key `k` and a nonce `n`.
 /// `c` is decrypted in place, so if this function is successful it will contain the plaintext.
 /// If the ciphertext fails verification, `open_detached()` returns `Err(())`,
 /// and the ciphertext is not modified.
-pub fn open_detached(c: &mut [u8], ad: Option<&[u8]>, t: &Tag, n: &Nonce, k: &Key) -> Result<(), ()> {
-    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong)).unwrap_or((0 as *const _, 0));
+pub fn open_detached(
+    c: &mut [u8],
+    ad: Option<&[u8]>,
+    t: &Tag,
+    n: &Nonce,
+    k: &Key,
+) -> Result<(), ()> {
+    let (ad_p, ad_len) = ad.map(|ad| (ad.as_ptr(), ad.len() as c_ulonglong))
+        .unwrap_or((0 as *const _, 0));
     let ret = unsafe {
         $open_detached_name(
             c.as_mut_ptr(),

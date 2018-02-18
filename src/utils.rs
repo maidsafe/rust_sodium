@@ -63,11 +63,13 @@ pub fn pad(mut buf: Vec<u8>, blocksize: usize) -> Result<Vec<u8>, ()> {
     buf.resize(max_buflen, 0);
 
     let error = unsafe {
-        ffi::sodium_pad(&mut padded_buflen,
-                        buf.as_mut_ptr(),
-                        unpadded_buflen,
-                        blocksize,
-                        max_buflen)
+        ffi::sodium_pad(
+            &mut padded_buflen,
+            buf.as_mut_ptr(),
+            unpadded_buflen,
+            blocksize,
+            max_buflen,
+        )
     };
 
     assert!(error == 0, "sodium_pad: unsatisfied precondition?!");
@@ -86,12 +88,8 @@ pub fn unpad(buf: &[u8], blocksize: usize) -> Result<&[u8], ()> {
     let padded_buflen = buf.len();
     let mut unpadded_buflen = 0;
 
-    let error = unsafe {
-        ffi::sodium_unpad(&mut unpadded_buflen,
-                          buf.as_ptr(),
-                          padded_buflen,
-                          blocksize)
-    };
+    let error =
+        unsafe { ffi::sodium_unpad(&mut unpadded_buflen, buf.as_ptr(), padded_buflen, blocksize) };
 
     if error != 0 {
         return Err(());
