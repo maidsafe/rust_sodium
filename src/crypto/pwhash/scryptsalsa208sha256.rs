@@ -194,7 +194,7 @@ mod test {
 
     #[test]
     fn test_str_prefix() {
-        assert!(::init());
+        unwrap!(::init());
         let str_prefix = unsafe {
             unwrap!(CStr::from_ptr(ffi::crypto_pwhash_scryptsalsa208sha256_STRPREFIX).to_str())
         };
@@ -204,7 +204,7 @@ mod test {
     #[test]
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_derive_key() {
-        assert!(::init());
+        unwrap!(::init());
         let mut kb = [0u8; 32];
         let salt = Salt([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
@@ -224,7 +224,7 @@ mod test {
     #[test]
     fn test_pwhash_verify() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let pw = randombytes(i);
             let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
@@ -235,7 +235,7 @@ mod test {
     #[test]
     fn test_pwhash_verify_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..16usize {
             let mut pw = randombytes(i);
             let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
@@ -251,7 +251,7 @@ mod test {
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let pw = randombytes(i);
             let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));

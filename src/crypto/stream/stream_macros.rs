@@ -157,7 +157,7 @@ mod test_m {
     #[test]
     fn test_encrypt_decrypt() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -171,7 +171,7 @@ mod test_m {
     #[test]
     fn test_stream_xor() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -189,7 +189,7 @@ mod test_m {
     #[test]
     fn test_stream_xor_inplace() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -235,7 +235,7 @@ mod test_m {
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for _ in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -256,7 +256,7 @@ mod bench_m {
 
     #[bench]
     fn bench_stream(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let k = gen_key();
         let n = gen_nonce();
         b.iter(|| {

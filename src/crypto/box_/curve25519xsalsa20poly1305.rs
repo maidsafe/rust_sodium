@@ -319,7 +319,7 @@ mod test {
     #[test]
     fn test_seal_open() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -334,7 +334,7 @@ mod test {
     #[test]
     fn test_seal_open_precomputed() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -354,7 +354,7 @@ mod test {
     #[test]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -372,7 +372,7 @@ mod test {
     #[test]
     fn test_seal_open_precomputed_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -587,7 +587,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // corresponding to tests/box.c and tests/box3.cpp from NaCl
-        assert!(::init());
+        unwrap!(::init());
         let alicesk = SecretKey([0x77, 0x07, 0x6d, 0x0a, 0x73, 0x18, 0xa5, 0x7d, 0x3c, 0x16,
                                  0xc1, 0x72, 0x51, 0xb2, 0x66, 0x45, 0xdf, 0x4c, 0x2f, 0x87,
                                  0xeb, 0xc0, 0x99, 0x2a, 0xb1, 0x77, 0xfb, 0xa5, 0x1d, 0xb9,
@@ -633,7 +633,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_2() {
         // corresponding to tests/box2.c and tests/box4.cpp from NaCl
-        assert!(::init());
+        unwrap!(::init());
         let bobsk = SecretKey([0x5d, 0xab, 0x08, 0x7e, 0x62, 0x4a, 0x8a, 0x4b, 0x79, 0xe1, 0x7f,
                                0x8b, 0x83, 0x80, 0x0e, 0xe6, 0x6f, 0x3b, 0xb1, 0x29, 0x26, 0x18,
                                0xb6, 0xfd, 0x1c, 0x2f, 0x8b, 0x27, 0xff, 0x88, 0xe0, 0xeb]);
@@ -677,7 +677,7 @@ mod test {
 
     #[test]
     fn test_public_key() {
-        assert!(::init());
+        unwrap!(::init());
         for _ in 0..256usize {
             let (pk1, sk) = gen_keypair();
             let pk2 = sk.public_key();
@@ -688,7 +688,7 @@ mod test {
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for _ in 0..256usize {
             let (pk, sk) = gen_keypair();
             let n = gen_nonce();
@@ -710,7 +710,7 @@ mod bench {
 
     #[bench]
     fn bench_seal_open(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let (pk, sk) = gen_keypair();
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
@@ -721,7 +721,7 @@ mod bench {
 
     #[bench]
     fn bench_precompute(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let (pk, sk) = gen_keypair();
         b.iter(|| {
             // we do this benchmark as many times as the other benchmarks so

@@ -21,7 +21,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // corresponding to tests/stream2.c and tests/stream6.cpp from NaCl
-        assert!(::init());
+        unwrap!(::init());
         use crypto::hash::sha256::{Digest, hash};
         let secondkey = Key([0xdc, 0x90, 0x8d, 0xda, 0x0b, 0x93, 0x44, 0xa9, 0x53, 0x62, 0x9b,
                              0x73, 0x38, 0x20, 0x77, 0x88, 0x80, 0xf3, 0xce, 0xb4, 0x21, 0xbb,
