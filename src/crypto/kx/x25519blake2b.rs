@@ -154,6 +154,7 @@ mod test {
 
     #[test]
     fn test_vectors() {
+        unwrap!(::init());
         let small_order_p = PublicKey([
             0xe0, 0xeb, 0x7a, 0x7c, 0x3b, 0x41, 0xb8, 0xae,
             0x16, 0x56, 0xe3, 0xfa, 0xf1, 0x9f, 0xc4, 0x6a,
@@ -186,7 +187,7 @@ mod test {
         let (client_rx, client_tx) = client_session_keys(&client_pk, &client_sk, &server_pk).unwrap();
 
         assert_eq!(server_session_keys(&server_pk, &server_sk, &small_order_p), Err(()));
-        server_session_keys(&server_pk, &server_sk, &client_pk).unwrap();
+        let _ = server_session_keys(&server_pk, &server_sk, &client_pk).unwrap();
 
         client_pk.0[0] += 1;
 
