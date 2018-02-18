@@ -2719,12 +2719,20 @@ pub struct randombytes_implementation {
 fn bindgen_test_layout_randombytes_implementation() {
     assert_eq!(
         ::std::mem::size_of::<randombytes_implementation>(),
-        48usize,
+        if cfg!(target_pointer_width = "64") {
+            48usize
+        } else {
+            24usize
+        },
         concat!("Size of: ", stringify!(randombytes_implementation))
     );
     assert_eq!(
         ::std::mem::align_of::<randombytes_implementation>(),
-        8usize,
+        if cfg!(target_pointer_width = "64") {
+            8usize
+        } else {
+            4usize
+        },
         concat!("Alignment of ", stringify!(randombytes_implementation))
     );
 }
