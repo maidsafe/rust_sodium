@@ -128,7 +128,7 @@ extern "C" fn buf(buf: *mut libc::c_void, size: usize) {
 /// elsewhere (e.g. via [`rust_sodium::init()`][2]) but this means that our attempt to apply this
 /// seeded RNG to libsodium has not been actioned.
 ///
-/// Each rust_sodium function which uses the random generator in a new thread will cause a new
+/// Each `rust_sodium` function which uses the random generator in a new thread will cause a new
 /// thread-local instance of the PRNG to be created.  Each such instance will be seeded with the
 /// same value, meaning for example that two newly-spawned threads calling `box_::gen_keypair()`
 /// will generate identical keys.

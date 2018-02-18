@@ -6,6 +6,7 @@ extern crate flate2;
 extern crate libc;
 extern crate pkg_config;
 extern crate reqwest;
+extern crate sha2;
 #[cfg(not(target_env = "msvc"))]
 extern crate tar;
 #[macro_use]
@@ -14,6 +15,7 @@ extern crate unwrap;
 extern crate zip;
 
 use reqwest::Client;
+use sha2::{Digest, Sha256};
 use std::env;
 use std::fs;
 use std::io::{Cursor, Read};
@@ -21,6 +23,15 @@ use std::path::Path;
 
 const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
 const VERSION: &'static str = "1.0.16";
+
+#[cfg(target_env = "msvc")] // libsodium-<VERSION>-msvc.zip
+const SHA256: &'static str = "0580d54f57594a7cb493607cec6e7045369fb67d43623491523781e901589948";
+
+#[cfg(all(windows, not(target_env = "msvc")))] // libsodium-<VERSION>-mingw.tar.gz
+const SHA256: &'static str = "5b81a4fc5d0de36dbda7efeaf355c133d4f6cc0b4dbf69bbe46ef7f5a6baa639";
+
+#[cfg(not(windows))] // libsodium-<VERSION>.tar.gz
+const SHA256: &'static str = "eeadc7e1e1bcef09680fb4837d448fbdf57224978f865ac1c16745868fbd0533";
 
 fn main() {
     println!("cargo:rerun-if-env-changed=RUST_SODIUM_LIB_DIR");
@@ -61,7 +72,7 @@ fn main() {
 }
 
 /// Download the specified URL into a buffer which is returned.
-fn download(url: &str) -> Cursor<Vec<u8>> {
+fn download(url: &str, expected_hash: &str) -> Cursor<Vec<u8>> {
     // Send GET request
     let client = Client::new();
     let mut response = unwrap!(client.get(url).send());
@@ -72,6 +83,15 @@ fn download(url: &str) -> Cursor<Vec<u8>> {
     }
     let mut buffer = vec![];
     let _ = unwrap!(response.read_to_end(&mut buffer));
+
+    // Check the SHA-256 hash of the downloaded file is as expected
+    let hash = Sha256::digest(&buffer);
+    assert_eq!(
+        &format!("{:x}", hash),
+        expected_hash,
+        "\n\nDownloaded libsodium file failed hash check.\n\n"
+    );
+
     Cursor::new(buffer)
 }
 
@@ -93,7 +113,7 @@ fn get_libsodium() {
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
     let url = format!("{}libsodium-{}-msvc.zip", DOWNLOAD_BASE_URL, VERSION);
-    let compressed_file = download(&url);
+    let compressed_file = download(&url, SHA256);
 
     // Unpack the zip file
     let mut zip_archive = unwrap!(ZipArchive::new(compressed_file));
@@ -154,7 +174,7 @@ fn get_libsodium() {
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
     let url = format!("{}libsodium-{}-mingw.tar.gz", DOWNLOAD_BASE_URL, VERSION);
-    let compressed_file = download(&url);
+    let compressed_file = download(&url, SHA256);
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
@@ -233,7 +253,7 @@ fn get_libsodium() {
     unwrap!(fs::create_dir_all(&source_dir));
 
     // Download sources
-    let compressed_file = download(&url);
+    let compressed_file = download(&url, SHA256);
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
