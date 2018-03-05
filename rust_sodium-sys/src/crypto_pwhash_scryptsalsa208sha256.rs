@@ -4,10 +4,10 @@ pub const crypto_pwhash_scryptsalsa208sha256_SALTBYTES: usize = 32;
 pub const crypto_pwhash_scryptsalsa208sha256_STRBYTES: usize = 102;
 pub const crypto_pwhash_scryptsalsa208sha256_STRPREFIX: *const c_char = (b"$7$\0" as *const u8) as
                                                                         *const c_char;
-pub const crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE: usize = 524_288;
-pub const crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE: usize = 16_777_216;
-pub const crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE: usize = 33_554_432;
-pub const crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE: usize = 1_073_741_824;
+pub const crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE: usize = 0x8_0000;
+pub const crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE: usize = 0x100_0000;
+pub const crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE: usize = 0x200_0000;
+pub const crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE: usize = 0x4000_0000;
 
 
 extern "C" {
@@ -170,7 +170,7 @@ fn test_crypto_pwhash_scryptsalsa208sha256_ll_3() {
     // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
     let password = "pleaseletmein";
     let salt = "SodiumChloride";
-    let n = 16_384;
+    let n = 0x4000;
     let r = 8;
     let p = 1;
     let mut buf = [0u8; 64];
@@ -198,7 +198,7 @@ fn test_crypto_pwhash_scryptsalsa208sha256_ll_4() {
     // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
     let password = "pleaseletmein";
     let salt = "SodiumChloride";
-    let n = 1_048_576;
+    let n = 0x10_0000;
     let r = 8;
     let p = 1;
     let mut buf = [0u8; 64];
