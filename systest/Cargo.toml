@@ -6,10 +6,10 @@ homepage = "https://maidsafe.net"
 license = "MIT OR Apache-2.0"
 name = "systest"
 publish = false
-version = "0.1.1"
+version = "0.1.2"
 
 [dependencies]
-rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.7.0" }
+rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.8.0" }
 libc = "~0.2.36"
 
 [build-dependencies]
