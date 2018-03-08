@@ -31,9 +31,7 @@ build_script:
   - cargo check --verbose --release --lib --tests
 
 test_script:
-  - ps: |
-        cargo test --verbose --release
-        cargo run --manifest-path systest/Cargo.toml > output.log
-        type output.log
-        cargo test --release --manifest-path rust_sodium-sys/Cargo.toml > output.log
-        type output.log
+  - |-
+    cargo test --verbose --release
+    cargo run --manifest-path systest/Cargo.toml
+    cargo test --release --manifest-path rust_sodium-sys/Cargo.toml
