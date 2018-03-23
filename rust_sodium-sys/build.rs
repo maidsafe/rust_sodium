@@ -15,7 +15,7 @@ extern crate zip;
 #[cfg(not(feature = "use-installed-libsodium"))]
 extern crate reqwest;
 
-const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
+const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/old/";
 const VERSION: &'static str = "1.0.12";
 
 #[cfg(feature = "use-installed-libsodium")]
