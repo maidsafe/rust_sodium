@@ -1,5 +1,8 @@
 # rust_sodium - Change Log
 
+## rust_sodium_sys [0.8.1]
+- update URL for libsodium sources
+
 ## [0.8.0]
 - Use rust 1.24.0 stable / 2018-02-05 nightly
 - rustfmt 0.9.0 and clippy-0.0.186

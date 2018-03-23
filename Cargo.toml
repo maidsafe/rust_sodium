@@ -13,7 +13,7 @@ version = "0.8.0"
 [dependencies]
 libc = "~0.2.38"
 rand = "~0.4.2"
-rust_sodium-sys = { path = "rust_sodium-sys", version = "~0.8.0" }
+rust_sodium-sys = { path = "rust_sodium-sys", version = "~0.8.1" }
 serde = "~1.0.27"
 unwrap = "~1.1.0"
 
