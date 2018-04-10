@@ -650,6 +650,15 @@ pub struct crypto_hash_sha512_state {
     pub count: [u64; 2usize],
     pub buf: [u8; 128usize],
 }
+impl Default for crypto_hash_sha512_state {
+    fn default() -> crypto_hash_sha512_state {
+        crypto_hash_sha512_state {
+            state: [0; 8],
+            count: [0; 2],
+            buf: [0; 128],
+        }
+    }
+}
 #[test]
 fn bindgen_test_layout_crypto_hash_sha512_state() {
     assert_eq!(
@@ -715,7 +724,7 @@ extern "C" {
     ) -> libc::c_int;
 }
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub struct crypto_auth_hmacsha512_state {
     pub ictx: crypto_hash_sha512_state,
     pub octx: crypto_hash_sha512_state,
@@ -843,6 +852,15 @@ pub struct crypto_hash_sha256_state {
     pub count: u64,
     pub buf: [u8; 64usize],
 }
+impl Default for crypto_hash_sha256_state {
+    fn default() -> crypto_hash_sha256_state {
+        crypto_hash_sha256_state {
+            state: [0; 8],
+            count: 0,
+            buf: [0; 64],
+        }
+    }
+}
 #[test]
 fn bindgen_test_layout_crypto_hash_sha256_state() {
     assert_eq!(
@@ -908,7 +926,7 @@ extern "C" {
     ) -> libc::c_int;
 }
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub struct crypto_auth_hmacsha256_state {
     pub ictx: crypto_hash_sha256_state,
     pub octx: crypto_hash_sha256_state,
@@ -1354,6 +1372,19 @@ pub struct crypto_generichash_blake2b_state {
     pub last_node: u8,
     pub __bindgen_padding_0: [u8; 23usize],
 }
+impl Default for crypto_generichash_blake2b_state {
+    fn default() -> crypto_generichash_blake2b_state {
+        crypto_generichash_blake2b_state {
+            h: [0; 8],
+            t: [0; 2],
+            f: [0; 2],
+            buf: [0; 256],
+            buflen: 0,
+            last_node: 0,
+            __bindgen_padding_0: [0; 23],
+        }
+    }
+}
 #[test]
 fn bindgen_test_layout_crypto_generichash_blake2b_state() {
     assert_eq!(
@@ -1616,6 +1647,11 @@ extern "C" {
 // #[repr(align(16))]
 pub struct crypto_onetimeauth_poly1305_state {
     pub opaque: [libc::c_uchar; 256usize],
+}
+impl Default for crypto_onetimeauth_poly1305_state {
+    fn default() -> crypto_onetimeauth_poly1305_state {
+        crypto_onetimeauth_poly1305_state { opaque: [0; 256] }
+    }
 }
 #[test]
 fn bindgen_test_layout_crypto_onetimeauth_poly1305_state() {
@@ -2269,7 +2305,7 @@ extern "C" {
     pub fn crypto_secretstream_xchacha20poly1305_tag_final() -> libc::c_uchar;
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct crypto_secretstream_xchacha20poly1305_state {
     pub k: [libc::c_uchar; 32usize],
     pub nonce: [libc::c_uchar; 12usize],
@@ -2392,7 +2428,7 @@ extern "C" {
     pub fn crypto_shorthash_keygen(k: *mut libc::c_uchar);
 }
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub struct crypto_sign_ed25519ph_state {
     pub hs: crypto_hash_sha512_state,
 }

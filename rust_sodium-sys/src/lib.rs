@@ -198,33 +198,28 @@ mod tests {
 
     #[test]
     fn generichash_multipart() {
-        use std::mem;
-
         let mut out = [0u8; crypto_generichash_BYTES as usize];
         let m = [0u8; 64];
         let key = [0u8; crypto_generichash_KEYBYTES as usize];
-
-        let mut st = vec![0u8; unsafe { crypto_generichash_statebytes() }];
-        let pst =
-            unsafe { mem::transmute::<*mut u8, *mut crypto_generichash_state>(st.as_mut_ptr()) };
+        let mut st = crypto_generichash_state::default();
 
         assert_eq!(
-            unsafe { crypto_generichash_init(pst, key.as_ptr(), key.len(), out.len()) },
+            unsafe { crypto_generichash_init(&mut st, key.as_ptr(), key.len(), out.len()) },
             0
         );
 
         assert_eq!(
-            unsafe { crypto_generichash_update(pst, m.as_ptr(), m.len() as u64) },
+            unsafe { crypto_generichash_update(&mut st, m.as_ptr(), m.len() as u64) },
             0
         );
 
         assert_eq!(
-            unsafe { crypto_generichash_update(pst, m.as_ptr(), m.len() as u64) },
+            unsafe { crypto_generichash_update(&mut st, m.as_ptr(), m.len() as u64) },
             0
         );
 
         assert_eq!(
-            unsafe { crypto_generichash_final(pst, out.as_mut_ptr(), out.len()) },
+            unsafe { crypto_generichash_final(&mut st, out.as_mut_ptr(), out.len()) },
             0
         );
     }
