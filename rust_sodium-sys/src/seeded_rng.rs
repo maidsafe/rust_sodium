@@ -7,6 +7,8 @@
 // specific language governing permissions and limitations relating to use of the SAFE Network
 // Software.
 
+#![cfg(feature = "seeded-rng")]
+
 use super::{randombytes_implementation, randombytes_set_implementation, sodium_init};
 use libc;
 use rand::{self, Rng, SeedableRng, XorShiftRng};

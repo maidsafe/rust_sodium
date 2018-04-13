@@ -58,10 +58,13 @@
 )]
 #![allow(clippy::decimal_literal_representation, clippy::unreadable_literal)]
 
+#[cfg(feature = "seeded-rng")]
 #[macro_use]
 extern crate lazy_static;
 extern crate libc;
+#[cfg(feature = "seeded-rng")]
 extern crate rand;
+#[cfg(feature = "seeded-rng")]
 #[macro_use]
 extern crate unwrap;
 
@@ -88,20 +91,24 @@ mod bindgen;
 mod seeded_rng;
 
 pub use crate::bindgen::*;
+#[cfg(feature = "seeded-rng")]
 pub use crate::seeded_rng::init_with_rng;
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "seeded-rng")))]
 mod tests {
     use super::*;
     use libc::*;
 
     #[test]
     fn generichash_statebytes() {
+        assert!(unsafe { sodium_init() } >= 0);
         assert!(unsafe { crypto_generichash_statebytes() } > 0);
     }
 
     #[test]
     fn generichash() {
+        assert!(unsafe { sodium_init() } >= 0);
+
         let mut out = [0u8; crypto_generichash_BYTES as usize];
         let m = [0u8; 64];
         let key = [0u8; crypto_generichash_KEYBYTES as usize];
@@ -123,6 +130,8 @@ mod tests {
 
     #[test]
     fn generichash_multipart() {
+        assert!(unsafe { sodium_init() } >= 0);
+
         let mut out = [0u8; crypto_generichash_BYTES as usize];
         let m = [0u8; 64];
         let key = [0u8; crypto_generichash_KEYBYTES as usize];
@@ -151,6 +160,8 @@ mod tests {
 
     #[test]
     fn generichash_blake2b() {
+        assert!(unsafe { sodium_init() } >= 0);
+
         let mut out = [0u8; crypto_generichash_blake2b_BYTES as usize];
         let m = [0u8; 64];
         let key = [0u8; crypto_generichash_blake2b_KEYBYTES as usize];
@@ -172,6 +183,8 @@ mod tests {
 
     #[test]
     fn generichash_blake2b_salt_personal() {
+        assert!(unsafe { sodium_init() } >= 0);
+
         let mut out = [0u8; crypto_generichash_blake2b_BYTES as usize];
         let m = [0u8; 64];
         let key = [0u8; crypto_generichash_blake2b_KEYBYTES as usize];
@@ -197,6 +210,8 @@ mod tests {
 
     #[test]
     fn pwhash_scryptsalsa208sha256_str() {
+        assert!(unsafe { sodium_init() } >= 0);
+
         let password = "Correct Horse Battery Staple";
         let mut hashed_password = [0; crypto_pwhash_scryptsalsa208sha256_STRBYTES as usize];
         let ret_hash = unsafe {
@@ -223,6 +238,9 @@ mod tests {
     #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_1() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
+
+        assert!(unsafe { sodium_init() } >= 0);
+
         let password = "";
         let salt = "";
         let n = 16;
@@ -255,6 +273,9 @@ mod tests {
     #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_2() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
+
+        assert!(unsafe { sodium_init() } >= 0);
+
         let password = "password";
         let salt = "NaCl";
         let n = 1024;
@@ -287,6 +308,9 @@ mod tests {
     #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_3() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
+
+        assert!(unsafe { sodium_init() } >= 0);
+
         let password = "pleaseletmein";
         let salt = "SodiumChloride";
         let n = 16_384;
@@ -319,6 +343,9 @@ mod tests {
     #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_4() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
+
+        assert!(unsafe { sodium_init() } >= 0);
+
         let password = "pleaseletmein";
         let salt = "SodiumChloride";
         let n = 1_048_576;

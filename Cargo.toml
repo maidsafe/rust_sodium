@@ -13,15 +13,16 @@ edition = "2018"
 
 [dependencies]
 libc = "~0.2.40"
-rand = "~0.4.2"
+rand = { version = "~0.4.2", optional = true }
 rust_sodium-sys = { path = "rust_sodium-sys", version = "~0.10.3" }
-serde = "~1.0.37"
+serde = "~1.0.50"
 unwrap = "~1.2.0"
 
 [dev-dependencies]
-hex = "~0.3.1"
+hex = "~0.3.2"
 rmp-serde = "~0.13.7"
-serde_json = "~1.0.13"
+serde_json = "~1.0.17"
 
 [features]
 benchmarks = []
+seeded-rng = ["rand", "rust_sodium-sys/seeded-rng"]

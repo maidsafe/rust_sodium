@@ -10,7 +10,7 @@ version = "0.2.0"
 
 [dependencies]
 rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.10.1" }
-libc = "~0.2.38"
+libc = "~0.2.40"
 
 [build-dependencies]
 ctest = "=0.1.4"

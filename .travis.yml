@@ -24,9 +24,11 @@ script:
     cargo fmt -- --check &&
     cargo test --release --verbose &&
     cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml &&
-    cargo clippy &&
-    cargo clippy --profile=test &&
-    cargo clippy --manifest-path=rust_sodium-sys/Cargo.toml &&
-    cargo clippy --profile=test --manifest-path=rust_sodium-sys/Cargo.toml
+    cargo test --release --verbose --features=seeded-rng &&
+    cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml --features=seeded-rng
+    cargo clippy --all-targets &&
+    cargo clippy --features=seeded-rng --all-targets &&
+    cargo clippy --manifest-path=rust_sodium-sys/Cargo.toml --all-targets &&
+    cargo clippy --manifest-path=rust_sodium-sys/Cargo.toml --features=seeded-rng --all-targets
 before_cache:
   - cargo prune

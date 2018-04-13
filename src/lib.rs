@@ -113,6 +113,8 @@
 
 #[cfg(test)]
 extern crate hex;
+#[cfg(feature = "seeded-rng")]
+extern crate rand;
 #[cfg(test)]
 extern crate rmp_serde;
 #[cfg(test)]
@@ -162,6 +164,7 @@ pub fn init() -> Result<(), ()> {
     }
 }
 
+#[cfg(feature = "seeded-rng")]
 #[allow(clippy::doc_markdown)]
 /// Sets [libsodium's `randombytes_implementation`]
 /// (https://download.libsodium.org/doc/advanced/custom_rng.html) to use a
