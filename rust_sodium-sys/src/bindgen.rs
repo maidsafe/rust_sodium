@@ -1361,8 +1361,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-// TODO - uncomment once https://github.com/rust-lang/rust/issues/33626 is in stable
-// #[repr(align(64))]
+#[repr(align(64))]
 pub struct crypto_generichash_blake2b_state {
     pub h: [u64; 8usize],
     pub t: [u64; 2usize],
@@ -1643,8 +1642,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-// TODO - uncomment once https://github.com/rust-lang/rust/issues/33626 is in stable
-// #[repr(align(16))]
+#[repr(align(16))]
 pub struct crypto_onetimeauth_poly1305_state {
     pub opaque: [libc::c_uchar; 256usize],
 }

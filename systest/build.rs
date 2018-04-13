@@ -81,10 +81,5 @@ fn main() {
         // alignment specifier"
         cfg.flag("/wd4324");
     }
-    // TODO - avoid skipping crypto_generichash_blake2b_state and crypto_onetimeauth_poly1305_state
-    // once https://github.com/rust-lang/rust/issues/33626 is in stable
-    cfg.skip_struct(|s| {
-        s == "crypto_generichash_blake2b_state" || s == "crypto_onetimeauth_poly1305_state"
-    });
     cfg.generate("../rust_sodium-sys/src/lib.rs", "all.rs");
 }
