@@ -1,16 +1,24 @@
-# rust_sodium - Change Log
+# rust_sodium-sys - Change Log
 
 ## [0.9.0]
 - upgrade libsodium version to 1.0.16
 - replace 'use-installed-libsodium' feature with env var
-- drop support for rustc-serialize since it has been deprecated
 - pull most outstanding sodiumoxide commits downstream
-- initialise libsodium in all tests
+- add a hash check of downloaded libsodium files to build script
 - use rust 1.25.0 stable
+
+## [0.8.1]
+- update URL for libsodium sources
 
 ## [0.8.0]
 - Use rust 1.24.0 stable / 2018-02-05 nightly
 - rustfmt 0.9.0 and clippy-0.0.186
+
+## [0.7.2]
+- Fix Android build error
+
+## [0.7.1]
+- Fixed issue causing libsodium to be built unoptimised on non-Windows platforms
 
 ## [0.7.0]
 - Use rust 1.22.1 stable / 2017-11-23 nightly
@@ -27,6 +35,9 @@
 
 ## [0.4.0]
 - Changed build script for non-Windows platforms to only pass `--disable-pie` when a new env var is set.
+
+## [0.3.1]
+- Added fallback URL for Windows libsodium artefacts.
 
 ## [0.3.0]
 - Ported several updates from sodiumoxide
