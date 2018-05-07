@@ -4,33 +4,39 @@
 use ffi;
 use libc::{c_char, c_ulonglong};
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in a `Salt`.
-pub const SALTBYTES: usize = ffi::crypto_pwhash_scryptsalsa208sha256_SALTBYTES;
+pub const SALTBYTES: usize = ffi::crypto_pwhash_scryptsalsa208sha256_SALTBYTES as usize;
 
 /// Number of bytes in a `HashedPassword`.
-pub const HASHEDPASSWORDBYTES: usize = ffi::crypto_pwhash_scryptsalsa208sha256_STRBYTES;
+pub const HASHEDPASSWORDBYTES: usize = ffi::crypto_pwhash_scryptsalsa208sha256_STRBYTES as usize;
 
 /// All `HashedPasswords` start with this string.
 pub const STRPREFIX: &str = "$7$";
 
 /// Safe base line for `OpsLimit` for interactive password hashing.
-pub const OPSLIMIT_INTERACTIVE: OpsLimit =
-    OpsLimit(ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE);
+pub const OPSLIMIT_INTERACTIVE: OpsLimit = OpsLimit(
+    ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE as
+        usize,
+);
 
 /// Safe base line for `MemLimit` for interactive password hashing.
-pub const MEMLIMIT_INTERACTIVE: MemLimit =
-    MemLimit(ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE);
+pub const MEMLIMIT_INTERACTIVE: MemLimit = MemLimit(
+    ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE as
+        usize,
+);
 
 /// `OpsLimit` for highly sensitive data.
-pub const OPSLIMIT_SENSITIVE: OpsLimit =
-    OpsLimit(ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE);
+pub const OPSLIMIT_SENSITIVE: OpsLimit = OpsLimit(
+    ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE as
+        usize,
+);
 
 /// `MemLimit` for highly sensitive data.
-pub const MEMLIMIT_SENSITIVE: MemLimit =
-    MemLimit(ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE);
+pub const MEMLIMIT_SENSITIVE: MemLimit = MemLimit(
+    ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE as
+        usize,
+);
 
 /// `OpsLimit` represents the maximum number of computations to perform when
 /// using the functions in this module.
@@ -188,7 +194,7 @@ mod test {
 
     #[test]
     fn test_str_prefix() {
-        assert!(::init());
+        unwrap!(::init());
         let str_prefix = unsafe {
             unwrap!(CStr::from_ptr(ffi::crypto_pwhash_scryptsalsa208sha256_STRPREFIX).to_str())
         };
@@ -198,7 +204,7 @@ mod test {
     #[test]
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_derive_key() {
-        assert!(::init());
+        unwrap!(::init());
         let mut kb = [0u8; 32];
         let salt = Salt([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
@@ -218,7 +224,7 @@ mod test {
     #[test]
     fn test_pwhash_verify() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let pw = randombytes(i);
             let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
@@ -227,10 +233,9 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_pwhash_verify_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..16usize {
             let mut pw = randombytes(i);
             let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
@@ -242,18 +247,17 @@ mod test {
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let pw = randombytes(i);
             let pwh = unwrap!(pwhash(&pw, OPSLIMIT_INTERACTIVE, MEMLIMIT_INTERACTIVE));
             let salt = gen_salt();
-            round_trip(pwh);
-            round_trip(salt);
+            round_trip(&pwh);
+            round_trip(&salt);
         }
     }
 }

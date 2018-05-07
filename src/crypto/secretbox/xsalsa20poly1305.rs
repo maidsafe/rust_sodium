@@ -7,14 +7,12 @@
 
 use ffi;
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in `Key`.
-pub const KEYBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_KEYBYTES;
+pub const KEYBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_KEYBYTES as usize;
 
 /// Number of bytes in a `Nonce`.
-pub const NONCEBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_NONCEBYTES;
+pub const NONCEBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_NONCEBYTES as usize;
 
 new_type! {
     /// `Key` for symmetric authenticated encryption
@@ -39,7 +37,7 @@ new_type! {
 /// Number of bytes in the authenticator tag of an encrypted message
 /// i.e. the number of bytes by which the ciphertext is larger than the
 /// plaintext.
-pub const MACBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_MACBYTES;
+pub const MACBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_MACBYTES as usize;
 
 /// `gen_key()` randomly generates a secret key
 ///
@@ -151,7 +149,7 @@ mod test {
     #[test]
     fn test_seal_open() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -163,9 +161,9 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_tamper() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -186,6 +184,7 @@ mod test {
     #[test]
     fn test_seal_open_detached() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -200,6 +199,7 @@ mod test {
     #[test]
     fn test_seal_combined_then_open_detached() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -215,6 +215,7 @@ mod test {
     #[test]
     fn test_seal_detached_then_open_combined() {
         use randombytes::randombytes;
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -230,10 +231,9 @@ mod test {
 
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_seal_open_detached_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let mut m = randombytes(i);
@@ -254,6 +254,7 @@ mod test {
 
     #[test]
     fn test_open_detached_failure_does_not_modify() {
+        unwrap!(::init());
         let mut buf = b"hello world".to_vec();
         let k = gen_key();
         let n = gen_nonce();
@@ -276,7 +277,7 @@ mod test {
     #[test]
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
-        assert!(::init());
+        unwrap!(::init());
         let firstkey = Key([0x1b, 0x27, 0x55, 0x64, 0x73, 0xe9, 0x85, 0xd4, 0x62, 0xcd, 0x51,
                             0x19, 0x7a, 0x9a, 0x46, 0xc7, 0x60, 0x09, 0x54, 0x9e, 0xac, 0x64,
                             0x74, 0xf2, 0x06, 0xc4, 0xee, 0x08, 0x44, 0xf6, 0x83, 0x89]);
@@ -314,16 +315,15 @@ mod test {
         assert!(Ok(m) == m2);
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for _ in 0..256usize {
             let k = gen_key();
             let n = gen_nonce();
-            round_trip(k);
-            round_trip(n);
+            round_trip(&k);
+            round_trip(&n);
         }
     }
 }
@@ -339,7 +339,7 @@ mod bench {
 
     #[bench]
     fn bench_seal_open(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let k = gen_key();
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();

@@ -3,14 +3,12 @@
 use ffi;
 use libc::c_ulonglong;
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in a `Digest`.
-pub const DIGESTBYTES: usize = ffi::crypto_shorthash_siphash24_BYTES;
+pub const DIGESTBYTES: usize = ffi::crypto_shorthash_siphash24_BYTES as usize;
 
 /// Number of bytes in a `Key`.
-pub const KEYBYTES: usize = ffi::crypto_shorthash_siphash24_KEYBYTES;
+pub const KEYBYTES: usize = ffi::crypto_shorthash_siphash24_KEYBYTES as usize;
 
 new_type! {
     /// `Digest` structure
@@ -55,9 +53,8 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_vectors() {
-        assert!(::init());
+        unwrap!(::init());
         let maxlen = 64;
         let mut m = Vec::with_capacity(64);
         for i in 0usize..64 {
@@ -136,18 +133,17 @@ mod test {
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..64usize {
             let k = gen_key();
             let m = randombytes(i);
             let d = shorthash(&m[..], &k);
-            round_trip(k);
-            round_trip(d);
+            round_trip(&k);
+            round_trip(&d);
         }
     }
 }
@@ -163,7 +159,7 @@ mod bench {
 
     #[bench]
     fn bench_shorthash(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
         b.iter(|| for m in ms.iter() {

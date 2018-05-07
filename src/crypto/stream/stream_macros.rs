@@ -1,13 +1,11 @@
 macro_rules! stream_module (($stream_name:ident,
                              $xor_name:ident,
+                             $xor_ic_name:ident,
                              $keybytes:expr,
                              $noncebytes:expr) => (
 
 use libc::c_ulonglong;
-use std::iter::repeat;
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in a `Key`.
 pub const KEYBYTES: usize = $keybytes;
@@ -59,7 +57,7 @@ pub fn stream(len: usize,
               &Nonce(ref n): &Nonce,
               &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
-        let mut c: Vec<u8> = repeat(0u8).take(len).collect();
+        let mut c = vec![0u8; len];
         let _todo_use_result = $stream_name(c.as_mut_ptr(),
                                             c.len() as c_ulonglong,
                                             n.as_ptr(),
@@ -78,7 +76,7 @@ pub fn stream_xor(m: &[u8],
                   &Nonce(ref n): &Nonce,
                   &Key(ref k): &Key) -> Vec<u8> {
     unsafe {
-        let mut c: Vec<u8> = repeat(0u8).take(m.len()).collect();
+        let mut c = vec![0u8; m.len()];
         let _todo_use_result = $xor_name(c.as_mut_ptr(),
                                          m.as_ptr(),
                                          m.len() as c_ulonglong,
@@ -88,7 +86,7 @@ pub fn stream_xor(m: &[u8],
     }
 }
 
-/// `stream_xor_inplace` encrypts a message `m` using a secret key `k` and a nonce `n`.
+/// `stream_xor_inplace()` encrypts a message `m` using a secret key `k` and a nonce `n`.
 /// The `stream_xor_inplace()` function encrypts the message in place.
 ///
 /// `stream_xor_inplace()` guarantees that the ciphertext has the same length as
@@ -106,6 +104,52 @@ pub fn stream_xor_inplace(m: &mut [u8],
     }
 }
 
+/// `stream_xor_ic()` encrypts a message `m` using a secret key `k` and a nonce `n`,
+/// it is similar to `stream_xor()` but allows the caller to set the value of the initial
+/// block counter `ic`.
+///
+/// `stream_xor()` guarantees that the ciphertext has the same length as the plaintext,
+/// and is the plaintext xor the output of `stream()`.
+/// Consequently `stream_xor()` can also be used to decrypt.
+pub fn stream_xor_ic(m: &[u8],
+                     &Nonce(ref n): &Nonce,
+                     ic: u64,
+                     &Key(ref k): &Key) -> Vec<u8> {
+    unsafe {
+        let mut c = vec![0u8; m.len()];
+        let _ = $xor_ic_name(c.as_mut_ptr(),
+                     m.as_ptr(),
+                     m.len() as c_ulonglong,
+                     n.as_ptr(),
+                     ic,
+                     k.as_ptr());
+        c
+    }
+}
+
+/// `stream_xor_ic_inplace()` encrypts a message `m` using a secret key `k` and a nonce `n`,
+/// it is similar to `stream_xor_inplace()` but allows the caller to set the value of the initial
+/// block counter `ic`.
+/// The `stream_xor_ic_inplace()` function encrypts the message in place.
+///
+/// `stream_xor_ic_inplace()` guarantees that the ciphertext has the same length as
+/// the plaintext, and is the plaintext xor the output of `stream_inplace()`.
+/// Consequently `stream_xor_ic_inplace()` can also be used to decrypt.
+pub fn stream_xor_ic_inplace(m: &mut [u8],
+                             &Nonce(ref n): &Nonce,
+                             ic: u64,
+                             &Key(ref k): &Key) {
+    unsafe {
+        let _ = $xor_ic_name(m.as_mut_ptr(),
+                     m.as_ptr(),
+                     m.len() as c_ulonglong,
+                     n.as_ptr(),
+                     ic,
+                     k.as_ptr());
+    }
+}
+
+
 #[cfg(test)]
 mod test_m {
     use super::*;
@@ -113,7 +157,7 @@ mod test_m {
     #[test]
     fn test_encrypt_decrypt() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -127,7 +171,7 @@ mod test_m {
     #[test]
     fn test_stream_xor() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -145,7 +189,7 @@ mod test_m {
     #[test]
     fn test_stream_xor_inplace() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -160,16 +204,45 @@ mod test_m {
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
+    #[test]
+    fn test_stream_xor_ic_same() {
+        use randombytes::randombytes;
+        unwrap!(::init());
+        for i in 0..1024usize {
+            let k = gen_key();
+            let n = gen_nonce();
+            let m = randombytes(i);
+            let c = stream_xor(&m, &n, &k);
+            let c_ic = stream_xor_ic(&m, &n, 0, &k);
+            assert_eq!(c, c_ic);
+        }
+    }
+
+    #[test]
+    fn test_stream_xor_ic_inplace() {
+        use randombytes::randombytes;
+        unwrap!(::init());
+        for i in 0..1024usize {
+            let k = gen_key();
+            let n = gen_nonce();
+            for j in 0..10 {
+                let mut m = randombytes(i);
+                let c = stream_xor_ic(&m, &n, j, &k);
+                stream_xor_ic_inplace(&mut m, &n, j, &k);
+                assert_eq!(m, c);
+            }
+        }
+    }
+
     #[test]
     fn test_serialisation() {
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for _ in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
-            round_trip(k);
-            round_trip(n);
+            round_trip(&k);
+            round_trip(&n);
         }
     }
 }
@@ -185,7 +258,7 @@ mod bench_m {
 
     #[bench]
     fn bench_stream(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let k = gen_key();
         let n = gen_nonce();
         b.iter(|| {

@@ -1,39 +1,61 @@
+#[cfg(not(windows))]
+extern crate cc;
+#[cfg(not(target_env = "msvc"))]
+extern crate flate2;
+#[cfg(target_env = "msvc")]
+extern crate libc;
+extern crate pkg_config;
+extern crate reqwest;
+extern crate sha2;
+#[cfg(not(target_env = "msvc"))]
+extern crate tar;
 #[macro_use]
 extern crate unwrap;
-#[cfg(feature = "use-installed-libsodium")]
-extern crate pkg_config;
-#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
-extern crate cc;
-#[cfg(all(not(target_env = "msvc"), not(feature = "use-installed-libsodium")))]
-extern crate flate2;
-#[cfg(all(not(target_env = "msvc"), not(feature = "use-installed-libsodium")))]
-extern crate tar;
-#[cfg(all(target_env = "msvc", not(feature = "use-installed-libsodium")))]
-extern crate libc;
-#[cfg(all(target_env = "msvc", not(feature = "use-installed-libsodium")))]
+#[cfg(target_env = "msvc")]
 extern crate zip;
-#[cfg(not(feature = "use-installed-libsodium"))]
-extern crate reqwest;
 
-const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/old/";
-const VERSION: &'static str = "1.0.12";
+use reqwest::Client;
+use sha2::{Digest, Sha256};
+use std::env;
+use std::fs;
+use std::io::{Cursor, Read};
+use std::path::Path;
 
-#[cfg(feature = "use-installed-libsodium")]
+const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
+const VERSION: &'static str = "1.0.16";
+
+#[cfg(target_env = "msvc")] // libsodium-<VERSION>-msvc.zip
+const SHA256: &'static str = "0580d54f57594a7cb493607cec6e7045369fb67d43623491523781e901589948";
+
+#[cfg(all(windows, not(target_env = "msvc")))] // libsodium-<VERSION>-mingw.tar.gz
+const SHA256: &'static str = "5b81a4fc5d0de36dbda7efeaf355c133d4f6cc0b4dbf69bbe46ef7f5a6baa639";
+
+#[cfg(not(windows))] // libsodium-<VERSION>.tar.gz
+const SHA256: &'static str = "eeadc7e1e1bcef09680fb4837d448fbdf57224978f865ac1c16745868fbd0533";
+
 fn main() {
-    use std::env;
-    if let Ok(lib_dir) = env::var("SODIUM_LIB_DIR") {
+    println!("cargo:rerun-if-env-changed=RUST_SODIUM_LIB_DIR");
+    println!("cargo:rerun-if-env-changed=RUST_SODIUM_USE_PKG_CONFIG");
+    println!("cargo:rerun-if-env-changed=RUST_SODIUM_SHARED");
+    if let Ok(lib_dir) = env::var("RUST_SODIUM_LIB_DIR") {
         println!("cargo:rustc-link-search=native={}", lib_dir);
-        let mode = match env::var_os("SODIUM_STATIC") {
-            Some(_) => "static",
-            None => "dylib",
+        let mode = if env::var("RUST_SODIUM_SHARED").is_ok() {
+            "dylib"
+        } else {
+            "static"
         };
-        println!("cargo:rustc-link-lib={0}=sodium", mode);
+        let name = if cfg!(target_env = "msvc") {
+            "libsodium"
+        } else {
+            "sodium"
+        };
+        println!("cargo:rustc-link-lib={}={}", mode, name);
         println!(
             "cargo:warning=Using unknown libsodium version.  This crate is tested against \
                   {} and may not be fully compatible with other versions.",
             VERSION
         );
-    } else {
+    } else if env::var("RUST_SODIUM_USE_PKG_CONFIG").is_ok() {
         let lib_details = unwrap!(pkg_config::probe_library("libsodium"));
         if lib_details.version != VERSION {
             println!(
@@ -44,18 +66,13 @@ fn main() {
                 lib_details.version
             );
         }
+    } else {
+        get_libsodium();
     }
 }
 
-#[cfg(not(feature = "use-installed-libsodium"))]
-use std::io::Cursor;
-
 /// Download the specified URL into a buffer which is returned.
-#[cfg(not(feature = "use-installed-libsodium"))]
-fn download(url: &str) -> Cursor<Vec<u8>> {
-    use reqwest::Client;
-    use std::io::Read;
-
+fn download(url: &str, expected_hash: &str) -> Cursor<Vec<u8>> {
     // Send GET request
     let client = Client::new();
     let mut response = unwrap!(client.get(url).send());
@@ -66,21 +83,29 @@ fn download(url: &str) -> Cursor<Vec<u8>> {
     }
     let mut buffer = vec![];
     let _ = unwrap!(response.read_to_end(&mut buffer));
+
+    // Check the SHA-256 hash of the downloaded file is as expected
+    let hash = Sha256::digest(&buffer);
+    assert_eq!(
+        &format!("{:x}", hash),
+        expected_hash,
+        "\n\nDownloaded libsodium file failed hash check.\n\n"
+    );
+
     Cursor::new(buffer)
 }
 
-#[cfg(not(feature = "use-installed-libsodium"))]
 fn get_install_dir() -> String {
-    use std::env;
     unwrap!(env::var("OUT_DIR")) + "/installed"
 }
 
-#[cfg(all(windows, target_env = "msvc", not(feature = "use-installed-libsodium")))]
-fn main() {
+
+
+#[cfg(target_env = "msvc")]
+fn get_libsodium() {
     use libc::S_IFDIR;
-    use std::fs::{self, File};
-    use std::io::{Read, Write};
-    use std::path::Path;
+    use std::fs::File;
+    use std::io::Write;
     use zip::ZipArchive;
 
     // Download zip file
@@ -88,7 +113,7 @@ fn main() {
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
     let url = format!("{}libsodium-{}-msvc.zip", DOWNLOAD_BASE_URL, VERSION);
-    let compressed_file = download(&url);
+    let compressed_file = download(&url, SHA256);
 
     // Unpack the zip file
     let mut zip_archive = unwrap!(ZipArchive::new(compressed_file));
@@ -139,10 +164,8 @@ fn main() {
 
 
 
-#[cfg(all(windows, not(target_env = "msvc"), not(feature = "use-installed-libsodium")))]
-fn main() {
-    use std::fs;
-    use std::path::Path;
+#[cfg(all(windows, not(target_env = "msvc")))]
+fn get_libsodium() {
     use flate2::read::GzDecoder;
     use tar::Archive;
 
@@ -151,7 +174,7 @@ fn main() {
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
     let url = format!("{}libsodium-{}-mingw.tar.gz", DOWNLOAD_BASE_URL, VERSION);
-    let compressed_file = download(&url);
+    let compressed_file = download(&url, SHA256);
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
@@ -193,15 +216,15 @@ fn main() {
 
 
 
-/// Fetch and unpack the libsodium sources.
-///
-/// Return tuple `(source_dir, install_dir)`.
-#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
-fn get_sources() -> (String, String) {
-    use std::env;
-    use std::fs;
+#[cfg(not(windows))]
+fn get_libsodium() {
     use flate2::read::GzDecoder;
+    use std::process::Command;
+    use std::str;
     use tar::Archive;
+
+    // Determine build target triple
+    let target = unwrap!(env::var("TARGET"));
 
     // Determine filenames and download URLs
     let basename = format!("libsodium-{}", VERSION);
@@ -213,7 +236,6 @@ fn get_sources() -> (String, String) {
 
     // Avoid issues with paths containing spaces by falling back to using a tempfile.
     // See https://github.com/jedisct1/libsodium/issues/207
-    let target = unwrap!(env::var("TARGET"));
     if install_dir.contains(" ") {
         let fallback_path = "/tmp/".to_string() + &basename + "/" + &target;
         install_dir = fallback_path.clone() + "/installed";
@@ -231,31 +253,13 @@ fn get_sources() -> (String, String) {
     unwrap!(fs::create_dir_all(&source_dir));
 
     // Download sources
-    let compressed_file = download(&url);
+    let compressed_file = download(&url, SHA256);
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
     let mut archive = Archive::new(gz_decoder);
     unwrap!(archive.unpack(&source_dir));
     source_dir.push_str(&format!("/{}", basename));
-
-    (source_dir, install_dir)
-}
-
-
-
-#[cfg(all(not(windows), not(feature = "use-installed-libsodium")))]
-fn main() {
-    use std::env;
-    use std::str;
-    use std::path::Path;
-    use std::process::Command;
-
-    // Determine build target triple
-    let target = unwrap!(env::var("TARGET"));
-
-    // Download sources
-    let (source_dir, install_dir) = get_sources();
 
     // Decide on CC, CFLAGS and the --host configure argument
     let build = cc::Build::new();
@@ -359,6 +363,7 @@ fn main() {
     if !cflags.is_empty() {
         configure_cmd.env("CFLAGS", &cflags);
     }
+    println!("cargo:rerun-if-env-changed=RUST_SODIUM_DISABLE_PIE");
     if env::var("RUST_SODIUM_DISABLE_PIE").is_ok() {
         configure_cmd.arg("--disable-pie");
     }

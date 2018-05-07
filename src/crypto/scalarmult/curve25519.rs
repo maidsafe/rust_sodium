@@ -2,18 +2,15 @@
 //! [Cryptography in `NaCl`](http://nacl.cr.yp.to/valid.html), Sections 2, 3, and 4.
 //! This function is conjectured to be strong. For background see Bernstein,
 //! "Curve25519: new Diffie-Hellman speed records," Lecture Notes in Computer
-//! Science 3958 (2006), 207–228, http://cr.yp.to/papers.html#curve25519.
+//! Science 3958 (2006), 207–228, <http://cr.yp.to/papers.html#curve25519/>.
 
 use ffi;
 
 /// Number of bytes in a `GroupElement`.
-pub const GROUPELEMENTBYTES: usize = ffi::crypto_scalarmult_curve25519_BYTES;
+pub const GROUPELEMENTBYTES: usize = ffi::crypto_scalarmult_curve25519_BYTES as usize;
 
 /// Number of bytes in a `Scalar`.
-pub const SCALARBYTES: usize = ffi::crypto_scalarmult_curve25519_SCALARBYTES;
-
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
+pub const SCALARBYTES: usize = ffi::crypto_scalarmult_curve25519_SCALARBYTES as usize;
 
 new_type! {
     /// `Scalar` value (integer in byte representation)
@@ -63,7 +60,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // corresponding to tests/scalarmult.c and tests/scalarmult3.cpp from NaCl
-        assert!(::init());
+        unwrap!(::init());
         let alicesk = Scalar([0x77, 0x07, 0x6d, 0x0a, 0x73, 0x18, 0xa5, 0x7d, 0x3c, 0x16, 0xc1,
                               0x72, 0x51, 0xb2, 0x66, 0x45, 0xdf, 0x4c, 0x2f, 0x87, 0xeb, 0xc0,
                               0x99, 0x2a, 0xb1, 0x77, 0xfb, 0xa5, 0x1d, 0xb9, 0x2c, 0x2a]);
@@ -78,7 +75,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_2() {
         // corresponding to tests/scalarmult2.c and tests/scalarmult4.cpp from NaCl
-        assert!(::init());
+        unwrap!(::init());
         let bobsk = Scalar([0x5d, 0xab, 0x08, 0x7e, 0x62, 0x4a, 0x8a, 0x4b, 0x79, 0xe1, 0x7f,
                             0x8b, 0x83, 0x80, 0x0e, 0xe6, 0x6f, 0x3b, 0xb1, 0x29, 0x26, 0x18,
                             0xb6, 0xfd, 0x1c, 0x2f, 0x8b, 0x27, 0xff, 0x88, 0xe0, 0xeb]);
@@ -93,7 +90,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_3() {
         // corresponding to tests/scalarmult5.c and tests/scalarmult7.cpp from NaCl
-        assert!(::init());
+        unwrap!(::init());
         let alicesk = Scalar([0x77, 0x07, 0x6d, 0x0a, 0x73, 0x18, 0xa5, 0x7d, 0x3c, 0x16, 0xc1,
                               0x72, 0x51, 0xb2, 0x66, 0x45, 0xdf, 0x4c, 0x2f, 0x87, 0xeb, 0xc0,
                               0x99, 0x2a, 0xb1, 0x77, 0xfb, 0xa5, 0x1d, 0xb9, 0x2c, 0x2a]);
@@ -112,7 +109,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_4() {
         // corresponding to tests/scalarmult6.c from NaCl
-        assert!(::init());
+        unwrap!(::init());
         let bobsk = Scalar([0x5d, 0xab, 0x08, 0x7e, 0x62, 0x4a, 0x8a, 0x4b, 0x79, 0xe1, 0x7f,
                             0x8b, 0x83, 0x80, 0x0e, 0xe6, 0x6f, 0x3b, 0xb1, 0x29, 0x26, 0x18,
                             0xb6, 0xfd, 0x1c, 0x2f, 0x8b, 0x27, 0xff, 0x88, 0xe0, 0xeb]);
@@ -130,6 +127,7 @@ mod test {
     #[test]
     #[should_panic]
     fn test_all_zero() {
+        unwrap!(::init());
         let mut sk = [0; SCALARBYTES];
         randombytes_into(&mut sk);
         let sk = Scalar(sk);
@@ -147,7 +145,7 @@ mod bench {
 
     #[bench]
     fn bench_scalarmult(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let mut gbs = [0u8; GROUPELEMENTBYTES];
         let mut sbs = [0u8; SCALARBYTES];
         randombytes_into(&mut gbs);
@@ -159,7 +157,7 @@ mod bench {
 
     #[bench]
     fn bench_scalarmult_base(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let mut sbs = [0u8; SCALARBYTES];
         randombytes_into(&mut sbs);
         let s = Scalar(sbs);

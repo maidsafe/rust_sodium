@@ -8,8 +8,8 @@ use ffi::{crypto_auth_hmacsha512, crypto_auth_hmacsha512_BYTES, crypto_auth_hmac
 auth_module!(
     crypto_auth_hmacsha512,
     crypto_auth_hmacsha512_verify,
-    crypto_auth_hmacsha512_KEYBYTES,
-    crypto_auth_hmacsha512_BYTES
+    crypto_auth_hmacsha512_KEYBYTES as usize,
+    crypto_auth_hmacsha512_BYTES as usize
 );
 
 auth_state!(
@@ -29,7 +29,7 @@ mod test {
     fn test_vector_1() {
         // corresponding to tests/auth.c from NaCl
         // "Test Case 2" from RFC 4231
-        assert!(::init());
+        unwrap!(::init());
         let key = Key([0x4a, 0x65, 0x66, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
@@ -52,7 +52,7 @@ mod test {
     fn test_vector_state_1() {
         // corresponding to tests/auth.c from NaCl
         // "Test Case 2" from RFC 4231
-        assert!(::init());
+        unwrap!(::init());
         let key = [0x4a, 0x65, 0x66, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00];

@@ -1,9 +1,10 @@
 [package]
 authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 build = "build.rs"
+categories = ["api-bindings", "cryptography"]
 description = "Raw bindings to libsodium"
-documentation = "http://docs.maidsafe.net/rust_sodium/latest"
 homepage = "https://maidsafe.net"
+keywords = ["crypto", "cryptographic", "cryptography", "sodium"]
 license = "MIT OR Apache-2.0"
 links = "sodium"
 name = "rust_sodium-sys"
@@ -12,23 +13,17 @@ version = "0.8.1"
 
 [dependencies]
 lazy_static = "~1.0.0"
-libc = "~0.2.36"
+libc = "~0.2.40"
 rand = "~0.4.2"
 unwrap = "~1.1.0"
 
 [build-dependencies]
-cc = { version = "~1.0.4", optional = true }
-flate2 = { version = "~1.0.1", optional = true }
-libc = "~0.2.36"
-pkg-config = { version = "~0.3.9", optional = true }
-reqwest = { version = "~0.8.5", optional = true }
-tar = { version = "~0.4.14", optional = true }
+cc = "~1.0.9"
+flate2 = "~1.0.1"
+libc = "~0.2.40"
+pkg-config = "~0.3.9"
+reqwest = "~0.8.5"
+sha2 = "~0.7.0"
+tar = "~0.4.15"
 unwrap = "~1.1.0"
-zip = { version = "~0.3.1", optional = true }
-
-[lib]
-path = "lib.rs"
-
-[features]
-default = ["flate2", "cc", "tar", "zip", "reqwest"]
-use-installed-libsodium = ["pkg-config"]
+zip = "~0.3.1"

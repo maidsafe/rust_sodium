@@ -2,7 +2,6 @@
 
 use ffi;
 use libc::c_void;
-use std::iter::repeat;
 
 /// `randombytes()` randomly generates size bytes of data.
 ///
@@ -11,7 +10,7 @@ use std::iter::repeat;
 /// from `rust_sodium`.
 pub fn randombytes(size: usize) -> Vec<u8> {
     unsafe {
-        let mut buf: Vec<u8> = repeat(0u8).take(size).collect();
+        let mut buf = vec![0u8; size];
         let pbuf = buf.as_mut_ptr() as *mut c_void;
         ffi::randombytes_buf(pbuf, size);
         buf

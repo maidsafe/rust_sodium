@@ -5,8 +5,6 @@ macro_rules! auth_module (($auth_name:ident,
 
 use libc::c_ulonglong;
 use randombytes::randombytes_into;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
 
 /// Number of bytes in a `Key`.
 pub const KEYBYTES: usize = $keybytes;
@@ -74,7 +72,7 @@ mod test_m {
     #[test]
     fn test_auth_verify() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -84,10 +82,9 @@ mod test_m {
     }
 
     #[test]
-    #[cfg_attr(feature="cargo-clippy", allow(needless_range_loop))]
     fn test_auth_verify_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let k = gen_key();
             let mut m = randombytes(i);
@@ -105,18 +102,17 @@ mod test_m {
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
             let tag = authenticate(&m, &k);
-            round_trip(k);
-            round_trip(tag);
+            round_trip(&k);
+            round_trip(&tag);
         }
     }
 }
@@ -133,7 +129,7 @@ mod bench_m {
 
     #[bench]
     fn bench_auth(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
@@ -147,7 +143,7 @@ mod bench_m {
 
     #[bench]
     fn bench_verify(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
@@ -168,16 +164,16 @@ mod bench_m {
 /// Macro for defining streaming authenticator tag computation types and functions.
 ///
 /// Parameters:
-/// $state_name - The authenticator state type.
-///               SAFETY NOTE: This needs to be a type that does not define a `Drop`
-///               implementation, otherwise undefined behaviour will occur.
-/// $init_name - A function `f(s: *mut $state_name, k: *u8, klen: size_t)` that initializes
-///              a state with a key.
-/// $update_name - A function `f(s: *mut $state_name, m: *u8, mlen: size_t)` that updates
-///                a state with a message chunk.
-/// $final_name - A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator
-///               tag of length $tagbytes from a $state_name.
-/// $tagbytes   - The number of bytes in an authenticator tag.
+/// `$state_name` -  The authenticator state type.
+///                  SAFETY NOTE: This needs to be a type that does not define a `Drop`
+///                  implementation, otherwise undefined behaviour will occur.
+/// `$init_name` -   A function `f(s: *mut $state_name, k: *u8, klen: size_t)` that initializes
+///                  a state with a key.
+/// `$update_name` - A function `f(s: *mut $state_name, m: *u8, mlen: size_t)` that updates
+///                  a state with a message chunk.
+/// `$final_name` -  A function `f(s: *mut $state_name, t: *u8)` that computes an authenticator
+///                  tag of length `$tagbytes` from a `$state_name`.
+/// `$tagbytes`   -  The number of bytes in an authenticator tag.
 #[allow(unused)]
 macro_rules! auth_state (($state_name:ident,
                           $init_name:ident,
@@ -229,19 +225,18 @@ impl State {
 /// `update()` can be called more than once in order to compute the authenticator
 /// from sequential chunks of the message.
     pub fn update(&mut self, in_: &[u8]) {
-        let &mut State(ref mut state) = self;
         unsafe {
-            let _todo_use_result = $update_name(state, in_.as_ptr(), in_.len() as c_ulonglong);
+            let _ = $update_name(&mut self.0, in_.as_ptr(), in_.len() as c_ulonglong);
         }
     }
 
-/// `finalize()` finalizes the authenticator computation and returns a `Tag`.
+    /// `finalize()` finalizes the authenticator computation and returns a `Tag`. `finalize`
+    /// consumes the `State` so that it cannot be accidentally reused.
     #[allow(trivial_numeric_casts)]
-    pub fn finalize(&mut self) -> Tag {
+    pub fn finalize(mut self) -> Tag {
         unsafe {
-            let &mut State(ref mut state) = self;
             let mut tag = [0; $tagbytes as usize];
-            let _todo_use_result = $final_name(state, tag.as_mut_ptr());
+            let _ = $final_name(&mut self.0, tag.as_mut_ptr());
             Tag(tag)
         }
     }
@@ -254,7 +249,7 @@ mod test_s {
     #[test]
     fn test_auth_eq_auth_state() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -269,7 +264,7 @@ mod test_s {
     #[test]
     fn test_auth_eq_auth_state_chunked() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);

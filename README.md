@@ -21,11 +21,6 @@ differences are:
 | [MaidSafe website](https://maidsafe.net) | [SAFE Dev Forum](https://forum.safedev.org) | [SAFE Network Forum](https://safenetforum.org) |
 |:----------------------------------------:|:-------------------------------------------:|:----------------------------------------------:|
 
-## Note for building on Windows
-
-In order to allow the build script to download libsodium, you must have Powershell v4.0 or greater
-installed.
-
 ## Note for building on Linux
 
 Certain situations may require building libsodium configured with `--disable-pie`.  To enable this,
@@ -34,6 +29,20 @@ set an environment variable `RUST_SODIUM_DISABLE_PIE` while building, e.g.
 ```sh
 RUST_SODIUM_DISABLE_PIE=1 cargo build
 ```
+
+## To use your own copy of libsodium
+
+If you already have a copy of libsodium, you can choose to link this rather than having rust_sodium
+download and build libsodium for you.  You should ensure that it is the same version as is specified
+in `VERSION` of [our build.rs]
+(https://github.com/maidsafe/rust_sodium/blob/master/rust_sodium-sys/build.rs) file.
+
+Set an environment variable `RUST_SODIUM_LIB_DIR` to the folder where libsodium exists.  A static
+version of libsodium will be preferred unless you also set `RUST_SODIUM_SHARED` to any value.
+
+Alternatively, you can use pkgconfig if appropriate to locate libsodium by setting
+`RUST_SODIUM_USE_PKG_CONFIG` to any value.  In this case, `RUST_SODIUM_SHARED` has no effect, and
+generally a shared version of libsodium will be used.
 
 ## Cross-Compiling
 

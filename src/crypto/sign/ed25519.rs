@@ -5,21 +5,18 @@
 
 use ffi;
 use libc::c_ulonglong;
-#[cfg(feature = "rustc-serialize")]
-use rustc_serialize;
-use std::iter::repeat;
 
 /// Number of bytes in a `Seed`.
-pub const SEEDBYTES: usize = ffi::crypto_sign_ed25519_SEEDBYTES;
+pub const SEEDBYTES: usize = ffi::crypto_sign_ed25519_SEEDBYTES as usize;
 
 /// Number of bytes in a `SecretKey`.
-pub const SECRETKEYBYTES: usize = ffi::crypto_sign_ed25519_SECRETKEYBYTES;
+pub const SECRETKEYBYTES: usize = ffi::crypto_sign_ed25519_SECRETKEYBYTES as usize;
 
 /// Number of bytes in a `PublicKey`.
-pub const PUBLICKEYBYTES: usize = ffi::crypto_sign_ed25519_PUBLICKEYBYTES;
+pub const PUBLICKEYBYTES: usize = ffi::crypto_sign_ed25519_PUBLICKEYBYTES as usize;
 
 /// Number of bytes in a `Signature`.
-pub const SIGNATUREBYTES: usize = ffi::crypto_sign_ed25519_BYTES;
+pub const SIGNATUREBYTES: usize = ffi::crypto_sign_ed25519_BYTES as usize;
 
 new_type! {
     /// `Seed` that can be used for keypair generation
@@ -81,7 +78,7 @@ pub fn keypair_from_seed(&Seed(ref seed): &Seed) -> (PublicKey, SecretKey) {
 /// `sign()` returns the resulting signed message `sm`.
 pub fn sign(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Vec<u8> {
     unsafe {
-        let mut sm: Vec<u8> = repeat(0u8).take(m.len() + SIGNATUREBYTES).collect();
+        let mut sm = vec![0u8; m.len() + SIGNATUREBYTES];
         let mut smlen = 0;
         let _todo_use_result = ffi::crypto_sign_ed25519(
             sm.as_mut_ptr(),
@@ -100,7 +97,7 @@ pub fn sign(m: &[u8], &SecretKey(ref sk): &SecretKey) -> Vec<u8> {
 /// If the signature fails verification, `verify()` returns `Err(())`.
 pub fn verify(sm: &[u8], &PublicKey(ref pk): &PublicKey) -> Result<Vec<u8>, ()> {
     unsafe {
-        let mut m: Vec<u8> = repeat(0u8).take(sm.len()).collect();
+        let mut m = vec![0u8; sm.len()];
         let mut mlen = 0;
         if ffi::crypto_sign_ed25519_open(
             m.as_mut_ptr(),
@@ -162,7 +159,7 @@ mod test {
     #[test]
     fn test_sign_verify() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -173,10 +170,9 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -192,7 +188,7 @@ mod test {
     #[test]
     fn test_sign_verify_detached() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -202,10 +198,9 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_detached_tamper() {
         use randombytes::randombytes;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -221,7 +216,7 @@ mod test {
     #[test]
     fn test_sign_verify_seed() {
         use randombytes::{randombytes, randombytes_into};
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let mut seedbuf = [0; 32];
             randombytes_into(&mut seedbuf);
@@ -235,10 +230,9 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(feature = "cargo-clippy", allow(needless_range_loop))]
     fn test_sign_verify_tamper_seed() {
         use randombytes::{randombytes, randombytes_into};
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..32usize {
             let mut seedbuf = [0; 32];
             randombytes_into(&mut seedbuf);
@@ -258,11 +252,11 @@ mod test {
     fn test_vectors() {
         // test vectors from the Python implementation
         // from the [Ed25519 Homepage](http://ed25519.cr.yp.to/software.html)
-        use rustc_serialize::hex::{FromHex, ToHex};
+        use hex;
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        assert!(::init());
+        unwrap!(::init());
         let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
             let line = unwrap!(mline);
@@ -271,7 +265,7 @@ mod test {
             let x1 = unwrap!(x.next());
             let x2 = unwrap!(x.next());
             let x3 = unwrap!(x.next());
-            let seed_bytes = unwrap!(x0[..64].from_hex());
+            let seed_bytes = unwrap!(hex::decode(&x0[..64]));
             assert!(seed_bytes.len() == SEEDBYTES);
             let mut seedbuf = [0u8; SEEDBYTES];
             for (s, b) in seedbuf.iter_mut().zip(seed_bytes.iter()) {
@@ -279,11 +273,11 @@ mod test {
             }
             let seed = Seed(seedbuf);
             let (pk, sk) = keypair_from_seed(&seed);
-            let m = unwrap!(x2.from_hex());
+            let m = unwrap!(hex::decode(x2));
             let sm = sign(&m, &sk);
             assert!(unwrap!(verify(&sm, &pk)) == m);
-            assert!(x1 == pk[..].to_hex());
-            assert!(x3 == sm.to_hex());
+            assert!(x1 == hex::encode(&pk[..]));
+            assert!(x3 == hex::encode(&sm));
         }
     }
 
@@ -291,11 +285,11 @@ mod test {
     fn test_vectors_detached() {
         // test vectors from the Python implementation
         // from the [Ed25519 Homepage](http://ed25519.cr.yp.to/software.html)
-        use rustc_serialize::hex::{FromHex, ToHex};
+        use hex;
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        assert!(::init());
+        unwrap!(::init());
         let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
             let line = unwrap!(mline);
@@ -304,7 +298,7 @@ mod test {
             let x1 = unwrap!(x.next());
             let x2 = unwrap!(x.next());
             let x3 = unwrap!(x.next());
-            let seed_bytes = unwrap!(x0[..64].from_hex());
+            let seed_bytes = unwrap!(hex::decode(&x0[..64]));
             assert!(seed_bytes.len() == SEEDBYTES);
             let mut seedbuf = [0u8; SEEDBYTES];
             for (s, b) in seedbuf.iter_mut().zip(seed_bytes.iter()) {
@@ -312,28 +306,27 @@ mod test {
             }
             let seed = Seed(seedbuf);
             let (pk, sk) = keypair_from_seed(&seed);
-            let m = unwrap!(x2.from_hex());
+            let m = unwrap!(hex::decode(&x2));
             let sig = sign_detached(&m, &sk);
             assert!(verify_detached(&sig, &m, &pk));
-            assert!(x1 == pk[..].to_hex());
-            let sm = sig[..].to_hex() + x2; // x2 is m hex encoded
+            assert!(x1 == hex::encode(&pk[..]));
+            let sm = hex::encode(&sig[..]) + x2; // x2 is m hex encoded
             assert!(x3 == sm);
         }
     }
 
-    #[cfg(any(feature = "serde", feature = "rustc-serialize"))]
     #[test]
     fn test_serialisation() {
         use randombytes::randombytes;
         use test_utils::round_trip;
-        assert!(::init());
+        unwrap!(::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
             let sig = sign_detached(&m, &sk);
-            round_trip(pk);
-            round_trip(sk);
-            round_trip(sig);
+            round_trip(&pk);
+            round_trip(&sk);
+            round_trip(&sig);
         }
     }
 }
@@ -349,7 +342,7 @@ mod bench {
 
     #[bench]
     fn bench_sign(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let (_, sk) = gen_keypair();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
         b.iter(|| for m in ms.iter() {
@@ -359,7 +352,7 @@ mod bench {
 
     #[bench]
     fn bench_verify(b: &mut test::Bencher) {
-        assert!(::init());
+        unwrap!(::init());
         let (pk, sk) = gen_keypair();
         let sms: Vec<Vec<u8>> = BENCH_SIZES
             .iter()
