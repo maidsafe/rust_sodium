@@ -31,7 +31,7 @@ impl Default for RandomBytesImpl {
         RandomBytesImpl {
             function_pointers: randombytes_implementation::default(),
             name: unwrap!(CString::new("Rust XorShiftRng")),
-            seed: seed,
+            seed,
         }
     }
 }

@@ -78,6 +78,9 @@
     box_pointers, missing_copy_implementations, missing_debug_implementations, trivial_casts,
     unsafe_code, variant_size_differences
 )]
+// Allow `write_literal` due to false positives. Revert this after
+// https://github.com/rust-lang-nursery/rust-clippy/issues/2657 is fixed.
+#![cfg_attr(feature = "cargo-clippy", allow(write_literal))]
 
 #[cfg(test)]
 extern crate hex;
