@@ -65,7 +65,6 @@ pub fn keypair_from_seed(&Seed(ref seed): &Seed) -> (PublicKey, SecretKey) {
         let mut sk = [0u8; SECRETKEYBYTES];
         let _ = ffi::crypto_kx_seed_keypair(pk.as_mut_ptr(), sk.as_mut_ptr(), seed.as_ptr());
         (PublicKey(pk), SecretKey(sk))
-
     }
 }
 
@@ -138,10 +137,10 @@ mod test {
         assert!(client_pk != server_pk);
         assert!(client_sk != server_sk);
 
-        let (client_rx, client_tx) = client_session_keys(&client_pk, &client_sk, &server_pk)
-            .unwrap();
-        let (server_rx, server_tx) = server_session_keys(&server_pk, &server_sk, &client_pk)
-            .unwrap();
+        let (client_rx, client_tx) =
+            client_session_keys(&client_pk, &client_sk, &server_pk).unwrap();
+        let (server_rx, server_tx) =
+            server_session_keys(&server_pk, &server_sk, &client_pk).unwrap();
 
         assert!(client_rx == server_tx);
         assert!(client_tx == server_rx);

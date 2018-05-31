@@ -122,9 +122,11 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use {crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES,
-         crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES,
-         crypto_box_curve25519xsalsa20poly1305_keypair};
+    use {
+        crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES,
+        crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES,
+        crypto_box_curve25519xsalsa20poly1305_keypair,
+    };
 
     #[test]
     #[cfg_attr(rustfmt, rustfmt_skip)]

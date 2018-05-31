@@ -2,11 +2,12 @@
 //! practically unlimited number of messages, but individual messages cannot
 //! exceed 64*(2^32)-64 bytes (approximatively 256 GB).
 
-use ffi::{crypto_aead_chacha20poly1305_ietf_ABYTES, crypto_aead_chacha20poly1305_ietf_KEYBYTES,
-          crypto_aead_chacha20poly1305_ietf_NPUBBYTES, crypto_aead_chacha20poly1305_ietf_decrypt,
-          crypto_aead_chacha20poly1305_ietf_decrypt_detached,
-          crypto_aead_chacha20poly1305_ietf_encrypt,
-          crypto_aead_chacha20poly1305_ietf_encrypt_detached};
+use ffi::{
+    crypto_aead_chacha20poly1305_ietf_ABYTES, crypto_aead_chacha20poly1305_ietf_KEYBYTES,
+    crypto_aead_chacha20poly1305_ietf_NPUBBYTES, crypto_aead_chacha20poly1305_ietf_decrypt,
+    crypto_aead_chacha20poly1305_ietf_decrypt_detached, crypto_aead_chacha20poly1305_ietf_encrypt,
+    crypto_aead_chacha20poly1305_ietf_encrypt_detached,
+};
 aead_module!(
     crypto_aead_chacha20poly1305_ietf_encrypt,
     crypto_aead_chacha20poly1305_ietf_decrypt,

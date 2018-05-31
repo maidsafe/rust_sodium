@@ -9,19 +9,19 @@ use ffi;
 use randombytes::randombytes_into;
 
 /// Number of bytes in a `PublicKey`.
-pub const PUBLICKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES as
-    usize;
+pub const PUBLICKEYBYTES: usize =
+    ffi::crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES as usize;
 
 /// Number of bytes in a `SecretKey`.
-pub const SECRETKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES as
-    usize;
+pub const SECRETKEYBYTES: usize =
+    ffi::crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES as usize;
 
 /// Number of bytes in a `Nonce`.
 pub const NONCEBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_NONCEBYTES as usize;
 
 /// Number of bytes in a `PrecomputedKey`.
-pub const PRECOMPUTEDKEYBYTES: usize = ffi::crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES as
-    usize;
+pub const PRECOMPUTEDKEYBYTES: usize =
+    ffi::crypto_box_curve25519xsalsa20poly1305_BEFORENMBYTES as usize;
 
 /// Number of bytes in the authenticator tag of an encrypted message
 /// i.e. the number of bytes by which the ciphertext is larger than the
@@ -164,7 +164,11 @@ pub fn open(
             sk.as_ptr(),
         )
     };
-    if ret == 0 { Ok(m) } else { Err(()) }
+    if ret == 0 {
+        Ok(m)
+    } else {
+        Err(())
+    }
 }
 
 /// `open_detached()` verifies and decrypts a ciphertext `c` using the receiver's secret key `sk`,
@@ -189,7 +193,11 @@ pub fn open_detached(
             sk.as_ptr(),
         )
     };
-    if ret == 0 { Ok(()) } else { Err(()) }
+    if ret == 0 {
+        Ok(())
+    } else {
+        Err(())
+    }
 }
 
 new_type! {
@@ -286,7 +294,11 @@ pub fn open_precomputed(
             k.as_ptr(),
         )
     };
-    if ret == 0 { Ok(m) } else { Err(()) }
+    if ret == 0 {
+        Ok(m)
+    } else {
+        Err(())
+    }
 }
 
 /// `open_detached_precomputed()` verifies and decrypts a ciphertext `c` using a precomputed key
@@ -309,7 +321,11 @@ pub fn open_detached_precomputed(
             k.as_ptr(),
         )
     };
-    if ret == 0 { Ok(()) } else { Err(()) }
+    if ret == 0 {
+        Ok(())
+    } else {
+        Err(())
+    }
 }
 
 #[cfg(test)]
@@ -480,8 +496,7 @@ mod test {
         assert!(failure.is_err());
         // Make sure the input hasn't been touched.
         assert_eq!(
-            buf,
-            copy,
+            buf, copy,
             "input should not be modified if authentication fails"
         );
     }
@@ -587,8 +602,7 @@ mod test {
         assert!(failure.is_err());
         // Make sure the input hasn't been touched.
         assert_eq!(
-            buf,
-            copy,
+            buf, copy,
             "input should not be modified if authentication fails"
         );
     }
@@ -724,8 +738,10 @@ mod bench {
         let (pk, sk) = gen_keypair();
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
-        b.iter(|| for m in ms.iter() {
-            unwrap!(open(&seal(m, &n, &pk, &sk), &n, &pk, &sk));
+        b.iter(|| {
+            for m in ms.iter() {
+                unwrap!(open(&seal(m, &n, &pk, &sk), &n, &pk, &sk));
+            }
         });
     }
 

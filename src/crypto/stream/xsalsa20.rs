@@ -3,9 +3,10 @@
 //! This cipher is conjectured to meet the standard notion of
 //! unpredictability.
 
-use ffi::{crypto_stream_xsalsa20, crypto_stream_xsalsa20_KEYBYTES,
-          crypto_stream_xsalsa20_NONCEBYTES, crypto_stream_xsalsa20_xor,
-          crypto_stream_xsalsa20_xor_ic};
+use ffi::{
+    crypto_stream_xsalsa20, crypto_stream_xsalsa20_KEYBYTES, crypto_stream_xsalsa20_NONCEBYTES,
+    crypto_stream_xsalsa20_xor, crypto_stream_xsalsa20_xor_ic,
+};
 
 stream_module!(
     crypto_stream_xsalsa20,

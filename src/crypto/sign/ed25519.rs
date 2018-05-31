@@ -142,13 +142,12 @@ pub fn verify_detached(
     &PublicKey(ref pk): &PublicKey,
 ) -> bool {
     unsafe {
-        0 ==
-            ffi::crypto_sign_ed25519_verify_detached(
-                sig.as_ptr(),
-                m.as_ptr(),
-                m.len() as c_ulonglong,
-                pk.as_ptr(),
-            )
+        0 == ffi::crypto_sign_ed25519_verify_detached(
+            sig.as_ptr(),
+            m.as_ptr(),
+            m.len() as c_ulonglong,
+            pk.as_ptr(),
+        )
     }
 }
 
@@ -345,8 +344,10 @@ mod bench {
         unwrap!(::init());
         let (_, sk) = gen_keypair();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
-        b.iter(|| for m in ms.iter() {
-            sign(m, &sk);
+        b.iter(|| {
+            for m in ms.iter() {
+                sign(m, &sk);
+            }
         });
     }
 
@@ -361,8 +362,10 @@ mod bench {
                 sign(&m, &sk)
             })
             .collect();
-        b.iter(|| for sm in sms.iter() {
-            verify(sm, &pk);
+        b.iter(|| {
+            for sm in sms.iter() {
+                verify(sm, &pk);
+            }
         });
     }
 }

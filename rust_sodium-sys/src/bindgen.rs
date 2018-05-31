@@ -2,8 +2,8 @@
 
 use libc;
 
-pub const SODIUM_VERSION_STRING: *const libc::c_char = (b"1.0.16\0" as *const libc::c_uchar) as
-    *const libc::c_char;
+pub const SODIUM_VERSION_STRING: *const libc::c_char =
+    (b"1.0.16\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const SODIUM_LIBRARY_VERSION_MAJOR: libc::c_uint = 10;
 pub const SODIUM_LIBRARY_VERSION_MINOR: libc::c_uint = 1;
 pub const crypto_aead_aes256gcm_KEYBYTES: libc::c_uint = 32;
@@ -96,8 +96,8 @@ pub const crypto_generichash_KEYBYTES: libc::c_uint = 32;
 pub const crypto_generichash_PRIMITIVE: *const libc::c_char =
     (b"blake2b\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const crypto_hash_BYTES: libc::c_uint = 64;
-pub const crypto_hash_PRIMITIVE: *const libc::c_char = (b"sha512\0" as *const libc::c_uchar) as
-    *const libc::c_char;
+pub const crypto_hash_PRIMITIVE: *const libc::c_char =
+    (b"sha512\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const crypto_kdf_blake2b_BYTES_MIN: libc::c_uint = 16;
 pub const crypto_kdf_blake2b_BYTES_MAX: libc::c_uint = 64;
 pub const crypto_kdf_blake2b_CONTEXTBYTES: libc::c_uint = 8;
@@ -106,14 +106,14 @@ pub const crypto_kdf_BYTES_MIN: libc::c_uint = 16;
 pub const crypto_kdf_BYTES_MAX: libc::c_uint = 64;
 pub const crypto_kdf_CONTEXTBYTES: libc::c_uint = 8;
 pub const crypto_kdf_KEYBYTES: libc::c_uint = 32;
-pub const crypto_kdf_PRIMITIVE: *const libc::c_char = (b"blake2b\0" as *const libc::c_uchar) as
-    *const libc::c_char;
+pub const crypto_kdf_PRIMITIVE: *const libc::c_char =
+    (b"blake2b\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const crypto_kx_PUBLICKEYBYTES: libc::c_uint = 32;
 pub const crypto_kx_SECRETKEYBYTES: libc::c_uint = 32;
 pub const crypto_kx_SEEDBYTES: libc::c_uint = 32;
 pub const crypto_kx_SESSIONKEYBYTES: libc::c_uint = 32;
-pub const crypto_kx_PRIMITIVE: *const libc::c_char = (b"x25519blake2b\0" as *const libc::c_uchar) as
-    *const libc::c_char;
+pub const crypto_kx_PRIMITIVE: *const libc::c_char =
+    (b"x25519blake2b\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const crypto_onetimeauth_poly1305_BYTES: libc::c_uint = 16;
 pub const crypto_onetimeauth_poly1305_KEYBYTES: libc::c_uint = 32;
 pub const crypto_onetimeauth_BYTES: libc::c_uint = 16;
@@ -173,8 +173,8 @@ pub const crypto_pwhash_OPSLIMIT_MODERATE: libc::c_uint = 3;
 pub const crypto_pwhash_MEMLIMIT_MODERATE: libc::c_uint = 268435456;
 pub const crypto_pwhash_OPSLIMIT_SENSITIVE: libc::c_uint = 4;
 pub const crypto_pwhash_MEMLIMIT_SENSITIVE: libc::c_uint = 1073741824;
-pub const crypto_pwhash_PRIMITIVE: *const libc::c_char = (b"argon2i\0" as *const libc::c_uchar) as
-    *const libc::c_char;
+pub const crypto_pwhash_PRIMITIVE: *const libc::c_char =
+    (b"argon2i\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const crypto_scalarmult_curve25519_BYTES: libc::c_uint = 32;
 pub const crypto_scalarmult_curve25519_SCALARBYTES: libc::c_uint = 32;
 pub const crypto_scalarmult_BYTES: libc::c_uint = 32;
@@ -222,12 +222,12 @@ pub const crypto_sign_BYTES: libc::c_uint = 64;
 pub const crypto_sign_SEEDBYTES: libc::c_uint = 32;
 pub const crypto_sign_PUBLICKEYBYTES: libc::c_uint = 32;
 pub const crypto_sign_SECRETKEYBYTES: libc::c_uint = 64;
-pub const crypto_sign_PRIMITIVE: *const libc::c_char = (b"ed25519\0" as *const libc::c_uchar) as
-    *const libc::c_char;
+pub const crypto_sign_PRIMITIVE: *const libc::c_char =
+    (b"ed25519\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const crypto_stream_KEYBYTES: libc::c_uint = 32;
 pub const crypto_stream_NONCEBYTES: libc::c_uint = 24;
-pub const crypto_stream_PRIMITIVE: *const libc::c_char = (b"xsalsa20\0" as *const libc::c_uchar) as
-    *const libc::c_char;
+pub const crypto_stream_PRIMITIVE: *const libc::c_char =
+    (b"xsalsa20\0" as *const libc::c_uchar) as *const libc::c_char;
 pub const crypto_stream_salsa20_KEYBYTES: libc::c_uint = 32;
 pub const crypto_stream_salsa20_NONCEBYTES: libc::c_uint = 8;
 pub const crypto_verify_16_BYTES: libc::c_uint = 16;
