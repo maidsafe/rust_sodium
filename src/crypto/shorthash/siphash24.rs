@@ -162,8 +162,10 @@ mod bench {
         unwrap!(::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
-        b.iter(|| for m in ms.iter() {
-            shorthash(m, &k);
+        b.iter(|| {
+            for m in ms.iter() {
+                shorthash(m, &k);
+            }
         });
     }
 }

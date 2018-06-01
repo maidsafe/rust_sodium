@@ -15,28 +15,20 @@ pub const HASHEDPASSWORDBYTES: usize = ffi::crypto_pwhash_scryptsalsa208sha256_S
 pub const STRPREFIX: &str = "$7$";
 
 /// Safe base line for `OpsLimit` for interactive password hashing.
-pub const OPSLIMIT_INTERACTIVE: OpsLimit = OpsLimit(
-    ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE as
-        usize,
-);
+pub const OPSLIMIT_INTERACTIVE: OpsLimit =
+    OpsLimit(ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_INTERACTIVE as usize);
 
 /// Safe base line for `MemLimit` for interactive password hashing.
-pub const MEMLIMIT_INTERACTIVE: MemLimit = MemLimit(
-    ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE as
-        usize,
-);
+pub const MEMLIMIT_INTERACTIVE: MemLimit =
+    MemLimit(ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_INTERACTIVE as usize);
 
 /// `OpsLimit` for highly sensitive data.
-pub const OPSLIMIT_SENSITIVE: OpsLimit = OpsLimit(
-    ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE as
-        usize,
-);
+pub const OPSLIMIT_SENSITIVE: OpsLimit =
+    OpsLimit(ffi::crypto_pwhash_scryptsalsa208sha256_OPSLIMIT_SENSITIVE as usize);
 
 /// `MemLimit` for highly sensitive data.
-pub const MEMLIMIT_SENSITIVE: MemLimit = MemLimit(
-    ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE as
-        usize,
-);
+pub const MEMLIMIT_SENSITIVE: MemLimit =
+    MemLimit(ffi::crypto_pwhash_scryptsalsa208sha256_MEMLIMIT_SENSITIVE as usize);
 
 /// `OpsLimit` represents the maximum number of computations to perform when
 /// using the functions in this module.

@@ -1,6 +1,6 @@
 use rmp_serde;
-use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 use serde_json;
 
 // Encodes then decodes `value` using JSON

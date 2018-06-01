@@ -52,7 +52,7 @@ fn main() {
         println!("cargo:rustc-link-lib={}={}", mode, name);
         println!(
             "cargo:warning=Using unknown libsodium version.  This crate is tested against \
-                  {} and may not be fully compatible with other versions.",
+             {} and may not be fully compatible with other versions.",
             VERSION
         );
     } else if env::var("RUST_SODIUM_USE_PKG_CONFIG").is_ok() {
@@ -60,10 +60,8 @@ fn main() {
         if lib_details.version != VERSION {
             println!(
                 "cargo:warning=Using libsodium version {}.  This crate is tested against {} \
-                      and may not be fully compatible with {}.",
-                lib_details.version,
-                VERSION,
-                lib_details.version
+                 and may not be fully compatible with {}.",
+                lib_details.version, VERSION, lib_details.version
             );
         }
     } else {
@@ -98,8 +96,6 @@ fn download(url: &str, expected_hash: &str) -> Cursor<Vec<u8>> {
 fn get_install_dir() -> String {
     unwrap!(env::var("OUT_DIR")) + "/installed"
 }
-
-
 
 #[cfg(target_env = "msvc")]
 fn get_libsodium() {
@@ -162,8 +158,6 @@ fn get_libsodium() {
     println!("cargo:include={}/include", install_dir);
 }
 
-
-
 #[cfg(all(windows, not(target_env = "msvc")))]
 fn get_libsodium() {
     use flate2::read::GzDecoder;
@@ -214,8 +208,6 @@ fn get_libsodium() {
     println!("cargo:include={}/include", install_dir);
 }
 
-
-
 #[cfg(not(windows))]
 fn get_libsodium() {
     use flate2::read::GzDecoder;
@@ -242,8 +234,8 @@ fn get_libsodium() {
         source_dir = fallback_path.clone() + "/source";
         println!(
             "cargo:warning=The path to the usual build directory contains spaces and hence \
-                  can't be used to build libsodium.  Falling back to use {}.  If running `cargo \
-                  clean`, ensure you also delete this fallback directory",
+             can't be used to build libsodium.  Falling back to use {}.  If running `cargo \
+             clean`, ensure you also delete this fallback directory",
             fallback_path
         );
     }
@@ -282,9 +274,7 @@ fn get_libsodium() {
         // Determine SDK directory paths
         let sdk_dir_simulator = unwrap!(
             Path::new(&xcode_dir)
-                .join(
-                    "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk",
-                )
+                .join("Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk")
                 .to_str()
         ).to_string();
         let sdk_dir_ios = unwrap!(

@@ -116,7 +116,11 @@ pub fn open(c: &[u8], &Nonce(ref n): &Nonce, &Key(ref k): &Key) -> Result<Vec<u8
             k.as_ptr(),
         )
     };
-    if ret == 0 { Ok(m) } else { Err(()) }
+    if ret == 0 {
+        Ok(m)
+    } else {
+        Err(())
+    }
 }
 
 /// `open_detached()` verifies and decrypts a ciphertext `c` and and authentication tag `tag`,
@@ -139,7 +143,11 @@ pub fn open_detached(
             k.as_ptr(),
         )
     };
-    if ret == 0 { Ok(()) } else { Err(()) }
+    if ret == 0 {
+        Ok(())
+    } else {
+        Err(())
+    }
 }
 
 #[cfg(test)]
@@ -229,7 +237,6 @@ mod test {
         }
     }
 
-
     #[test]
     fn test_seal_open_detached_tamper() {
         use randombytes::randombytes;
@@ -268,8 +275,7 @@ mod test {
         assert!(failure.is_err());
         // Make sure the input hasn't been touched.
         assert_eq!(
-            buf,
-            copy,
+            buf, copy,
             "input should not be modified if authentication fails"
         );
     }
@@ -343,8 +349,10 @@ mod bench {
         let k = gen_key();
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
-        b.iter(|| for m in ms.iter() {
-            unwrap!(open(&seal(&m, &n, &k), &n, &k));
+        b.iter(|| {
+            for m in ms.iter() {
+                unwrap!(open(&seal(&m, &n, &k), &n, &k));
+            }
         });
     }
 }

@@ -1,6 +1,5 @@
 //! A particular combination of `Curve25519`, `Blake2B`, `Salsa20` and `Poly1305`.
 
-
 use super::super::box_::curve25519xsalsa20poly1305 as box_;
 use ffi;
 
@@ -58,13 +57,17 @@ pub fn open(
             sk.as_ptr(),
         )
     };
-    if ret == 0 { Ok(m) } else { Err(()) }
+    if ret == 0 {
+        Ok(m)
+    } else {
+        Err(())
+    }
 }
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use super::super::super::box_::curve25519xsalsa20poly1305 as box_;
+    use super::*;
 
     #[test]
     fn test_seal_open() {

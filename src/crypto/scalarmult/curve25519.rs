@@ -152,7 +152,9 @@ mod bench {
         randombytes_into(&mut sbs);
         let g = GroupElement(gbs);
         let s = Scalar(sbs);
-        b.iter(|| { scalarmult(&s, &g); });
+        b.iter(|| {
+            scalarmult(&s, &g);
+        });
     }
 
     #[bench]
@@ -161,6 +163,8 @@ mod bench {
         let mut sbs = [0u8; SCALARBYTES];
         randombytes_into(&mut sbs);
         let s = Scalar(sbs);
-        b.iter(|| { scalarmult_base(&s); });
+        b.iter(|| {
+            scalarmult_base(&s);
+        });
     }
 }

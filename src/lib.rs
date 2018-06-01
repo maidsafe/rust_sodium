@@ -51,34 +51,44 @@
 //!
 //!  [`crypto::shorthash`](crypto/shorthash/index.html)
 
-#![doc(html_logo_url =
-           "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
-       html_favicon_url = "https://maidsafe.net/img/favicon.ico",
-       html_root_url = "https://docs.rs/rust_sodium")]
-
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
+    html_favicon_url = "https://maidsafe.net/img/favicon.ico",
+    html_root_url = "https://docs.rs/rust_sodium"
+)]
 // For explanation of lint checks, run `rustc -W help` or see
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
-#![forbid(bad_style, exceeding_bitshifts, mutable_transmutes, no_mangle_const_items,
-          unknown_crate_types, warnings)]
-#![deny(deprecated, improper_ctypes, missing_docs,
-        non_shorthand_field_patterns, overflowing_literals, plugin_as_library,
-        private_no_mangle_fns, private_no_mangle_statics, stable_features, unconditional_recursion,
-        unknown_lints, unused, unused_allocation, unused_attributes, unused_comparisons,
-        unused_features, unused_parens, while_true)]
-#![warn(trivial_numeric_casts, unused_extern_crates, unused_import_braces,
-        unused_qualifications, unused_results)]
+#![forbid(
+    bad_style, exceeding_bitshifts, mutable_transmutes, no_mangle_const_items, unknown_crate_types,
+    warnings
+)]
+#![deny(
+    deprecated, improper_ctypes, missing_docs, non_shorthand_field_patterns, overflowing_literals,
+    plugin_as_library, private_no_mangle_fns, private_no_mangle_statics, stable_features,
+    unconditional_recursion, unknown_lints, unused, unused_allocation, unused_attributes,
+    unused_comparisons, unused_features, unused_parens, while_true
+)]
+#![warn(
+    trivial_numeric_casts, unused_extern_crates, unused_import_braces, unused_qualifications,
+    unused_results
+)]
 // Allow `trivial_casts` to cast `u8` to `c_char`, which is `u8` or `i8`, depending on the
 // architecture.
-#![allow(box_pointers, missing_copy_implementations,
-         missing_debug_implementations, trivial_casts, unsafe_code, variant_size_differences)]
+#![allow(
+    box_pointers, missing_copy_implementations, missing_debug_implementations, trivial_casts,
+    unsafe_code, variant_size_differences
+)]
+// Allow `write_literal` due to false positives. Revert this after
+// https://github.com/rust-lang-nursery/rust-clippy/issues/2657 is fixed.
+#![cfg_attr(feature = "cargo-clippy", allow(write_literal))]
 
-extern crate rust_sodium_sys as ffi;
 #[cfg(test)]
 extern crate hex;
 extern crate libc;
 extern crate rand;
 #[cfg(test)]
 extern crate rmp_serde;
+extern crate rust_sodium_sys as ffi;
 extern crate serde;
 #[cfg(test)]
 extern crate serde_json;
@@ -97,19 +107,19 @@ mod test_utils;
 /// Cryptographic functions
 pub mod crypto {
     pub mod aead;
-    pub mod box_;
-    pub mod sealedbox;
-    pub mod sign;
-    pub mod scalarmult;
     pub mod auth;
+    pub mod box_;
     pub mod hash;
-    pub mod secretbox;
+    pub mod kx;
     pub mod onetimeauth;
     pub mod pwhash;
-    pub mod stream;
+    pub mod scalarmult;
+    pub mod sealedbox;
+    pub mod secretbox;
     pub mod shorthash;
+    pub mod sign;
+    pub mod stream;
     pub mod verify;
-    pub mod kx;
 }
 
 /// Initialises libsodium and chooses faster versions of the primitives if possible.  Also makes the
