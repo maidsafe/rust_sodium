@@ -360,8 +360,7 @@ mod bench {
             .map(|s| {
                 let m = randombytes(*s);
                 sign(&m, &sk)
-            })
-            .collect();
+            }).collect();
         b.iter(|| {
             for sm in sms.iter() {
                 verify(sm, &pk);
