@@ -1,7 +1,5 @@
 # rust_sodium
 
- **Maintainer:** David Irvine (david.irvine@maidsafe.net)
-
 Rust bindings to [libsodium](https://github.com/jedisct1/libsodium).
 
 This project is largely based on [sodiumoxide](https://github.com/dnaq/sodiumoxide).  Some main
