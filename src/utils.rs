@@ -228,25 +228,25 @@ mod test {
     fn test_padding_invalid_block_size() {
         unwrap!(::init());
         // invalid block size
-        pad(Vec::new(), 0).unwrap_err();
+        unwrap_err!(pad(Vec::new(), 0));
         let v = vec![0x80];
-        unpad(&v, 0).unwrap_err();
+        unwrap_err!(unpad(&v, 0));
 
         // mismatching block size
         let v = pad(Vec::new(), 8).unwrap();
-        unpad(&v, 4).unwrap_err();
+        unwrap_err!(unpad(&v, 4));
     }
 
     #[test]
     fn test_padding_invalid_padded_size() {
         unwrap!(::init());
         // An empty array couldn't possibly have been created by `pad()`.
-        unpad(&[], 1).unwrap_err();
+        unwrap_err!(unpad(&[], 1));
 
         // Padded scheme is of incorrect length (not a multiple of block size)
         let mut v = pad(vec![42], 1337).unwrap();
         let _ = v.pop();
-        unpad(&v, 1337).unwrap_err();
+        unwrap_err!(unpad(&v, 1337));
     }
 
     #[test]
@@ -255,6 +255,6 @@ mod test {
         // A trailing padding byte is incorrect
         let mut v = pad(vec![42], 128).unwrap();
         *v.last_mut().expect("non-empty") = 99;
-        unpad(&v, 128).unwrap_err();
+        unwrap_err!(unpad(&v, 128));
     }
 }
