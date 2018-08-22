@@ -13,10 +13,8 @@ where
     assert_eq!(*value, decoded_value);
 
     let mut buf = Vec::new();
-    value
-        .serialize(&mut rmp_serde::Serializer::new(&mut buf))
-        .unwrap();
+    unwrap!(value.serialize(&mut rmp_serde::Serializer::new(&mut buf)));
     let mut de = rmp_serde::Deserializer::new(&buf[..]);
-    let decoded_value: T = Deserialize::deserialize(&mut de).unwrap();
+    let decoded_value: T = unwrap!(Deserialize::deserialize(&mut de));
     assert_eq!(*value, decoded_value);
 }
