@@ -182,7 +182,7 @@ mod test {
                 // Test the combined mode.
                 assert_eq!(Err(()), open(&c, &n, &k));
                 // Test the detached mode.
-                let tag = Tag::from_slice(&c[..MACBYTES]).unwrap();
+                let tag = unwrap!(Tag::from_slice(&c[..MACBYTES]));
                 assert_eq!(Err(()), open_detached(&mut c[MACBYTES..], &tag, &n, &k));
                 c[i] ^= 0x20;
             }
@@ -199,7 +199,7 @@ mod test {
             let n = gen_nonce();
             let mut buf = m.clone();
             let tag = seal_detached(&mut buf, &n, &k);
-            open_detached(&mut buf, &tag, &n, &k).unwrap();
+            unwrap!(open_detached(&mut buf, &tag, &n, &k));
             assert_eq!(m, buf);
         }
     }
@@ -213,9 +213,9 @@ mod test {
             let m = randombytes(i);
             let n = gen_nonce();
             let mut c = seal(&m, &n, &k);
-            let tag = Tag::from_slice(&c[..MACBYTES]).unwrap();
+            let tag = unwrap!(Tag::from_slice(&c[..MACBYTES]));
             let buf = &mut c[MACBYTES..];
-            open_detached(buf, &tag, &n, &k).unwrap();
+            unwrap!(open_detached(buf, &tag, &n, &k));
             assert_eq!(buf, &*m);
         }
     }
@@ -267,7 +267,7 @@ mod test {
         let n = gen_nonce();
         let tag = seal_detached(&mut buf, &n, &k);
         // Flip the last bit in the ciphertext, to break authentication.
-        *buf.last_mut().unwrap() ^= 1;
+        *unwrap!(buf.last_mut()) ^= 1;
         // Make a copy that we can compare against after the failure below.
         let copy = buf.clone();
         // Now try to open the message. This will fail.

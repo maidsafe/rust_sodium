@@ -192,7 +192,7 @@ mod test_m {
             let ad = randombytes(i);
             let m = randombytes(i);
             let c = seal(&m, Some(&ad), &n, &k);
-            let m2 = open(&c, Some(&ad), &n, &k).unwrap();
+            let m2 = unwrap!(open(&c, Some(&ad), &n, &k));
             assert_eq!(m, m2);
         }
     }
@@ -233,7 +233,7 @@ mod test_m {
             let mut m = randombytes(i);
             let m2 = m.clone();
             let t = seal_detached(&mut m, Some(&ad), &n, &k);
-            open_detached(&mut m, Some(&ad), &t, &n, &k).unwrap();
+            unwrap!(open_detached(&mut m, Some(&ad), &t, &n, &k));
             assert_eq!(m, m2);
         }
     }
@@ -285,8 +285,8 @@ mod test_m {
             assert_eq!(&c[0..c.len()-TAGBYTES], &m[..]);
             assert_eq!(&c[c.len()-TAGBYTES..], &t.0[..]);
 
-            let m2 = open(&c, Some(&ad), &n, &k).unwrap();
-            open_detached(&mut m, Some(&ad), &t, &n, &k).unwrap();
+            let m2 = unwrap!(open(&c, Some(&ad), &n, &k));
+            unwrap!(open_detached(&mut m, Some(&ad), &t, &n, &k));
 
             assert_eq!(m2, m);
         }

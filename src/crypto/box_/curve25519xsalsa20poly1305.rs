@@ -416,7 +416,7 @@ mod test {
             let n = gen_nonce();
             let mut buf = m.clone();
             let tag = seal_detached(&mut buf, &n, &pk1, &sk2);
-            open_detached(&mut buf, &tag, &n, &pk2, &sk1).unwrap();
+            unwrap!(open_detached(&mut buf, &tag, &n, &pk2, &sk1));
             assert_eq!(m, buf);
         }
     }
@@ -431,9 +431,9 @@ mod test {
             let m = randombytes(i);
             let n = gen_nonce();
             let mut c = seal(&m, &n, &pk1, &sk2);
-            let tag = Tag::from_slice(&c[..MACBYTES]).unwrap();
+            let tag = unwrap!(Tag::from_slice(&c[..MACBYTES]));
             let buf = &mut c[MACBYTES..];
-            open_detached(buf, &tag, &n, &pk2, &sk1).unwrap();
+            unwrap!(open_detached(buf, &tag, &n, &pk2, &sk1));
             assert_eq!(buf, &*m);
         }
     }
@@ -488,7 +488,7 @@ mod test {
         let n = gen_nonce();
         let tag = seal_detached(&mut buf, &n, &pk1, &sk2);
         // Flip the last bit in the ciphertext, to break authentication.
-        *buf.last_mut().unwrap() ^= 1;
+        *unwrap!(buf.last_mut()) ^= 1;
         // Make a copy that we can compare against after the failure below.
         let copy = buf.clone();
         // Now try to open the message. This will fail.
@@ -514,7 +514,7 @@ mod test {
             let n = gen_nonce();
             let mut buf = m.clone();
             let tag = seal_detached_precomputed(&mut buf, &n, &k1);
-            open_detached_precomputed(&mut buf, &tag, &n, &k2).unwrap();
+            unwrap!(open_detached_precomputed(&mut buf, &tag, &n, &k2));
             assert_eq!(m, buf);
         }
     }
@@ -531,9 +531,9 @@ mod test {
             let m = randombytes(i);
             let n = gen_nonce();
             let mut c = seal_precomputed(&m, &n, &k1);
-            let tag = Tag::from_slice(&c[..MACBYTES]).unwrap();
+            let tag = unwrap!(Tag::from_slice(&c[..MACBYTES]));
             let buf = &mut c[MACBYTES..];
-            open_detached_precomputed(buf, &tag, &n, &k2).unwrap();
+            unwrap!(open_detached_precomputed(buf, &tag, &n, &k2));
             assert_eq!(buf, &*m);
         }
     }
@@ -594,7 +594,7 @@ mod test {
         let n = gen_nonce();
         let tag = seal_detached_precomputed(&mut buf, &n, &k1);
         // Flip the last bit in the ciphertext, to break authentication.
-        *buf.last_mut().unwrap() ^= 1;
+        *unwrap!(buf.last_mut()) ^= 1;
         // Make a copy that we can compare against after the failure below.
         let copy = buf.clone();
         // Now try to open the message. This will fail.

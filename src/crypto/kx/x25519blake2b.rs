@@ -138,9 +138,9 @@ mod test {
         assert!(client_sk != server_sk);
 
         let (client_rx, client_tx) =
-            client_session_keys(&client_pk, &client_sk, &server_pk).unwrap();
+            unwrap!(client_session_keys(&client_pk, &client_sk, &server_pk));
         let (server_rx, server_tx) =
-            server_session_keys(&server_pk, &server_sk, &client_pk).unwrap();
+            unwrap!(server_session_keys(&server_pk, &server_sk, &client_pk));
 
         assert!(client_rx == server_tx);
         assert!(client_tx == server_rx);
@@ -193,26 +193,24 @@ mod test {
             client_session_keys(&client_pk, &client_sk, &small_order_p),
             Err(())
         );
-        let (client_rx, client_tx) = client_session_keys(&client_pk, &client_sk, &server_pk)
-            .unwrap();
+        let (client_rx, client_tx) = unwrap!(client_session_keys(&client_pk, &client_sk, &server_pk)
+            );
 
         assert_eq!(
             server_session_keys(&server_pk, &server_sk, &small_order_p),
             Err(())
         );
-        let _ = server_session_keys(&server_pk, &server_sk, &client_pk).unwrap();
+        let _ = unwrap!(server_session_keys(&server_pk, &server_sk, &client_pk));
 
         client_pk.0[0] += 1;
 
-        let (server_rx, server_tx) = server_session_keys(&server_pk, &server_sk, &client_pk)
-            .unwrap();
+        let (server_rx, server_tx) = unwrap!(server_session_keys(&server_pk, &server_sk, &client_pk));
 
         assert_ne!(server_rx.0, client_tx.0);
         assert_ne!(server_tx.0, client_rx.0);
 
         let (client_pk, _) = gen_keypair();
-        let (server_rx, server_tx) = server_session_keys(&server_pk, &server_sk, &client_pk)
-            .unwrap();
+        let (server_rx, server_tx) = unwrap!(server_session_keys(&server_pk, &server_sk, &client_pk));
 
         assert_ne!(server_rx.0, client_tx.0);
         assert_ne!(server_tx.0, client_rx.0);
@@ -221,8 +219,7 @@ mod test {
         seed.0[0] += 1;
         let (server_pk, server_sk) = keypair_from_seed(&seed);
 
-        let (server_rx, server_tx) = server_session_keys(&server_pk, &server_sk, &client_pk)
-            .unwrap();
+        let (server_rx, server_tx) = unwrap!(server_session_keys(&server_pk, &server_sk, &client_pk));
         let server_rx_expected = SessionKey([
             0x62, 0xc8, 0xf4, 0xfa, 0x81, 0x80, 0x0a, 0xbd, 0x05, 0x77, 0xd9, 0x99, 0x18, 0xd1,
             0x29, 0xb6, 0x5d, 0xeb, 0x78, 0x9a, 0xf8, 0xc8, 0x35, 0x1f, 0x39, 0x1f, 0xeb, 0x0c,
@@ -234,8 +231,7 @@ mod test {
         assert_eq!(server_rx, server_rx_expected);
         assert_eq!(server_tx, server_tx_expected);
 
-        let (client_rx, client_tx) = client_session_keys(&client_pk, &client_sk, &server_pk)
-            .unwrap();
+        let (client_rx, client_tx) = unwrap!(client_session_keys(&client_pk, &client_sk, &server_pk));
         let client_rx_expected = SessionKey([
             0x74, 0x95, 0x19, 0xc6, 0x80, 0x59, 0xbc, 0xe6, 0x9f, 0x7c, 0xfc, 0xc7, 0xb3, 0x87,
             0xa3, 0xde, 0x1a, 0x1e, 0x82, 0x37, 0xd1, 0x10, 0x99, 0x13, 0x23, 0xbf, 0x62, 0x87,
