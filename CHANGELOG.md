@@ -1,5 +1,11 @@
 # rust_sodium - Change Log
 
+## [0.10.0]
+- upgrade rust_sodium-sys to 0.10.0
+- upgrade unwrap version to 1.2.0
+- use rust 1.28.0 stable / 2018-07-07 nightly
+- rustfmt 0.99.2 and clippy-0.0.212
+
 ## [0.9.0]
 - upgrade libsodium version to 1.0.16
 - replace 'use-installed-libsodium' feature with env var
