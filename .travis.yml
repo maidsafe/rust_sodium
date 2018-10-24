@@ -2,17 +2,12 @@ env:
   global:
     - PATH=$PATH:$HOME/.cargo/bin
     - RUST_BACKTRACE=1
-    - RUST_STABLE=1.28.0
-    - RUST_NIGHTLY=nightly-2018-07-07
-    - RUST_RUSTFMT=0.99.2
-    - RUST_CLIPPY=0.0.212
 os:
   - linux
   - osx
 language: rust
 rust:
-  - 1.28.0
-  - nightly-2018-07-07
+  - 1.29.0
 sudo: false
 branches:
   only:
@@ -22,26 +17,16 @@ cache:
 before_script:
   - curl -sSL https://github.com/maidsafe/QA/raw/master/travis/cargo_install.sh > cargo_install.sh
   - bash cargo_install.sh cargo-prune;
-  - if [ "$TRAVIS_RUST_VERSION" = $RUST_NIGHTLY ] && [ "$TRAVIS_OS_NAME" = linux ]; then
-      bash cargo_install.sh rustfmt-nightly "$RUST_RUSTFMT";
-      bash cargo_install.sh clippy "$RUST_CLIPPY";
-    fi
+  - rustup component add rustfmt-preview
+  - rustup component add clippy-preview
 script:
-  - if [ "${TRAVIS_RUST_VERSION}" = "$RUST_STABLE" ]; then
-      (
-        set -x;
-        cargo test --release --verbose &&
-        cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml
-      );
-    elif [ "${TRAVIS_OS_NAME}" = linux ]; then
-      (
-        set -x;
-        cargo fmt -- --check &&
-        cargo clippy &&
-        cargo clippy --profile=test &&
-        cargo clippy --manifest-path=rust_sodium-sys/Cargo.toml &&
-        cargo clippy --profile=test --manifest-path=rust_sodium-sys/Cargo.toml
-      );
-    fi
+  - set -x;
+    cargo fmt -- --check &&
+    cargo test --release --verbose &&
+    cargo test --release --verbose --manifest-path rust_sodium-sys/Cargo.toml &&
+    cargo clippy &&
+    cargo clippy --profile=test &&
+    cargo clippy --manifest-path=rust_sodium-sys/Cargo.toml &&
+    cargo clippy --profile=test --manifest-path=rust_sodium-sys/Cargo.toml
 before_cache:
   - cargo prune
