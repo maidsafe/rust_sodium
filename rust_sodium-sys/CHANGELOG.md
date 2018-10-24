@@ -1,5 +1,10 @@
 # rust_sodium-sys - Change Log
 
+## [0.10.1]
+- fix build: replace reqwest with http_req in build script
+- use rust 1.29.0 stable, drop nightly
+- use cargo fmt and cargo clippy
+
 ## [0.10.0]
 - upgrade unwrap version to 1.2.0
 - use rust 1.28.0 stable / 2018-07-07 nightly
