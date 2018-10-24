@@ -9,7 +9,7 @@ publish = false
 version = "0.2.0"
 
 [dependencies]
-rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.10.0" }
+rust_sodium-sys = { path = "../rust_sodium-sys", version = "~0.10.1" }
 libc = "~0.2.38"
 
 [build-dependencies]

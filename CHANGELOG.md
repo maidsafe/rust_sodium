@@ -1,5 +1,10 @@
 # rust_sodium - Change Log
 
+## [0.10.1]
+- upgrade rust_sodium-sys to 0.10.1
+- use rust to 1.29.0 stable, drop nightly
+- use cargo fmt and cargo clippy
+
 ## [0.10.0]
 - upgrade rust_sodium-sys to 0.10.0
 - upgrade unwrap version to 1.2.0
