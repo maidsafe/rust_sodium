@@ -5,7 +5,7 @@ extern crate flate2;
 #[cfg(target_env = "msvc")]
 extern crate libc;
 extern crate pkg_config;
-extern crate reqwest;
+extern crate http_req;
 extern crate sha2;
 #[cfg(not(target_env = "msvc"))]
 extern crate tar;
@@ -14,11 +14,11 @@ extern crate unwrap;
 #[cfg(target_env = "msvc")]
 extern crate zip;
 
-use reqwest::Client;
+use http_req::request;
 use sha2::{Digest, Sha256};
 use std::env;
 use std::fs;
-use std::io::{Cursor, Read};
+use std::io::Cursor;
 use std::path::Path;
 
 const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
@@ -72,15 +72,14 @@ fn main() {
 /// Download the specified URL into a buffer which is returned.
 fn download(url: &str, expected_hash: &str) -> Cursor<Vec<u8>> {
     // Send GET request
-    let client = Client::new();
-    let mut response = unwrap!(client.get(url).send());
+    let response = unwrap!(request::get(url));
 
     // Only accept 2xx status codes
-    if !response.status().is_success() {
-        panic!("Download error: HTTP {}", response.status());
+    if response.status_code() < 200 && response.status_code() >= 300 { 
+        panic!("Download error: HTTP {}", response.status_code());
     }
-    let mut buffer = vec![];
-    let _ = unwrap!(response.read_to_end(&mut buffer));
+    let resp_body = response.body();
+    let buffer = resp_body.to_vec();
 
     // Check the SHA-256 hash of the downloaded file is as expected
     let hash = Sha256::digest(&buffer);
