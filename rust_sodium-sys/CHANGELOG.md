@@ -1,8 +1,5 @@
 # rust_sodium-sys - Change Log
 
-## [0.10.2]
-- add missing trait for MSVC build
-
 ## [0.10.1]
 - fix build: replace reqwest with http_req in build script
 - use rust 1.29.0 stable, drop nightly
