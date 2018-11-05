@@ -1,11 +1,13 @@
+#![forbid(warnings)]
+
 #[cfg(not(windows))]
 extern crate cc;
 #[cfg(not(target_env = "msvc"))]
 extern crate flate2;
+extern crate http_req;
 #[cfg(target_env = "msvc")]
 extern crate libc;
 extern crate pkg_config;
-extern crate http_req;
 extern crate sha2;
 #[cfg(not(target_env = "msvc"))]
 extern crate tar;
@@ -18,7 +20,7 @@ use http_req::request;
 use sha2::{Digest, Sha256};
 use std::env;
 use std::fs;
-use std::io::{Cursor, Read};
+use std::io::Cursor;
 use std::path::Path;
 
 const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
@@ -100,7 +102,7 @@ fn get_install_dir() -> String {
 fn get_libsodium() {
     use libc::S_IFDIR;
     use std::fs::File;
-    use std::io::Write;
+    use std::io::{Read, Write};
     use zip::ZipArchive;
 
     // Download zip file
