@@ -1,5 +1,5 @@
 macro_rules! newtype_clone (($newtype:ident) => (
-        #[cfg_attr(feature="cargo-clippy", allow(expl_impl_clone_on_copy))]
+        #[allow(clippy::expl_impl_clone_on_copy)]
         impl Clone for $newtype {
             fn clone(&self) -> $newtype {
                 let &$newtype(v) = self;
