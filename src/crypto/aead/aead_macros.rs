@@ -7,7 +7,7 @@ macro_rules! aead_module (($seal_name:ident,
                            $tagbytes:expr) => (
 
 use libc::c_ulonglong;
-use randombytes::randombytes_into;
+use crate::randombytes::randombytes_into;
 use std::ptr;
 
 /// Number of bytes in a `Key`.
@@ -184,8 +184,8 @@ mod test_m {
 
     #[test]
     fn test_seal_open() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -199,8 +199,8 @@ mod test_m {
 
     #[test]
     fn test_seal_open_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -224,8 +224,8 @@ mod test_m {
 
     #[test]
     fn test_seal_open_detached() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -240,8 +240,8 @@ mod test_m {
 
     #[test]
     fn test_seal_open_detached_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -271,8 +271,8 @@ mod test_m {
 
     #[test]
     fn test_seal_open_detached_same() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let k = gen_key();
             let n = gen_nonce();

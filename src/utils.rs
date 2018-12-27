@@ -1,6 +1,6 @@
 //! Libsodium utility functions
 
-use ffi;
+use crate::ffi;
 use libc::c_void;
 
 /// `memzero()` tries to effectively zero out the data in `x` even if
@@ -106,9 +106,9 @@ mod test {
 
     #[test]
     fn test_memcmp() {
-        use randombytes::randombytes;
+        use crate::randombytes::randombytes;
 
-        unwrap!(::init());
+        unwrap!(crate::init());
         for i in 0usize..256 {
             let x = randombytes(i);
             assert!(memcmp(&x, &x));
@@ -129,7 +129,7 @@ mod test {
 
     #[test]
     fn test_increment_le_zero() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         for i in 1usize..256 {
             let mut x = vec![0u8; i];
             increment_le(&mut x);
@@ -142,7 +142,7 @@ mod test {
 
     #[test]
     fn test_increment_le_vectors() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let mut x = [255, 2, 3, 4, 5];
         let y = [0, 3, 3, 4, 5];
         increment_le(&mut x);
@@ -172,7 +172,7 @@ mod test {
 
     #[test]
     fn test_increment_le_overflow() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         for i in 1usize..256 {
             let mut x = vec![255u8; i];
             increment_le(&mut x);
@@ -182,7 +182,7 @@ mod test {
 
     #[test]
     fn test_padding_not_multiple_of_blocksize() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let v = vec![1, 2, 3, 4, 5, 6, 7];
         let p = unwrap!(pad(v.clone(), 5));
         let u = unwrap!(unpad(&p, 5));
@@ -193,7 +193,7 @@ mod test {
 
     #[test]
     fn test_padding_multiple_of_blocksize() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let v = vec![1, 2, 3, 4, 5, 6];
         let p = unwrap!(pad(v.clone(), 3));
         let u = unwrap!(unpad(&p, 3));
@@ -204,7 +204,7 @@ mod test {
 
     #[test]
     fn test_padding_not_multiple_of_blocksize_pow2() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let v = vec![1, 2, 3, 4, 5, 6, 7];
         let p = unwrap!(pad(v.clone(), 4));
         let u = unwrap!(unpad(&p, 4));
@@ -215,7 +215,7 @@ mod test {
 
     #[test]
     fn test_padding_multiple_of_blocksize_pow2() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let v = vec![1, 2, 3, 4, 5, 6, 7, 8];
         let p = unwrap!(pad(v.clone(), 4));
         let u = unwrap!(unpad(&p, 4));
@@ -226,7 +226,7 @@ mod test {
 
     #[test]
     fn test_padding_invalid_block_size() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         // invalid block size
         unwrap_err!(pad(Vec::new(), 0));
         let v = vec![0x80];
@@ -239,7 +239,7 @@ mod test {
 
     #[test]
     fn test_padding_invalid_padded_size() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         // An empty array couldn't possibly have been created by `pad()`.
         unwrap_err!(unpad(&[], 1));
 
@@ -251,7 +251,7 @@ mod test {
 
     #[test]
     fn test_padding_invalid_padded_data() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         // A trailing padding byte is incorrect
         let mut v = unwrap!(pad(vec![42], 128));
         *v.last_mut().expect("non-empty") = 99;

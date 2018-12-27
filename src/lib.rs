@@ -104,16 +104,14 @@
 
 #[cfg(test)]
 extern crate hex;
-extern crate libc;
-extern crate rand;
 #[cfg(test)]
 extern crate rmp_serde;
-extern crate rust_sodium_sys as ffi;
-extern crate serde;
 #[cfg(test)]
 extern crate serde_json;
 #[macro_use]
 extern crate unwrap;
+
+use rust_sodium_sys as ffi;
 
 #[macro_use]
 mod newtype_macros;

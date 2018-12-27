@@ -1,6 +1,6 @@
 //! Libsodium version functions
 
-use ffi;
+use crate::ffi;
 use std::ffi::CStr;
 
 /// `version_string()` returns the version string from libsodium.
@@ -23,8 +23,8 @@ pub fn version_minor() -> usize {
 mod test {
     #[test]
     fn test_version_string() {
-        use version::version_string;
-        unwrap!(::init());
+        use crate::version::version_string;
+        unwrap!(crate::init());
         assert!(!version_string().is_empty());
     }
 }

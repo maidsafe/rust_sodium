@@ -74,8 +74,8 @@ mod test_m {
 
     #[test]
     fn test_hash_multipart() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let m = randombytes(i);
             let h = hash(&m);
@@ -92,12 +92,12 @@ mod test_m {
 #[cfg(test)]
 mod test_encode {
     use super::*;
-    use test_utils::round_trip;
+    use crate::test_utils::round_trip;
 
     #[test]
     fn test_serialisation() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let m = randombytes(i);
             let d = hash(&m[..]);
@@ -110,7 +110,7 @@ mod test_encode {
 #[cfg(test)]
 mod bench_m {
     extern crate test;
-    use randombytes::randombytes;
+    use crate::randombytes::randombytes;
     use super::*;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64,
@@ -118,7 +118,7 @@ mod bench_m {
 
     #[bench]
     fn bench_hash(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| {
             randombytes(*s)
         }).collect();

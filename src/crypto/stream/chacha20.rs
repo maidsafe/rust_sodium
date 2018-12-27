@@ -1,6 +1,6 @@
 //! `crypto_stream_chacha20` (Chacha20)
 
-use ffi::{
+use crate::ffi::{
     crypto_stream_chacha20, crypto_stream_chacha20_KEYBYTES, crypto_stream_chacha20_NONCEBYTES,
     crypto_stream_chacha20_xor, crypto_stream_chacha20_xor_ic,
 };
@@ -22,7 +22,7 @@ mod test {
     fn test_vector_1() {
         // the fifth test from
         // https://tools.ietf.org/html/draft-agl-tls-chacha20poly1305-04#section-7
-        unwrap!(::init());
+        unwrap!(crate::init());
         let key = Key([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
                        0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
                        0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f]);

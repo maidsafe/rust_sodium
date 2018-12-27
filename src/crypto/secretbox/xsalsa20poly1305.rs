@@ -5,8 +5,8 @@
 //! This function is conjectured to meet the standard notions of privacy and
 //! authenticity.
 
-use ffi;
-use randombytes::randombytes_into;
+use crate::ffi;
+use crate::randombytes::randombytes_into;
 
 /// Number of bytes in `Key`.
 pub const KEYBYTES: usize = ffi::crypto_secretbox_xsalsa20poly1305_KEYBYTES as usize;
@@ -156,8 +156,8 @@ mod test {
 
     #[test]
     fn test_seal_open() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -170,8 +170,8 @@ mod test {
 
     #[test]
     fn test_seal_open_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -191,8 +191,8 @@ mod test {
 
     #[test]
     fn test_seal_open_detached() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -206,8 +206,8 @@ mod test {
 
     #[test]
     fn test_seal_combined_then_open_detached() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -222,8 +222,8 @@ mod test {
 
     #[test]
     fn test_seal_detached_then_open_combined() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -239,8 +239,8 @@ mod test {
 
     #[test]
     fn test_seal_open_detached_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let k = gen_key();
             let mut m = randombytes(i);
@@ -261,7 +261,7 @@ mod test {
 
     #[test]
     fn test_open_detached_failure_does_not_modify() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let mut buf = b"hello world".to_vec();
         let k = gen_key();
         let n = gen_nonce();
@@ -283,7 +283,7 @@ mod test {
     #[test]
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let firstkey = Key([0x1b, 0x27, 0x55, 0x64, 0x73, 0xe9, 0x85, 0xd4, 0x62, 0xcd, 0x51,
                             0x19, 0x7a, 0x9a, 0x46, 0xc7, 0x60, 0x09, 0x54, 0x9e, 0xac, 0x64,
                             0x74, 0xf2, 0x06, 0xc4, 0xee, 0x08, 0x44, 0xf6, 0x83, 0x89]);
@@ -323,8 +323,8 @@ mod test {
 
     #[test]
     fn test_serialisation() {
-        use test_utils::round_trip;
-        unwrap!(::init());
+        use crate::test_utils::round_trip;
+        unwrap!(crate::init());
         for _ in 0..256usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -339,13 +339,13 @@ mod test {
 mod bench {
     extern crate test;
     use super::*;
-    use randombytes::randombytes;
+    use crate::randombytes::randombytes;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 
     #[bench]
     fn bench_seal_open(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let k = gen_key();
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();

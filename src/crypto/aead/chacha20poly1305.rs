@@ -2,7 +2,7 @@
 //! unlimited number of messages with the same key, without any practical limit
 //! to the size of a message (up to ~ 2^64 bytes).
 
-use ffi::{
+use crate::ffi::{
     crypto_aead_chacha20poly1305_ABYTES, crypto_aead_chacha20poly1305_KEYBYTES,
     crypto_aead_chacha20poly1305_NPUBBYTES, crypto_aead_chacha20poly1305_decrypt,
     crypto_aead_chacha20poly1305_decrypt_detached, crypto_aead_chacha20poly1305_encrypt,
@@ -26,7 +26,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // Test from https://tools.ietf.org/html/draft-agl-tls-chacha20poly1305-04#section-7
-        unwrap!(::init());
+        unwrap!(crate::init());
         let m = &[0x86, 0xd0, 0x99, 0x74, 0x84, 0x0b, 0xde, 0xd2, 0xa5, 0xca];
         let k = Key([
             0x42, 0x90, 0xbc, 0xb1, 0x54, 0x17, 0x35, 0x31, 0xf3, 0x14, 0xaf, 0x57, 0xf3, 0xbe,

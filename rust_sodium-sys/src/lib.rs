@@ -78,8 +78,8 @@ extern crate unwrap;
 mod bindgen;
 mod seeded_rng;
 
-pub use bindgen::*;
-pub use seeded_rng::init_with_rng;
+pub use crate::bindgen::*;
+pub use crate::seeded_rng::init_with_rng;
 
 #[cfg(test)]
 mod tests {

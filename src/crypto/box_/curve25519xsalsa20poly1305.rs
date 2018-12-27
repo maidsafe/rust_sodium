@@ -5,8 +5,8 @@
 //! This function is conjectured to meet the standard notions of privacy and
 //! third-party unforgeability.
 
-use ffi;
-use randombytes::randombytes_into;
+use crate::ffi;
+use crate::randombytes::randombytes_into;
 
 /// Number of bytes in a `PublicKey`.
 pub const PUBLICKEYBYTES: usize =
@@ -334,8 +334,8 @@ mod test {
 
     #[test]
     fn test_seal_open() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -349,8 +349,8 @@ mod test {
 
     #[test]
     fn test_seal_open_precomputed() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -369,8 +369,8 @@ mod test {
 
     #[test]
     fn test_seal_open_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -387,8 +387,8 @@ mod test {
 
     #[test]
     fn test_seal_open_precomputed_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -407,8 +407,8 @@ mod test {
 
     #[test]
     fn test_seal_open_detached() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -423,8 +423,8 @@ mod test {
 
     #[test]
     fn test_seal_combined_then_open_detached() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -440,8 +440,8 @@ mod test {
 
     #[test]
     fn test_seal_detached_then_open_combined() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -458,8 +458,8 @@ mod test {
 
     #[test]
     fn test_seal_open_detached_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -481,7 +481,7 @@ mod test {
 
     #[test]
     fn test_open_detached_failure_does_not_modify() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let mut buf = b"hello world".to_vec();
         let (pk1, sk1) = gen_keypair();
         let (pk2, sk2) = gen_keypair();
@@ -503,8 +503,8 @@ mod test {
 
     #[test]
     fn test_seal_open_detached_precomputed() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -521,8 +521,8 @@ mod test {
 
     #[test]
     fn test_seal_combined_then_open_detached_precomputed() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -540,8 +540,8 @@ mod test {
 
     #[test]
     fn test_seal_detached_precomputed_then_open_combined() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -560,8 +560,8 @@ mod test {
 
     #[test]
     fn test_seal_open_detached_precomputed_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let (pk1, sk1) = gen_keypair();
             let (pk2, sk2) = gen_keypair();
@@ -585,7 +585,7 @@ mod test {
 
     #[test]
     fn test_open_detached_precomputed_failure_does_not_modify() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let mut buf = b"hello world".to_vec();
         let (pk1, sk1) = gen_keypair();
         let (pk2, sk2) = gen_keypair();
@@ -611,7 +611,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_1() {
         // corresponding to tests/box.c and tests/box3.cpp from NaCl
-        unwrap!(::init());
+        unwrap!(crate::init());
         let alicesk = SecretKey([0x77, 0x07, 0x6d, 0x0a, 0x73, 0x18, 0xa5, 0x7d, 0x3c, 0x16,
                                  0xc1, 0x72, 0x51, 0xb2, 0x66, 0x45, 0xdf, 0x4c, 0x2f, 0x87,
                                  0xeb, 0xc0, 0x99, 0x2a, 0xb1, 0x77, 0xfb, 0xa5, 0x1d, 0xb9,
@@ -657,7 +657,7 @@ mod test {
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vector_2() {
         // corresponding to tests/box2.c and tests/box4.cpp from NaCl
-        unwrap!(::init());
+        unwrap!(crate::init());
         let bobsk = SecretKey([0x5d, 0xab, 0x08, 0x7e, 0x62, 0x4a, 0x8a, 0x4b, 0x79, 0xe1, 0x7f,
                                0x8b, 0x83, 0x80, 0x0e, 0xe6, 0x6f, 0x3b, 0xb1, 0x29, 0x26, 0x18,
                                0xb6, 0xfd, 0x1c, 0x2f, 0x8b, 0x27, 0xff, 0x88, 0xe0, 0xeb]);
@@ -701,7 +701,7 @@ mod test {
 
     #[test]
     fn test_public_key() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         for _ in 0..256usize {
             let (pk1, sk) = gen_keypair();
             let pk2 = sk.public_key();
@@ -711,8 +711,8 @@ mod test {
 
     #[test]
     fn test_serialisation() {
-        use test_utils::round_trip;
-        unwrap!(::init());
+        use crate::test_utils::round_trip;
+        unwrap!(crate::init());
         for _ in 0..256usize {
             let (pk, sk) = gen_keypair();
             let n = gen_nonce();
@@ -728,13 +728,13 @@ mod test {
 mod bench {
     extern crate test;
     use super::*;
-    use randombytes::randombytes;
+    use crate::randombytes::randombytes;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 
     #[bench]
     fn bench_seal_open(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let (pk, sk) = gen_keypair();
         let n = gen_nonce();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
@@ -747,7 +747,7 @@ mod bench {
 
     #[bench]
     fn bench_precompute(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let (pk, sk) = gen_keypair();
         b.iter(|| {
             // we do this benchmark as many times as the other benchmarks so

@@ -1,6 +1,6 @@
 //! `x25519blake2b` is the current default key exchange scheme of `libsodium`.
 
-use ffi;
+use crate::ffi;
 
 /// Number of bytes in a `PublicKey`.
 pub const PUBLICKEYBYTES: usize = ffi::crypto_kx_PUBLICKEYBYTES as usize;
@@ -130,7 +130,7 @@ mod test {
 
     #[test]
     fn test_kx() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let (client_pk, client_sk) = gen_keypair();
         let (server_pk, server_sk) = gen_keypair();
 
@@ -148,7 +148,7 @@ mod test {
 
     #[test]
     fn test_kx_non_acceptable_keys() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let (client_pk, client_sk) = gen_keypair();
         let (server_pk, server_sk) = gen_keypair();
 
@@ -163,7 +163,7 @@ mod test {
     #[test]
     #[cfg_attr(rustfmt, rustfmt_skip)]
     fn test_vectors() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let small_order_p = PublicKey([
             0xe0, 0xeb, 0x7a, 0x7c, 0x3b, 0x41, 0xb8, 0xae, 0x16, 0x56, 0xe3, 0xfa, 0xf1, 0x9f,
             0xc4, 0x6a, 0xda, 0x09, 0x8d, 0xeb, 0x9c, 0x32, 0xb1, 0xfd, 0x86, 0x62, 0x05, 0x16,

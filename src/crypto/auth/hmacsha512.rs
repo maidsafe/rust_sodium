@@ -1,7 +1,7 @@
 //! `HMAC-SHA-512` `HMAC-SHA-512` is conjectured to meet the standard notion of
 //! unforgeability.
 
-use ffi::{
+use crate::ffi::{
     crypto_auth_hmacsha512, crypto_auth_hmacsha512_BYTES, crypto_auth_hmacsha512_KEYBYTES,
     crypto_auth_hmacsha512_final, crypto_auth_hmacsha512_init, crypto_auth_hmacsha512_state,
     crypto_auth_hmacsha512_update, crypto_auth_hmacsha512_verify,
@@ -31,7 +31,7 @@ mod test {
     fn test_vector_1() {
         // corresponding to tests/auth.c from NaCl
         // "Test Case 2" from RFC 4231
-        unwrap!(::init());
+        unwrap!(crate::init());
         let key = Key([0x4a, 0x65, 0x66, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
@@ -54,7 +54,7 @@ mod test {
     fn test_vector_state_1() {
         // corresponding to tests/auth.c from NaCl
         // "Test Case 2" from RFC 4231
-        unwrap!(::init());
+        unwrap!(crate::init());
         let key = [0x4a, 0x65, 0x66, 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
