@@ -5,7 +5,7 @@ macro_rules! stream_module (($stream_name:ident,
                              $noncebytes:expr) => (
 
 use libc::c_ulonglong;
-use randombytes::randombytes_into;
+use crate::randombytes::randombytes_into;
 
 /// Number of bytes in a `Key`.
 pub const KEYBYTES: usize = $keybytes;
@@ -156,8 +156,8 @@ mod test_m {
 
     #[test]
     fn test_encrypt_decrypt() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -170,8 +170,8 @@ mod test_m {
 
     #[test]
     fn test_stream_xor() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -188,8 +188,8 @@ mod test_m {
 
     #[test]
     fn test_stream_xor_inplace() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -206,8 +206,8 @@ mod test_m {
 
     #[test]
     fn test_stream_xor_ic_same() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -220,8 +220,8 @@ mod test_m {
 
     #[test]
     fn test_stream_xor_ic_inplace() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -236,8 +236,8 @@ mod test_m {
 
     #[test]
     fn test_serialisation() {
-        use test_utils::round_trip;
-        unwrap!(::init());
+        use crate::test_utils::round_trip;
+        unwrap!(crate::init());
         for _ in 0..1024usize {
             let k = gen_key();
             let n = gen_nonce();
@@ -258,7 +258,7 @@ mod bench_m {
 
     #[bench]
     fn bench_stream(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let k = gen_key();
         let n = gen_nonce();
         b.iter(|| {

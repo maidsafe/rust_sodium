@@ -1,8 +1,8 @@
 //! `SipHash-2-4`
 
-use ffi;
+use crate::ffi;
+use crate::randombytes::randombytes_into;
 use libc::c_ulonglong;
-use randombytes::randombytes_into;
 
 /// Number of bytes in a `Digest`.
 pub const DIGESTBYTES: usize = ffi::crypto_shorthash_siphash24_BYTES as usize;
@@ -54,7 +54,7 @@ mod test {
 
     #[test]
     fn test_vectors() {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let maxlen = 64;
         let mut m = Vec::with_capacity(64);
         for i in 0usize..64 {
@@ -135,9 +135,9 @@ mod test {
 
     #[test]
     fn test_serialisation() {
-        use randombytes::randombytes;
-        use test_utils::round_trip;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        use crate::test_utils::round_trip;
+        unwrap!(crate::init());
         for i in 0..64usize {
             let k = gen_key();
             let m = randombytes(i);
@@ -153,13 +153,13 @@ mod test {
 mod bench {
     extern crate test;
     use super::*;
-    use randombytes::randombytes;
+    use crate::randombytes::randombytes;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 
     #[bench]
     fn bench_shorthash(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let k = gen_key();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
         b.iter(|| {

@@ -63,7 +63,7 @@ extern "C" fn buf(buf: *mut libc::c_void, size: usize) {
         let rng_ptr = RNG.with(|rng| Rc::clone(rng));
         let rng = &mut *rng_ptr.borrow_mut();
         for i in 0..size {
-            *ptr.offset(i as isize) = rng.gen();
+            *ptr.add(i) = rng.gen();
         }
     }
 }
@@ -122,7 +122,7 @@ pub fn init_with_rng<T: Rng>(rng: &mut T) -> Result<(), i32> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use {
+    use crate::{
         crypto_box_curve25519xsalsa20poly1305_PUBLICKEYBYTES,
         crypto_box_curve25519xsalsa20poly1305_SECRETKEYBYTES,
         crypto_box_curve25519xsalsa20poly1305_keypair,

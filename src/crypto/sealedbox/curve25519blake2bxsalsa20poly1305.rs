@@ -1,7 +1,7 @@
 //! A particular combination of `Curve25519`, `Blake2B`, `Salsa20` and `Poly1305`.
 
 use super::super::box_::curve25519xsalsa20poly1305 as box_;
-use ffi;
+use crate::ffi;
 
 use libc::c_ulonglong;
 
@@ -71,8 +71,8 @@ mod test {
 
     #[test]
     fn test_seal_open() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk, sk) = box_::gen_keypair();
             let m = randombytes(i);
@@ -84,8 +84,8 @@ mod test {
 
     #[test]
     fn test_seal_open_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let (pk, sk) = box_::gen_keypair();
             let m = randombytes(i);

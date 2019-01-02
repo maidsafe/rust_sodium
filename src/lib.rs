@@ -54,7 +54,7 @@
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/maidsafe/QA/master/Images/maidsafe_logo.png",
     html_favicon_url = "https://maidsafe.net/img/favicon.ico",
-    test(attr(forbid(warnings))),
+    test(attr(forbid(warnings)))
 )]
 // For explanation of lint checks, run `rustc -W help` or see
 // https://github.com/maidsafe/QA/blob/master/Documentation/Rust%20Lint%20Checks.md
@@ -73,8 +73,6 @@
     non_shorthand_field_patterns,
     overflowing_literals,
     plugin_as_library,
-    private_no_mangle_fns,
-    private_no_mangle_statics,
     stable_features,
     unconditional_recursion,
     unknown_lints,
@@ -103,22 +101,17 @@
     unsafe_code,
     variant_size_differences
 )]
-// Allow `write_literal` due to false positives. Revert this after
-// https://github.com/rust-lang-nursery/rust-clippy/issues/2657 is fixed.
-#![cfg_attr(feature = "cargo-clippy", allow(write_literal))]
 
 #[cfg(test)]
 extern crate hex;
-extern crate libc;
-extern crate rand;
 #[cfg(test)]
 extern crate rmp_serde;
-extern crate rust_sodium_sys as ffi;
-extern crate serde;
 #[cfg(test)]
 extern crate serde_json;
 #[macro_use]
 extern crate unwrap;
+
+use rust_sodium_sys as ffi;
 
 #[macro_use]
 mod newtype_macros;
@@ -160,7 +153,7 @@ pub fn init() -> Result<(), ()> {
     }
 }
 
-#[cfg_attr(feature = "cargo-clippy", allow(doc_markdown))]
+#[allow(clippy::doc_markdown)]
 /// Sets [libsodium's `randombytes_implementation`]
 /// (https://download.libsodium.org/doc/advanced/custom_rng.html) to use a
 /// [Rust `Rng` implementation](../rand/trait.Rng.html) and initialises libsodium.

@@ -3,7 +3,7 @@
 //! standard notion of unforgeability for a public-key signature scheme under
 //! chosen-message attacks.
 
-use ffi;
+use crate::ffi;
 use libc::c_ulonglong;
 
 /// Number of bytes in a `Seed`.
@@ -157,8 +157,8 @@ mod test {
 
     #[test]
     fn test_sign_verify() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -170,8 +170,8 @@ mod test {
 
     #[test]
     fn test_sign_verify_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -186,8 +186,8 @@ mod test {
 
     #[test]
     fn test_sign_verify_detached() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -198,8 +198,8 @@ mod test {
 
     #[test]
     fn test_sign_verify_detached_tamper() {
-        use randombytes::randombytes;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        unwrap!(crate::init());
         for i in 0..32usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -214,8 +214,8 @@ mod test {
 
     #[test]
     fn test_sign_verify_seed() {
-        use randombytes::{randombytes, randombytes_into};
-        unwrap!(::init());
+        use crate::randombytes::{randombytes, randombytes_into};
+        unwrap!(crate::init());
         for i in 0..256usize {
             let mut seedbuf = [0; 32];
             randombytes_into(&mut seedbuf);
@@ -230,8 +230,8 @@ mod test {
 
     #[test]
     fn test_sign_verify_tamper_seed() {
-        use randombytes::{randombytes, randombytes_into};
-        unwrap!(::init());
+        use crate::randombytes::{randombytes, randombytes_into};
+        unwrap!(crate::init());
         for i in 0..32usize {
             let mut seedbuf = [0; 32];
             randombytes_into(&mut seedbuf);
@@ -255,7 +255,7 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        unwrap!(::init());
+        unwrap!(crate::init());
         let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
             let line = unwrap!(mline);
@@ -288,7 +288,7 @@ mod test {
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
-        unwrap!(::init());
+        unwrap!(crate::init());
         let r = BufReader::new(unwrap!(File::open("testvectors/ed25519.input")));
         for mline in r.lines() {
             let line = unwrap!(mline);
@@ -316,9 +316,9 @@ mod test {
 
     #[test]
     fn test_serialisation() {
-        use randombytes::randombytes;
-        use test_utils::round_trip;
-        unwrap!(::init());
+        use crate::randombytes::randombytes;
+        use crate::test_utils::round_trip;
+        unwrap!(crate::init());
         for i in 0..256usize {
             let (pk, sk) = gen_keypair();
             let m = randombytes(i);
@@ -335,13 +335,13 @@ mod test {
 mod bench {
     extern crate test;
     use super::*;
-    use randombytes::randombytes;
+    use crate::randombytes::randombytes;
 
     const BENCH_SIZES: [usize; 14] = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096];
 
     #[bench]
     fn bench_sign(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let (_, sk) = gen_keypair();
         let ms: Vec<Vec<u8>> = BENCH_SIZES.iter().map(|s| randombytes(*s)).collect();
         b.iter(|| {
@@ -353,14 +353,15 @@ mod bench {
 
     #[bench]
     fn bench_verify(b: &mut test::Bencher) {
-        unwrap!(::init());
+        unwrap!(crate::init());
         let (pk, sk) = gen_keypair();
         let sms: Vec<Vec<u8>> = BENCH_SIZES
             .iter()
             .map(|s| {
                 let m = randombytes(*s);
                 sign(&m, &sk)
-            }).collect();
+            })
+            .collect();
         b.iter(|| {
             for sm in sms.iter() {
                 verify(sm, &pk);

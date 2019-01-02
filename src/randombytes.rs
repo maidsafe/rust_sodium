@@ -1,6 +1,6 @@
 //! Cryptographic random number generation.
 
-use ffi;
+use crate::ffi;
 use libc::c_void;
 
 /// `randombytes()` randomly generates size bytes of data.
