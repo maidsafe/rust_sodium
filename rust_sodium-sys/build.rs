@@ -77,7 +77,7 @@ fn download(url: &str, expected_hash: &str) -> Cursor<Vec<u8>> {
     let response = unwrap!(request::get(url));
 
     // Only accept 2xx status codes
-    if response.status_code() < 200 && response.status_code() >= 300 {
+    if response.status_code() < 200 || response.status_code() >= 300 {
         panic!("Download error: HTTP {}", response.status_code());
     }
     let resp_body = response.body();
