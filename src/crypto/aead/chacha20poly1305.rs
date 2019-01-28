@@ -23,7 +23,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // Test from https://tools.ietf.org/html/draft-agl-tls-chacha20poly1305-04#section-7
         unwrap!(crate::init());

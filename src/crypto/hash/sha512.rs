@@ -26,7 +26,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // corresponding to tests/hash.c, tests/hash2.cpp,
         // tests/hash3.c and tests/hash4.cpp from NaCl
@@ -83,7 +83,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_hash_state_multi_parts() {
         // corresponding to tests/hash.c, tests/hash2.cpp,
         // tests/hash3.c and tests/hash4.cpp from NaCl

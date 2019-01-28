@@ -57,7 +57,7 @@ mod test {
     use crate::randombytes::randombytes_into;
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // corresponding to tests/scalarmult.c and tests/scalarmult3.cpp from NaCl
         unwrap!(crate::init());
@@ -72,7 +72,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_2() {
         // corresponding to tests/scalarmult2.c and tests/scalarmult4.cpp from NaCl
         unwrap!(crate::init());
@@ -87,7 +87,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_3() {
         // corresponding to tests/scalarmult5.c and tests/scalarmult7.cpp from NaCl
         unwrap!(crate::init());
@@ -106,7 +106,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_4() {
         // corresponding to tests/scalarmult6.c from NaCl
         unwrap!(crate::init());

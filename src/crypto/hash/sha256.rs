@@ -26,7 +26,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // hash of empty string
         unwrap!(crate::init());
@@ -39,7 +39,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_2() {
         // The quick brown fox jumps over the lazy dog
         unwrap!(crate::init());
@@ -95,7 +95,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_hash_state_empty() {
         // hash of empty string
         unwrap!(crate::init());
@@ -108,7 +108,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_hash_state_multi_parts() {
         // The quick brown fox jumps over the lazy dog
         unwrap!(crate::init());

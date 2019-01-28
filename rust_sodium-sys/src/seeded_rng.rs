@@ -129,7 +129,7 @@ mod tests {
     };
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn seeded_init_with_rng() {
         use std::thread::Builder;
         let mut rng = XorShiftRng::from_seed([0, 1, 2, 3]);

@@ -23,7 +23,7 @@ auth_state!(
 );
 
 #[cfg(test)]
-#[cfg_attr(rustfmt, rustfmt_skip)]
+#[rustfmt::skip]
 mod test {
     use super::*;
 

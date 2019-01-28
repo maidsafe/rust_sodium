@@ -161,7 +161,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vectors() {
         unwrap!(crate::init());
         let small_order_p = PublicKey([

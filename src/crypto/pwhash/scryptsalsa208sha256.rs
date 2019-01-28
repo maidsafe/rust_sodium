@@ -194,7 +194,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_derive_key() {
         unwrap!(crate::init());
         let mut kb = [0u8; 32];
