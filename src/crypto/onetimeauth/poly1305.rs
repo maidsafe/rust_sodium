@@ -20,7 +20,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // corresponding to tests/onetimeauth.c, tests/onetimeauth2.c,
         // tests/onetimeauth5.cpp and tests/onetimeauth6.cpp from NaCl

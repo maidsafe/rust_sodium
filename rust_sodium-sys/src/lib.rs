@@ -211,7 +211,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_1() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
         let password = "";
@@ -243,7 +243,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_2() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
         let password = "password";
@@ -275,7 +275,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_3() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
         let password = "pleaseletmein";
@@ -307,7 +307,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn pwhash_scryptsalsa208sha256_ll_4() {
         // See https://www.tarsnap.com/scrypt/scrypt.pdf Page 16
         let password = "pleaseletmein";

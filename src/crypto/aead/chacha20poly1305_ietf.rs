@@ -23,7 +23,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // Test vector from https://tools.ietf.org/html/rfc7539#section-2.8.1
         unwrap!(crate::init());

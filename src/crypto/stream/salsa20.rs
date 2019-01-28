@@ -20,7 +20,7 @@ mod test {
     use super::*;
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // corresponding to tests/stream2.c and tests/stream6.cpp from NaCl
         unwrap!(crate::init());

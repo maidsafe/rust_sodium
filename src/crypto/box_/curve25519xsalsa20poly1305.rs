@@ -608,7 +608,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_1() {
         // corresponding to tests/box.c and tests/box3.cpp from NaCl
         unwrap!(crate::init());
@@ -654,7 +654,7 @@ mod test {
     }
 
     #[test]
-    #[cfg_attr(rustfmt, rustfmt_skip)]
+    #[rustfmt::skip]
     fn test_vector_2() {
         // corresponding to tests/box2.c and tests/box4.cpp from NaCl
         unwrap!(crate::init());
