@@ -12,7 +12,7 @@ repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.10.2"
 
 [dependencies]
-lazy_static = "~1.0.0"
+lazy_static = "~1.2.0"
 libc = "~0.2.40"
 rand = "~0.4.2"
 unwrap = "~1.2.0"
