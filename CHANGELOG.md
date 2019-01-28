@@ -1,6 +1,12 @@
 # rust_sodium - Change Log
 
 ## [0.10.1]
+- upgrade rust_sodium-sys to 0.10.3
+- use stable rust, 2018 edition without being tied to
+  a specific version
+- use cargo fmt and cargo clippy
+
+## [0.10.1]
 - upgrade rust_sodium-sys to 0.10.1
 - use rust to 1.29.0 stable, drop nightly
 - use cargo fmt and cargo clippy
