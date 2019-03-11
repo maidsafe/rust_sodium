@@ -28,6 +28,19 @@ set an environment variable `RUST_SODIUM_DISABLE_PIE` while building, e.g.
 RUST_SODIUM_DISABLE_PIE=1 cargo build
 ```
 
+It may also be necessary to install `build-essential` in addition to disabling pie.
+
+```sh
+sudo apt-get install build-essential
+```
+
+Linking errors are a common symptom of these build issues, e.g.
+
+```
+= note: /usr/bin/ld: /tmp/rustc.ZbjniGJ7D9Ug/librust_sodium_sys-24ee5a8b5f6825c1.rlib(libsodium_la-aead_chacha20poly1305.o): relocation R_X86_64_PC32 against symbol `cr
+ypto_aead_chacha20poly1305_encrypt_detached' can not be used when making a shared object; recompile with -fPIC
+```
+
 ## To use your own copy of libsodium
 
 If you already have a copy of libsodium, you can choose to link this rather than having rust_sodium
