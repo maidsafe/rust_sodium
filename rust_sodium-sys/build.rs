@@ -39,10 +39,10 @@ const VERSION: &'static str = "1.0.17";
 const SHA256: &'static str = "0580d54f57594a7cb493607cec6e7045369fb67d43623491523781e901589948";
 
 #[cfg(all(windows, not(target_env = "msvc")))] // libsodium-<VERSION>-mingw.tar.gz
-const SHA256: &'static str = "5b81a4fc5d0de36dbda7efeaf355c133d4f6cc0b4dbf69bbe46ef7f5a6baa639";
+const SHA256: &'static str = "3c76ab4a5033b03503331314b2f289361171d7fbbfd98886751dd7f8a8a6496f";
 
 #[cfg(not(windows))] // libsodium-<VERSION>.tar.gz
-const SHA256: &'static str = "eeadc7e1e1bcef09680fb4837d448fbdf57224978f865ac1c16745868fbd0533";
+const SHA256: &'static str = "0cc3dae33e642cc187b5ceb467e0ad0e1b51dcba577de1190e9ffa17766ac2b1";
 
 fn main() {
     println!("cargo:rerun-if-env-changed=RUST_SODIUM_LIB_DIR");
