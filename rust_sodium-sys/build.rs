@@ -126,12 +126,11 @@ fn get_libsodium() {
 
     // Extract just the appropriate version of libsodium.lib and headers to the install path.  For
     // now, only handle MSVC 2015.
-    let arch_path = if cfg!(target_pointer_width = "32") {
-        Path::new("Win32")
-    } else if cfg!(target_pointer_width = "64") {
-        Path::new("x64")
-    } else {
-        panic!("target_pointer_width not 32 or 64")
+    let target_pointer_width = unwrap!(env::var("CARGO_CFG_TARGET_POINTER_WIDTH"));
+    let arch_path = match target_pointer_width.as_str() {
+        "32" => Path::new("Win32"),
+        "64" => Path::new("x64"),
+        _ => panic!("target_pointer_width not 32 or 64"),
     };
 
     let unpacked_lib = arch_path.join("Release/v140/static/libsodium.lib");
@@ -185,12 +184,11 @@ fn get_libsodium() {
     let mut archive = Archive::new(gz_decoder);
 
     // Extract just the appropriate version of libsodium.a and headers to the install path
-    let arch_path = if cfg!(target_pointer_width = "32") {
-        Path::new("libsodium-win32")
-    } else if cfg!(target_pointer_width = "64") {
-        Path::new("libsodium-win64")
-    } else {
-        panic!("target_pointer_width not 32 or 64")
+    let target_pointer_width = unwrap!(env::var("CARGO_CFG_TARGET_POINTER_WIDTH"));
+    let arch_path = match target_pointer_width.as_str() {
+        "32" => Path::new("Win32"),
+        "64" => Path::new("x64"),
+        _ => panic!("target_pointer_width not 32 or 64"),
     };
 
     let unpacked_include = arch_path.join("include");
