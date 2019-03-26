@@ -186,8 +186,8 @@ fn get_libsodium() {
     // Extract just the appropriate version of libsodium.a and headers to the install path
     let target_pointer_width = unwrap!(env::var("CARGO_CFG_TARGET_POINTER_WIDTH"));
     let arch_path = match target_pointer_width.as_str() {
-        "32" => Path::new("Win32"),
-        "64" => Path::new("x64"),
+        "32" => Path::new("libsodium-win32"),
+        "64" => Path::new("libsodium-win64"),
         _ => panic!("target_pointer_width not 32 or 64"),
     };
 
