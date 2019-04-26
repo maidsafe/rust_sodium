@@ -9,8 +9,8 @@ branches:
     - master
 
 cache:
-  - '%USERPROFILE%\.cargo'
-  - '%APPVEYOR_BUILD_FOLDER%\target'
+  - '%USERPROFILE%\.cargo -> Cargo.toml, **\Cargo.toml'
+  - '%APPVEYOR_BUILD_FOLDER%\target -> Cargo.toml, **\Cargo.toml'
 
 clone_depth: 1
 

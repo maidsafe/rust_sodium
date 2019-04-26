@@ -32,14 +32,14 @@ use std::fs;
 use std::io::Cursor;
 use std::path::Path;
 
-const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
+const DOWNLOAD_BASE_URL: &'static str = "https://s3.amazonaws.com/libsodium/";
 const VERSION: &'static str = "1.0.16";
 
 #[cfg(target_env = "msvc")] // libsodium-<VERSION>-msvc.zip
-const SHA256: &'static str = "0580d54f57594a7cb493607cec6e7045369fb67d43623491523781e901589948";
+const SHA256: &'static str = "4b1edd6df3e5ac478ff66c897a56d3eea5808ce59547561ff0428c44c7c3504a";
 
 #[cfg(all(windows, not(target_env = "msvc")))] // libsodium-<VERSION>-mingw.tar.gz
-const SHA256: &'static str = "5b81a4fc5d0de36dbda7efeaf355c133d4f6cc0b4dbf69bbe46ef7f5a6baa639";
+const SHA256: &'static str = "88cf674e0098b5eb0bff5a0db11ecf3162d081eaff685b320cdc4a655403671b";
 
 #[cfg(not(windows))] // libsodium-<VERSION>.tar.gz
 const SHA256: &'static str = "eeadc7e1e1bcef09680fb4837d448fbdf57224978f865ac1c16745868fbd0533";
@@ -134,7 +134,7 @@ fn get_libsodium() {
         panic!("target_pointer_width not 32 or 64")
     };
 
-    let unpacked_lib = arch_path.join("Release/v140/static/libsodium.lib");
+    let unpacked_lib = arch_path.join("Release/v141/static/libsodium.lib");
     for i in 0..zip_archive.len() {
         let mut entry = unwrap!(zip_archive.by_index(i));
         let entry_name = entry.name().to_string();
