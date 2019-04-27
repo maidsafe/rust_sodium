@@ -83,6 +83,26 @@ pub use crate::seeded_rng::init_with_rng;
 mod tests {
     use super::*;
     use libc::*;
+    use std::ffi::CStr;
+
+    #[test]
+    fn version_check() {
+        let wrapper_generated_from_version = unsafe { CStr::from_ptr(SODIUM_VERSION_STRING) }
+            .to_string_lossy()
+            .into_owned();
+        let actual_version = unsafe { CStr::from_ptr(sodium_version_string()) }
+            .to_string_lossy()
+            .into_owned();
+        assert!(
+            wrapper_generated_from_version == actual_version,
+            "\n\nUsing libsodium version {1}, but version used to create {0} was {2}.\nIf you \
+             just updated the build script, you should also regenerate {0}.\nSee comment block in \
+             'rust_sodium-sys/src/lib.rs' for details on how to do this.\n\n",
+            "'rust_sodium-sys/src/bindgen.rs'",
+            actual_version,
+            wrapper_generated_from_version
+        );
+    }
 
     #[test]
     fn generichash_statebytes() {
