@@ -56,14 +56,7 @@
     unsafe_code,
     variant_size_differences
 )]
-#![allow(clippy::decimal_literal_representation, clippy::unreadable_literal)]
-
-#[macro_use]
-extern crate lazy_static;
-extern crate libc;
-extern crate rand;
-#[macro_use]
-extern crate unwrap;
+#![allow(clippy::unreadable_literal)]
 
 // Bindgen generated file.  Generated using the following commands:
 // ```
@@ -78,12 +71,8 @@ extern crate unwrap;
 // ```
 //
 // Further manual adjustments are usually needed when upgrading the libsodium version to accommodate
-// for e.g.
-//   * deprecated libsodium items
-//   * https://github.com/rust-lang-nursery/rust-bindgen/issues/511 generating incorrect rust code
-//   * applying #[repr(align(...))]
-// However, these should show up when running the systest, which should also be reviewed and updated
-// when upgrading the libsodium version.
+// for example, deprecated libsodium items.  Search all libsodium headers for
+// `__attribute__ ((deprecated))` and apply `#[deprecated]` to the bindings.
 mod bindgen;
 mod seeded_rng;
 

@@ -33,16 +33,16 @@ use std::io::Cursor;
 use std::path::Path;
 
 const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
-const VERSION: &'static str = "1.0.16";
+const VERSION: &'static str = "1.0.17";
 
 #[cfg(target_env = "msvc")] // libsodium-<VERSION>-msvc.zip
-const SHA256: &'static str = "0580d54f57594a7cb493607cec6e7045369fb67d43623491523781e901589948";
+const SHA256: &'static str = "f0f32ad8ebd76eee99bb039f843f583f2babca5288a8c26a7261db9694c11467";
 
 #[cfg(all(windows, not(target_env = "msvc")))] // libsodium-<VERSION>-mingw.tar.gz
-const SHA256: &'static str = "5b81a4fc5d0de36dbda7efeaf355c133d4f6cc0b4dbf69bbe46ef7f5a6baa639";
+const SHA256: &'static str = "abd2b6a4e70966dc50d6ad1aa7a0e63ced9ff5869724b7f29a856fb7cae78031";
 
 #[cfg(not(windows))] // libsodium-<VERSION>.tar.gz
-const SHA256: &'static str = "eeadc7e1e1bcef09680fb4837d448fbdf57224978f865ac1c16745868fbd0533";
+const SHA256: &'static str = "0cc3dae33e642cc187b5ceb467e0ad0e1b51dcba577de1190e9ffa17766ac2b1";
 
 fn main() {
     println!("cargo:rerun-if-env-changed=RUST_SODIUM_LIB_DIR");
@@ -282,16 +282,14 @@ fn get_libsodium() {
             .to_string();
 
         // Determine SDK directory paths
-        let sdk_dir_simulator = unwrap!(
-            Path::new(&xcode_dir)
-                .join("Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk")
-                .to_str()
-        ).to_string();
-        let sdk_dir_ios = unwrap!(
-            Path::new(&xcode_dir)
-                .join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
-                .to_str()
-        ).to_string();
+        let sdk_dir_simulator = unwrap!(Path::new(&xcode_dir)
+            .join("Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk")
+            .to_str())
+        .to_string();
+        let sdk_dir_ios = unwrap!(Path::new(&xcode_dir)
+            .join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
+            .to_str())
+        .to_string();
 
         // Min versions
         let ios_simulator_version_min = "6.0.0";
