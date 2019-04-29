@@ -1,5 +1,8 @@
 # rust_sodium-sys - Change Log
 
+## [0.10.4]
+- upgrade libsodium to 1.0.17
+
 ## [0.10.3]
 - update lazy_static to 1.2.0
 - fix compilation with rustc 1.32.0
