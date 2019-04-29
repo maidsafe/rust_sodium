@@ -8,12 +8,14 @@
 // Software.
 
 use super::{randombytes_implementation, randombytes_set_implementation, sodium_init};
+use lazy_static::lazy_static;
 use libc;
 use rand::{self, Rng, SeedableRng, XorShiftRng};
 use std::cell::RefCell;
 use std::ffi::CString;
 use std::rc::Rc;
 use std::sync::Mutex;
+use unwrap::unwrap;
 
 lazy_static! {
     static ref INIT_RESULT: Mutex<Option<i32>> = Mutex::new(None);

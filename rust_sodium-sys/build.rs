@@ -33,16 +33,17 @@ use std::io::Cursor;
 use std::path::Path;
 
 const DOWNLOAD_BASE_URL: &'static str = "https://download.libsodium.org/libsodium/releases/";
-const VERSION: &'static str = "1.0.16";
+const FALLBACK_BASE_URL: &'static str = "https://s3.amazonaws.com/libsodium/";
+const VERSION: &'static str = "1.0.17";
 
 #[cfg(target_env = "msvc")] // libsodium-<VERSION>-msvc.zip
-const SHA256: &'static str = "0580d54f57594a7cb493607cec6e7045369fb67d43623491523781e901589948";
+const SHA256: &'static str = "f0f32ad8ebd76eee99bb039f843f583f2babca5288a8c26a7261db9694c11467";
 
 #[cfg(all(windows, not(target_env = "msvc")))] // libsodium-<VERSION>-mingw.tar.gz
-const SHA256: &'static str = "5b81a4fc5d0de36dbda7efeaf355c133d4f6cc0b4dbf69bbe46ef7f5a6baa639";
+const SHA256: &'static str = "abd2b6a4e70966dc50d6ad1aa7a0e63ced9ff5869724b7f29a856fb7cae78031";
 
 #[cfg(not(windows))] // libsodium-<VERSION>.tar.gz
-const SHA256: &'static str = "eeadc7e1e1bcef09680fb4837d448fbdf57224978f865ac1c16745868fbd0533";
+const SHA256: &'static str = "0cc3dae33e642cc187b5ceb467e0ad0e1b51dcba577de1190e9ffa17766ac2b1";
 
 fn main() {
     println!("cargo:rerun-if-env-changed=RUST_SODIUM_LIB_DIR");
@@ -80,27 +81,49 @@ fn main() {
     }
 }
 
-/// Download the specified URL into a buffer which is returned.
-fn download(url: &str, expected_hash: &str) -> Cursor<Vec<u8>> {
+/// Try to download the specified URL into a buffer which is returned.
+fn try_download(url: &str) -> Result<Cursor<Vec<u8>>, String> {
     // Send GET request
-    let response = unwrap!(request::get(url));
+    let response = request::get(url).map_err(|error| error.to_string())?;
 
     // Only accept 2xx status codes
     if response.status_code() < 200 || response.status_code() >= 300 {
-        panic!("Download error: HTTP {}", response.status_code());
+        return Err(format!("Download error: HTTP {}", response.status_code()));
     }
     let resp_body = response.body();
     let buffer = resp_body.to_vec();
 
     // Check the SHA-256 hash of the downloaded file is as expected
     let hash = Sha256::digest(&buffer);
-    assert_eq!(
-        &format!("{:x}", hash),
-        expected_hash,
-        "\n\nDownloaded libsodium file failed hash check.\n\n"
-    );
+    if &format!("{:x}", hash) != SHA256 {
+        return Err("Downloaded libsodium file failed hash check.".to_string());
+    }
+    Ok(Cursor::new(buffer))
+}
 
-    Cursor::new(buffer)
+/// Try to download the required file using the `DOWNLOAD_BASE_URL` and on failure from the
+/// `FALLBACK_BASE_URL`.
+fn download_compressed_file() -> Cursor<Vec<u8>> {
+    let filename = if cfg!(target_env = "msvc") {
+        format!("libsodium-{}-msvc.zip", VERSION)
+    } else if cfg!(all(windows, not(target_env = "msvc"))) {
+        format!("libsodium-{}-mingw.tar.gz", VERSION)
+    } else {
+        format!("libsodium-{}.tar.gz", VERSION)
+    };
+
+    let url = format!("{}{}", DOWNLOAD_BASE_URL, filename);
+    if let Ok(compressed_file) = try_download(&url) {
+        return compressed_file;
+    }
+
+    let fallback_url = format!("{}{}", FALLBACK_BASE_URL, filename);
+    println!(
+        "cargo:warning=Failed to download libsodium from {}.  Falling back to MaidSafe mirror at {}",
+        url,
+        fallback_url
+    );
+    try_download(&fallback_url).unwrap_or_else(|error| panic!("\n\nDownload error: {}\n\n", error))
 }
 
 fn get_install_dir() -> String {
@@ -118,8 +141,7 @@ fn get_libsodium() {
     let install_dir = get_install_dir();
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
-    let url = format!("{}libsodium-{}-msvc.zip", DOWNLOAD_BASE_URL, VERSION);
-    let compressed_file = download(&url, SHA256);
+    let compressed_file = download_compressed_file();
 
     // Unpack the zip file
     let mut zip_archive = unwrap!(ZipArchive::new(compressed_file));
@@ -177,8 +199,7 @@ fn get_libsodium() {
     let install_dir = get_install_dir();
     let lib_install_dir = Path::new(&install_dir).join("lib");
     unwrap!(fs::create_dir_all(&lib_install_dir));
-    let url = format!("{}libsodium-{}-mingw.tar.gz", DOWNLOAD_BASE_URL, VERSION);
-    let compressed_file = download(&url, SHA256);
+    let compressed_file = download_compressed_file();
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
@@ -228,11 +249,8 @@ fn get_libsodium() {
     // Determine build target triple
     let target = unwrap!(env::var("TARGET"));
 
-    // Determine filenames and download URLs
-    let basename = format!("libsodium-{}", VERSION);
-    let url = format!("{}{}.tar.gz", DOWNLOAD_BASE_URL, basename);
-
     // Determine source and install dir
+    let basename = format!("libsodium-{}", VERSION);
     let mut install_dir = get_install_dir();
     let mut source_dir = unwrap!(env::var("OUT_DIR")) + "/source";
 
@@ -243,9 +261,9 @@ fn get_libsodium() {
         install_dir = fallback_path.clone() + "/installed";
         source_dir = fallback_path.clone() + "/source";
         println!(
-            "cargo:warning=The path to the usual build directory contains spaces and hence \
-             can't be used to build libsodium.  Falling back to use {}.  If running `cargo \
-             clean`, ensure you also delete this fallback directory",
+            "cargo:warning=The path to the usual build directory contains spaces and hence can't \
+            be used to build libsodium.  Falling back to use {}.  If running `cargo clean`, ensure \
+            you also delete this fallback directory",
             fallback_path
         );
     }
@@ -255,7 +273,7 @@ fn get_libsodium() {
     unwrap!(fs::create_dir_all(&source_dir));
 
     // Download sources
-    let compressed_file = download(&url, SHA256);
+    let compressed_file = download_compressed_file();
 
     // Unpack the tarball
     let gz_decoder = GzDecoder::new(compressed_file);
@@ -282,16 +300,14 @@ fn get_libsodium() {
             .to_string();
 
         // Determine SDK directory paths
-        let sdk_dir_simulator = unwrap!(
-            Path::new(&xcode_dir)
-                .join("Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk")
-                .to_str()
-        ).to_string();
-        let sdk_dir_ios = unwrap!(
-            Path::new(&xcode_dir)
-                .join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
-                .to_str()
-        ).to_string();
+        let sdk_dir_simulator = unwrap!(Path::new(&xcode_dir)
+            .join("Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk")
+            .to_str())
+        .to_string();
+        let sdk_dir_ios = unwrap!(Path::new(&xcode_dir)
+            .join("Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk")
+            .to_str())
+        .to_string();
 
         // Min versions
         let ios_simulator_version_min = "6.0.0";

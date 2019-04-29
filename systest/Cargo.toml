@@ -2,6 +2,7 @@
 authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 build = "build.rs"
 description = "Test that bindings match native library's interface"
+edition = "2018"
 homepage = "https://maidsafe.net"
 license = "MIT OR Apache-2.0"
 name = "systest"

@@ -33,4 +33,4 @@ build_script:
 test_script:
   - |-
     cargo test --verbose --release
-    cargo test --release --manifest-path rust_sodium-sys/Cargo.toml
+    cargo test --verbose --release --manifest-path rust_sodium-sys/Cargo.toml
