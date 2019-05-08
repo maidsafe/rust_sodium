@@ -2,6 +2,7 @@
 authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 categories = ["cryptography"]
 description = "Fast cryptographic library for Rust (bindings to libsodium)"
+edition = "2018"
 homepage = "https://maidsafe.net"
 keywords = ["crypto", "cryptographic", "cryptography", "sodium"]
 license = "MIT OR BSD-3-Clause"
@@ -9,7 +10,6 @@ name = "rust_sodium"
 readme = "README.md"
 repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.10.2"
-edition = "2018"
 
 [dependencies]
 libc = "~0.2.40"

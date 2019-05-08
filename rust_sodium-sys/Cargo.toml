@@ -3,13 +3,14 @@ authors = ["MaidSafe Developers <dev@maidsafe.net>"]
 build = "build.rs"
 categories = ["api-bindings", "cryptography"]
 description = "Raw bindings to libsodium"
+edition = "2018"
 homepage = "https://maidsafe.net"
 keywords = ["crypto", "cryptographic", "cryptography", "sodium"]
 license = "MIT OR BSD-3-Clause"
 links = "sodium"
 name = "rust_sodium-sys"
 repository = "https://github.com/maidsafe/rust_sodium"
-version = "0.10.3"
+version = "0.10.4"
 
 [dependencies]
 lazy_static = "~1.2.0"
