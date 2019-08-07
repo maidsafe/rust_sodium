@@ -12,6 +12,7 @@
 //! standard notion of unforgeability for a public-key signature scheme under
 //! chosen-message attacks.
 
+use crate::crypto::box_::curve25519xsalsa20poly1305 as curve25519;
 use crate::ffi;
 use libc::c_ulonglong;
 
@@ -46,9 +47,41 @@ new_type! {
     secret SecretKey(SECRETKEYBYTES);
 }
 
+impl SecretKey {
+    /// Creates a curve25519 secret key from the ed25519 secret key
+    ///
+    /// This is so it can be used as a key for encryption via `box_`
+    pub fn to_curve25519(&self) -> curve25519::SecretKey {
+        unsafe {
+            let mut curve_sk_bytes = [0u8; curve25519::SECRETKEYBYTES];
+            let _todo_use_result = ffi::crypto_sign_ed25519_sk_to_curve25519(
+                curve_sk_bytes.as_mut_ptr(),
+                self.0.as_ptr(),
+            );
+            curve25519::SecretKey(curve_sk_bytes)
+        }
+    }
+}
+
 new_type! {
     /// `PublicKey` for signatures
     public PublicKey(PUBLICKEYBYTES);
+}
+
+impl PublicKey {
+    /// Creates a curve25519 public key from the ed25519 public key
+    ///
+    /// This is so it can be used as a key for encryption via `box_`
+    pub fn to_curve25519(&self) -> curve25519::PublicKey {
+        unsafe {
+            let mut curve_pk_bytes = [0u8; curve25519::PUBLICKEYBYTES];
+            let _todo_use_result = ffi::crypto_sign_ed25519_pk_to_curve25519(
+                curve_pk_bytes.as_mut_ptr(),
+                self.0.as_ptr(),
+            );
+            curve25519::PublicKey(curve_pk_bytes)
+        }
+    }
 }
 
 new_type! {
