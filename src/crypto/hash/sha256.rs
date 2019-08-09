@@ -64,7 +64,6 @@ mod test {
     }
 
     fn test_nist_vector(filename: &str) {
-        use hex;
         use std::fs::File;
         use std::io::{BufRead, BufReader};
 
