@@ -8,7 +8,7 @@ homepage = "https://maidsafe.net"
 keywords = ["crypto", "cryptographic", "cryptography", "sodium"]
 license = "MIT OR BSD-3-Clause"
 links = "sodium"
-name = "rust_sodium-sys"
+name = "rust_sodium_holochain_fork-sys"
 repository = "https://github.com/maidsafe/rust_sodium"
 version = "0.10.4"
 
