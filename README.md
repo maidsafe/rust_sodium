@@ -2,6 +2,9 @@
 
 Rust bindings to [libsodium](https://github.com/jedisct1/libsodium).
 
+## Please note that the rust_sodium crate is no longer maintained; switch to a modern alternative.
+## Interested in taking ownership? Contact us at qa@maidsafe.net
+
 This project is largely based on [sodiumoxide](https://github.com/dnaq/sodiumoxide).  Some main
 differences are:
 
