@@ -2,8 +2,15 @@
 
 Rust bindings to [libsodium](https://github.com/jedisct1/libsodium).
 
-## Please note that the rust_sodium crate is no longer maintained; switch to a modern alternative.
+## This repository has been copied to the open-development platform Subspace, you can access it directly by following [this link](https://app.dev.subspace.net/gitlab/subspace-open-development/rust_sodium).
+
+## To learn more about Subspace, click [here](https://docs.subspace.net/).
+
+## The rust_sodium crate is no longer maintained by MaidSafe, you should check whether it is actively maintained on Subspace as per the link above, or switch to a modern alternative.
+
 ## Interested in taking ownership? Contact us at qa@maidsafe.net
+
+
 
 This project is largely based on [sodiumoxide](https://github.com/dnaq/sodiumoxide).  Some main
 differences are:
