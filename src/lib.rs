@@ -76,7 +76,6 @@
     warnings
 )]
 #![deny(
-    deprecated,
     improper_ctypes,
     missing_docs,
     non_shorthand_field_patterns,
@@ -103,6 +102,7 @@
 // Allow `trivial_casts` to cast `u8` to `c_char`, which is `u8` or `i8`, depending on the
 // architecture.
 #![allow(
+    deprecated,
     box_pointers,
     missing_copy_implementations,
     missing_debug_implementations,
@@ -120,7 +120,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate unwrap;
 
-use rust_sodium_sys as ffi;
+use rust_sodium_holochain_fork_sys as ffi;
 
 #[macro_use]
 mod newtype_macros;
